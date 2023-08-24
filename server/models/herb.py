@@ -20,4 +20,4 @@ class Herb(db.Model, SerializerMixin):
     entered_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     
     properties = db.relationship('Property', back_populates='herbs')
-    recipes = db.relationship('Recipe', back_populates='herbs')
+    recipe_herbs = db.relationship('RecipeHerb', back_populates='herb')
