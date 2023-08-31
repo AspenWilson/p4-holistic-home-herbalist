@@ -17,7 +17,7 @@ class Herb(db.Model, SerializerMixin):
     image_url = db.Column(db.String)
     entered_on = db.Column(db.DateTime, default=datetime.utcnow)
     
-    entered_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    entered_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     
     properties = db.relationship('Property', back_populates='herbs')
     recipe_herbs = db.relationship('RecipeHerb', back_populates='herb')
@@ -46,7 +46,7 @@ class Herb(db.Model, SerializerMixin):
     def validate_image_url(self, key, image_url):
         if not image_url:
             image_url = 'https://www.nicepng.com/png/detail/265-2650267_organic-organic-herb-logo.png'
-            
+
         return image_url
 
     def __repr__(self):

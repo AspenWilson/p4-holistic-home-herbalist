@@ -13,7 +13,7 @@ class Property(db.Model, SerializerMixin):
     name = db.Column(db.String)
     description = db.Column(db.String)
     entered_on = db.Column(db.DateTime, default=datetime.utcnow)
-    entered_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    entered_by = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     herbs = db.relationship('Herb', back_populates='properties')
     recipes = db.relationship('Recipe', back_populates='properties')

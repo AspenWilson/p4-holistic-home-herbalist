@@ -15,8 +15,8 @@ class User(db.Model, SerializerMixin):
     _password_hash = db.Column(db.String)
     admin = db.Column(db.String, default=False)
 
-    saved_herbs = db.Column(db.ARRAY(db.Integer), defualt=None) 
-    saved_recipes = db.Column(db.ARRAY(db.Integer), default=None) 
+    saved_herbs = db.Column(db.String, default=None) 
+    saved_recipes = db.Column(db.String, default=None) 
 
     entered_herbs = db.relationship('Herb', back_populates='entered_by')
     entered_properties = db.relationship('Property', back_populates='entered_by')

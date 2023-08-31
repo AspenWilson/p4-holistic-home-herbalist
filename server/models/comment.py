@@ -11,10 +11,10 @@ class Comment(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String)
-    entered_on = db.Column(db.DateTime, defaut=datetime.utcnow)
+    entered_on = db.Column(db.DateTime, default=datetime.utcnow)
     
-    entered_by = db.Column(db.Integer, db.ForeignKey('user.id'))
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+    entered_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
 
     @validates('comment')
     def validate_comment(self, key, comment):

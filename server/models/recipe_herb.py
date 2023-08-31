@@ -16,7 +16,7 @@ class RecipeHerb(db.Model):
     
     herb_id = db.Column(db.Integer, db.ForeignKey('herbs.id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
-    properties = db.Column(db.ARRAY(db.Integer)) 
+    properties = db.Column(db.String, default=None) 
     
     herb = db.relationship('Herb', back_populates='recipe_herbs')
     recipe = db.relationship('Recipe', back_populates='recipe_herbs')
