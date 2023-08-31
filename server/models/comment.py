@@ -15,3 +15,13 @@ class Comment(db.Model, SerializerMixin):
     
     entered_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+
+    @validates('comment')
+    def validate_comment(self, key, comment):
+        if not comment:
+            raise ValueError('Comment is required.')
+        
+        return comment
+        
+    def __repr__(self):
+        return f'Comment: {self.comment}'

@@ -10,13 +10,13 @@ class Recipe(db.Model, SerializerMixin):
     __tablename__ = 'recipes'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String)
     entered_on = db.Column(db.DateTime, default=datetime.utcnow)
     entered_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     directions = db.Column(db.String)
 
 
-    herbs = db.relationship('Herb', secondary='recipe_herbs', back_populates='recipes')
+    recipe_herbs = db.relationship('Herb', secondary='recipe_herbs', back_populates='recipes')
     properties = db.relationship('Property', secondary='recipe_herbs', viewonly=True)
     comments = db.relationship('Comment', back_populates='recipe')
 
@@ -36,5 +36,17 @@ class Recipe(db.Model, SerializerMixin):
         
         return directions
 
+    def combined_properties(self):
+        recipe_properties = self.properties  
 
-        
+        for recipe_herb in self.recipe_herbs:
+            herb_properties = recipe_herb.herb.properties
+            recipe_properties.extend(herb_properties)
+
+        deduplicated_properties = list(set(recipe_properties))
+
+        return deduplicated_properties
+
+
+    def __repr__(self):
+        return f'Recipe: {self.name}, ID: {self.id}'        

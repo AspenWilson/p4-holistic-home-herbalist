@@ -21,5 +21,34 @@ class Herb(db.Model, SerializerMixin):
     
     properties = db.relationship('Property', back_populates='herbs')
     recipe_herbs = db.relationship('RecipeHerb', back_populates='herb')
-    dosages = db.relationship('HerbDosage', back_populates='herb')
+    herb_dosages = db.relationship('HerbDosage', back_populates='herb')
+
+
+    @validates('name')
+    def validate_name(self, key, name):
+        if not name:
+            raise ValueError('Herb name is required')
+        
+        existing_herb = Herb.query.filter_by(name=name).first()
+        if existing_herb:
+            raise ValueError('Herb already exists.')
+        
+        return name
+    
+    @validates('latin_name', 'description', 'warnings')
+    def validate_presence(self, key, value):
+        if not {value}:
+            raise ValueError('Herb {key} is required')
+        
+        return {value}
+
+    @validates('image_url')
+    def validate_image_url(self, key, image_url):
+        if not image_url:
+            image_url = 'https://www.nicepng.com/png/detail/265-2650267_organic-organic-herb-logo.png'
+            
+        return image_url
+
+    def __repr__(self):
+        return f'Herb:{self.name}, Herb ID:{self.id}'
 

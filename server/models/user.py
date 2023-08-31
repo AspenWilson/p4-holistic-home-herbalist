@@ -10,13 +10,13 @@ class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False)
+    username = db.Column(db.String)
     account_created_on = db.Column(db.DateTime, default=datetime.utcnow)
     _password_hash = db.Column(db.String)
-    admin = db.Column(db.Boolean, default=False)
+    admin = db.Column(db.String, default=False)
 
-    saved_herbs = db.Column(db.ARRAY(db.Integer)) 
-    saved_recipes = db.Column(db.ARRAY(db.Integer)) 
+    saved_herbs = db.Column(db.ARRAY(db.Integer), defualt=None) 
+    saved_recipes = db.Column(db.ARRAY(db.Integer), default=None) 
 
     entered_herbs = db.relationship('Herb', back_populates='entered_by')
     entered_properties = db.relationship('Property', back_populates='entered_by')
@@ -40,6 +40,10 @@ class User(db.Model, SerializerMixin):
     def validate_username(self, key, username):
         if not username:
             raise ValueError('Username is required.')
+        
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            raise ValueError('Username is already taken.')
         return username
 
     def __repr__(self):
