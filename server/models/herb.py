@@ -21,3 +21,5 @@ class Herb(db.Model, SerializerMixin):
     
     properties = db.relationship('Property', back_populates='herbs')
     recipe_herbs = db.relationship('RecipeHerb', back_populates='herb')
+    dosages = db.relationship('HerbDosage', back_populates='herb')
+

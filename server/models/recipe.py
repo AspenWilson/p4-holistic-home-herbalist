@@ -14,10 +14,10 @@ class Recipe(db.Model, SerializerMixin):
     entered_on = db.Column(db.DateTime, default=datetime.utcnow)
     entered_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     directions = db.Column(db.String)
-    type = db.Column(db.String) 
 
-    recipe_herbs = db.relationship('RecipeHerb', back_populates='recipe')
-    properties = db.relationship('Property', back_populates='recipes')
+
+    herbs = db.relationship('Herb', secondary='recipe_herbs', back_populates='recipes')
+    properties = db.relationship('Property', secondary='recipe_herbs', viewonly=True)
     comments = db.relationship('Comment', back_populates='recipe')
 
     @validates('name')
@@ -36,10 +36,5 @@ class Recipe(db.Model, SerializerMixin):
         
         return directions
 
-    @validates('type')
-    def validate_type(self, key, type):
-        types = ['Bulk Herb', 'Capsule', 'Capsule & Powder', 'Decoction - Standard','Decoction - Weak', 'Dried Seed', 'Essential Oil', 'Fresh Herb', 'Fresh Juice', 'Gycerite', 'Infusion - Cold', 'Infusion - Strong', 'Infusion - Weak', 'Oil & Salve', 'Powder', 'Standardized Extract', 'Tea', 'Tincture', 'Topical Use']
-        
-        if not type:
-            raise ValueError('Recipe must have a type.')
+
         

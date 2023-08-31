@@ -11,12 +11,16 @@ class RecipeHerb(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.String)
-    type = db.Column(db.String) 
+    amount_type = db.Column(db.String)
+    herb_type = db.Column(db.String) 
     
     herb_id = db.Column(db.Integer, db.ForeignKey('herbs.id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    herb_properties = db.Column(db.ARRAY(db.Integer)) 
     
     herb = db.relationship('Herb', back_populates='recipe_herbs')
     recipe = db.relationship('Recipe', back_populates='recipe_herbs')
 
-    types = ['Key Herb', 'Supporting Herb', 'Catalyst', 'Optional Catalyst', 'Balancing Herb', 'Optional Balancing Herb']
+    herb_types = ['Key Herb', 'Supporting Herb', 'Catalyst', 'Optional Catalyst', 'Balancing Herb', 'Optional Balancing Herb']
+
+    amount_types = ['Part(s)', 'Cup']

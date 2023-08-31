@@ -11,6 +11,7 @@ class Property(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    description = db.Column(db.String)
     entered_on = db.Column(db.DateTime, default=datetime.utcnow)
     entered_by = db.Column(db.Integer, db.ForeignKey('user.id'))
 
