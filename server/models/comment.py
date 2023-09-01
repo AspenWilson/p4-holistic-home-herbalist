@@ -13,8 +13,11 @@ class Comment(db.Model, SerializerMixin):
     comment = db.Column(db.String)
     entered_on = db.Column(db.DateTime, default=datetime.utcnow)
     
-    entered_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', back_populates='comments')
+
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    recipe = db.relationship('Recipe', back_populates='comments')
 
     @validates('comment')
     def validate_comment(self, key, comment):

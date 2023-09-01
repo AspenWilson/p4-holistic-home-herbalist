@@ -6,16 +6,16 @@ from datetime import datetime
 
 from config import db
 
-class HerbDosage(db.Model, SerializerMixin):
-    __tablename__ = 'herb_dosages'
+class Dosage(db.Model, SerializerMixin):
+    __tablename__ = 'dosages'
 
     id = db.Column(db.Integer, primary_key=True)
     dosage_form = db.Column(db.String)  
     dosage_description = db.Column(db.String)
 
     herb_id = db.Column(db.Integer, db.ForeignKey('herbs.id'))
-
-    herb = db.relationship('Herb', back_populates='herb_dosages')
+    
+    herb = db.relationship('Herb', back_populates='dosages')
 
 
     @validates('dosage_form')

@@ -1,3 +1,3 @@
 from flask_restful import Resource
-from models.models import Comment
-from config import api
+from models.models import *
+from config import *

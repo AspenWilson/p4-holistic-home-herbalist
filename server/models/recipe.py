@@ -3,6 +3,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from datetime import datetime
+from .association_tables import *
 
 from config import db
 
@@ -12,13 +13,29 @@ class Recipe(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     entered_on = db.Column(db.DateTime, default=datetime.utcnow)
-    entered_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     directions = db.Column(db.String)
 
+    entered_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    recipe_herbs = db.relationship('Herb', secondary='recipe_herbs', back_populates='recipes')
-    properties = db.relationship('Property', secondary='recipe_herbs', viewonly=True)
+    entered_by = db.relationship('User', back_populates='entered_recipes')
+    
+    ingredients = db.relationship('Ingredient',back_populates='recipe')
+    
+    saved_by = db.relationship('User', secondary='user_saved_recipes', back_populates='saved_recipes')
+
+    properties = db.relationship('Property', secondary='recipe_property_association', back_populates='recipes')
+
+    herbs = db.relationship('Herb', secondary='herb_recipe_association', back_populates='recipes')
+    
     comments = db.relationship('Comment', back_populates='recipe')
+    
+    @property
+    def unique_properties(self):
+        unique_property_ids = set()
+        for herb in self.herbs:
+            unique_property_ids.update(herb.properties)
+        return list(unique_property_ids)
+
 
     @validates('name')
     def validate_title(self, key, name):

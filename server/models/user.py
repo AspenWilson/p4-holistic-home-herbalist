@@ -3,6 +3,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from datetime import datetime
+from .association_tables import *
 
 from config import db, bcrypt
 
@@ -15,13 +16,13 @@ class User(db.Model, SerializerMixin):
     _password_hash = db.Column(db.String)
     admin = db.Column(db.String, default=False)
 
-    saved_herbs = db.Column(db.String, default=None) 
-    saved_recipes = db.Column(db.String, default=None) 
+    saved_herbs = db.relationship('Herb', secondary='user_saved_herbs', back_populates='saved_by')
+    saved_recipes = db.relationship('Recipe', secondary='user_saved_recipes', back_populates='saved_by')
 
     entered_herbs = db.relationship('Herb', back_populates='entered_by')
-    entered_properties = db.relationship('Property', back_populates='entered_by')
     entered_recipes = db.relationship('Recipe', back_populates='entered_by')
-    entered_comments = db.relationship('Comment', back_populates='entered_by')
+    entered_properties = db.relationship('Property', back_populates='entered_by')
+    comments = db.relationship('Comment', back_populates = 'user')
 
     @hybrid_property
     def password_hash(self):

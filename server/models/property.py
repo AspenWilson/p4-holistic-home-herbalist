@@ -3,6 +3,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from datetime import datetime
+from .association_tables import *
 
 from config import db
 
@@ -13,10 +14,14 @@ class Property(db.Model, SerializerMixin):
     name = db.Column(db.String)
     description = db.Column(db.String)
     entered_on = db.Column(db.DateTime, default=datetime.utcnow)
-    entered_by = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    herbs = db.relationship('Herb', back_populates='properties')
-    recipes = db.relationship('Recipe', back_populates='properties')
+    entered_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    entered_by = db.relationship('User', back_populates='entered_properties')   
+    herbs = db.relationship('Herb', secondary='herb_property_association', back_populates='properties')
+    
+    recipes = db.relationship('Recipe', secondary='recipe_property_association', back_populates='properties')
+
 
     @validates('name')
     def validate_name(self, key, name):

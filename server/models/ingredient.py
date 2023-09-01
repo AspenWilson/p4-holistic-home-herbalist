@@ -3,24 +3,21 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 
-
 from config import db
 
-class RecipeHerb(db.Model):
-    __tablename__ = 'recipe_herbs'
+class Ingredient(db.Model, SerializerMixin):
+    __tablename__ = 'ingredients'
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer)
     amount_type = db.Column(db.String)
     herb_type = db.Column(db.String) 
     
-    herb_id = db.Column(db.Integer, db.ForeignKey('herbs.id'))
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
-    properties = db.Column(db.String, default=None) 
-    
-    herb = db.relationship('Herb', back_populates='recipe_herbs')
-    recipe = db.relationship('Recipe', back_populates='recipe_herbs')
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
+    herb_id = db.Column(db.Integer, db.ForeignKey('herbs.id'), nullable=False)
 
+    herb = db.relationship('Herb', back_populates='ingredients')
+    recipe = db.relationship('Recipe', back_populates='ingredients')
 
 
     @validates('amount')
