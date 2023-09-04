@@ -30,6 +30,7 @@ class Herb(db.Model, SerializerMixin):
     dosages = db.relationship('Dosage', back_populates='herb')
     ingredients = db.relationship('Ingredient', back_populates='herb')
 
+    serialize_rules = ('-recipes.herbs', '-saved_by', '-entered_by')
 
     @validates('name')
     def validate_name(self, key, name):
@@ -44,10 +45,10 @@ class Herb(db.Model, SerializerMixin):
     
     @validates('latin_name', 'description', 'warnings')
     def validate_presence(self, key, value):
-        if not {value}:
+        if not value:
             raise ValueError('Herb {key} is required')
         
-        return {value}
+        return value
 
     @validates('image_url')
     def validate_image_url(self, key, image_url):
@@ -57,5 +58,5 @@ class Herb(db.Model, SerializerMixin):
         return image_url
 
     def __repr__(self):
-        return f'Herb:{self.name}, Herb ID:{self.id}'
+        return f'Herb: {self.name}, Herb ID: {self.id}'
 

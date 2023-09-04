@@ -22,6 +22,8 @@ class Property(db.Model, SerializerMixin):
     
     recipes = db.relationship('Recipe', secondary='recipe_property_association', back_populates='properties')
 
+    serialize_rules = ('-entered_by',)
+
 
     @validates('name')
     def validate_name(self, key, name):

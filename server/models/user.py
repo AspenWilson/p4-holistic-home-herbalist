@@ -24,6 +24,8 @@ class User(db.Model, SerializerMixin):
     entered_properties = db.relationship('Property', back_populates='entered_by')
     comments = db.relationship('Comment', back_populates = 'user')
 
+    serialize_rules = ('-entered_herbs.entered_by_id', '-saved_herbs.entered_by_id', '-entered_herbs.entered_by', '-entered_herbs.description', '-entered_herbs.warnings', '-entered_herbs.saved_by', '-entered_herbs.dosages', '-entered_herbs.ingredients', '-entered_herbs.recipes', '-entered_herbs.properties')
+
     @hybrid_property
     def password_hash(self):
         raise AttributeError('Password hashes may not be viewed')
