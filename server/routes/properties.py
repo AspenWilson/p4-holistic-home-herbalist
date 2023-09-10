@@ -66,7 +66,7 @@ class PropertiesByID(Resource):
         db.session.delete(prop)
         db.session.commit()
 
-        response = 'Herb deleted', 204
+        response = 'Property deleted', 204
         return response  
 
 api.add_resource(Properties, '/properties')

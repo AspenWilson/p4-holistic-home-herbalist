@@ -22,7 +22,7 @@ class Property(db.Model, SerializerMixin):
     
     recipes = db.relationship('Recipe', secondary='recipe_property_association', back_populates='properties')
 
-    serialize_rules = ('-entered_by',)
+    serialize_rules = ('-entered_by', '-herbs')
 
 
     @validates('name')
