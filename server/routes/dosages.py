@@ -4,25 +4,44 @@ from config import *
 from flask import Flask, request, session, abort, make_response
 from models.models import Dosage
 
-class Dosages(Resource):
-    def get(self):
-        all_dosages = [herb.to_dict() for herb in Dosage.query.all()]
+class DosagesByHerb(Resource):
+    def get(self, herb_id):
+        all_dosages = [dosage.to_dict() for dosage in Dosage.query.filter_by(herb_id=herb_id).all()]
         return all_dosages, 200
 
-    def post(self, id):
-        data = request.get_json()
-        new_dosage = Dosage(
-            dosage_form = data['dosage_form'],
-            dosage_description = data['dosage_description'],
-            herb_id = id
-        )
-        db.session.add(new_dosage)
-        db.session.commit()
-
-class DosageByHerb(Resource):
-    def get(self, id):
-        herb_dosages = [dosage.to_dict() for dosage in Dosage.query.filter_by(id=id).first()]
-        return herb_dosages, 200
+class DosageByID(Resource):
+    def get(self, herb_id, id):
+        dosage = Dosage.query.filter((Dosage.id == id) & (Dosage.herb_id == herb_id)).first()
+        if dosage:
+            return dosage.to_dict(), 200
+        else:
+            return {'error': 'Dosage not found'}, 404
     
-    def patch(self, id):
-        dosage = Dosage.query.filter_by(id=id).first()
+    def patch(self, herb_id, id):
+        dosage = Dosage.query.filter((Dosage.id == id) & (Dosage.herb_id == herb_id)).first()
+        if dosage:
+            data = request.get_json()
+            for attr, value in data.items():
+                    setattr(dosage, attr, value)
+            
+            db.session.commit()
+
+            response = dosage.to_dict(), 200
+            return response
+        else:
+            return {'error': 'Dosage not found'}, 404
+    
+    def delete(self, herb_id, id):
+        dosage = Dosage.query.filter((Dosage.id == id) & (Dosage.herb_id == herb_id)).first()
+        if dosage:
+            db.session.delete(dosage)
+            db.session.commit()
+
+            response = 'Dosage deleted', 204
+            return response 
+
+        else:
+            return {'error': 'Dosage not found'}, 404
+        
+api.add_resource(DosagesByHerb, '/herbs/<int:herb_id>/dosages')
+api.add_resource(DosageByID, '/herbs/<int:herb_id>/dosages/<int:id>')

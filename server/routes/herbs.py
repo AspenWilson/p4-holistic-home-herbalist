@@ -3,7 +3,7 @@ from models.models import User
 from config import *
 from flask import Flask, request, session, abort, make_response
 from models.models import Herb, User, Property, Dosage
-from .dosages import Dosages
+
 
 class Herbs(Resource):
     def get(self):
@@ -22,17 +22,17 @@ class Herbs(Resource):
                 entered_by_id = session.get('user_id')
             )
             if 'dosages' in data:
-                dosages_data = data['dosages']
-                dosages_resource=Dosages()
-                dosages_resource.post(new_herb.id, dosages_data)
+                dosages_data = data.get('dosages', [])
+                dosages = [Dosage(
+                    dosage_form=dosage_data['dosage_form'],
+                    dosage_description=dosage_data['dosage_description']
+                ) for dosage_data in dosages_data]
+                new_herb.dosages = dosages
 
-            # dosages_data = data.get('dosages',[])
-            # dosages = [Dosage(**dosage_data) for dosage_data in dosages_data]
-            # new_herb.dosages = dosages
-
-            property_ids = data.get('property_ids', [])
-            properties = Property.query.filter(Property.id.in_(property_ids)).all()
-            new_herb.properties = properties
+            if 'property_ids' in data:
+                property_ids = data.get('property_ids', [])
+                properties = Property.query.filter(Property.id.in_(property_ids)).all()
+                new_herb.properties = properties
 
             db.session.add(new_herb)
             db.session.commit()
@@ -60,29 +60,29 @@ class HerbsByID(Resource):
         
         current_user = User.query.filter_by(id=session.get('user_id')).first()
         if herb:
-            # if herb.entered_by_id == session.get('user_id') or current_user.admin == 1:
-            data = request.get_json()
+            if herb.entered_by_id == session.get('user_id') or current_user.admin == 1:
+                data = request.get_json()
 
-            if 'property_ids' in data:
-                property_ids = data['property_ids']
+                if 'property_ids' in data:
+                    property_ids = data['property_ids']
 
-                properties = Property.query.filter(Property.id.in_(property_ids)).all()
-                herb.properties = properties
+                    properties = Property.query.filter(Property.id.in_(property_ids)).all()
+                    herb.properties = properties
 
-            if 'dosages' in data:
-                dosages_data = data['dosages']
-                herb.dosages = [Dosage(**dosage_data) for dosage_data in dosages_data]
+                if 'dosages' in data:
+                    dosages_data = data['dosages']
+                    herb.dosages = [Dosage(**dosage_data) for dosage_data in dosages_data]
 
-            else:
-                for attr, value in data.items():
-                    setattr(herb, attr, value)
+                else:
+                    for attr, value in data.items():
+                        setattr(herb, attr, value)
 
-        
-            print(f'Committing to db...')
-            db.session.commit()
+            
+                print(f'Committing to db...')
+                db.session.commit()
 
-            response= herb.to_dict(), 200
-            return response
+                response= herb.to_dict(), 200
+                return response
     
     def delete(self, id):
         herb = Herb.query.filter_by(id=id).first()

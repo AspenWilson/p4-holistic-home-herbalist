@@ -17,6 +17,8 @@ class Dosage(db.Model, SerializerMixin):
     
     herb = db.relationship('Herb', back_populates='dosages')
 
+    serialize_rules=('-herb',)
+
 
     @validates('dosage_form')
     def validate_dosage_form(self, key, dosage_form):
