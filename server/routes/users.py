@@ -31,7 +31,7 @@ class Login(Resource):
 
 class CheckSession(Resource):
     def get(self):
-        user = User.query.filter_by(id=session['user_id']).first()
+        user = User.query.filter_by(id=session.get('user_id')).first()
         if user:
             response = user.to_dict(), 200
             return response

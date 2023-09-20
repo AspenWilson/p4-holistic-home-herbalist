@@ -19,7 +19,7 @@ class Recipe(db.Model, SerializerMixin):
 
     entered_by = db.relationship('User', back_populates='entered_recipes')
     
-    ingredients = db.relationship('Ingredient',back_populates='recipe')
+    ingredients = db.relationship('Ingredient',back_populates='recipe', cascade='all, delete-orphan')
     
     saved_by = db.relationship('User', secondary='user_saved_recipes', back_populates='saved_recipes')
 
@@ -28,6 +28,8 @@ class Recipe(db.Model, SerializerMixin):
     herbs = db.relationship('Herb', secondary='herb_recipe_association', back_populates='recipes')
     
     comments = db.relationship('Comment', back_populates='recipe')
+
+    serialize_rules=('-herbs.recipes','-properties.recipes', '-comments.recipes', '-saved_by', '-entered_by', '-ingredients.recipe', '-ingredients.herb', '-herbs.entered_on', '-herbs.dosages', '-herbs.ingredients', '-herbs.image_url', '-herbs.properties', '-herbs.description', '-properties.entered_on', '-properties.description')
     
     @property
     def unique_properties(self):

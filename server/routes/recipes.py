@@ -2,10 +2,11 @@ from flask_restful import Resource, Api
 from models.models import User
 from config import *
 from flask import Flask, request, session, abort
-from models.models import Recipe, Ingredient
+from models.models import Recipe, Ingredient, Herb
 
 class Recipes(Resource):
     def get(self):
+        # import pdb; pdb.set_trace()
         all_recipes = [recipe.to_dict() for recipe in Recipe.query.all()]
         return all_recipes, 200
     
@@ -18,9 +19,20 @@ class Recipes(Resource):
         )
 
         if 'ingredients' in data:
-            ingredients_data = data.get('dosages', [])
+            ingredients_data = data.get('ingredients', [])
             ingredients = [Ingredient(**ingredient_data) for ingredient_data in ingredients_data]
             new_recipe.ingredients = ingredients
+
+            herb_ids = [ingredient_data.get('herb_id') for ingredient_data in ingredients_data]
+
+            if herb_ids:
+                herbs = [Herb.query.get(herb_id) for herb_id in herb_ids]
+                new_recipe.herbs = herbs
+
+                properties = []
+                for herb in herbs:
+                    properties.extend(herb.properties)
+                new_recipe.properties = list(set(properties))
         
 
         db.session.add(new_recipe)
@@ -31,7 +43,7 @@ class Recipes(Resource):
 
 class RecipesByID(Resource):
     def get(self, id):
-        recipe = Recipe.query.filter_by(id=id).all()
+        recipe = Recipe.query.filter_by(id=id).first()
 
         if not recipe:
             return {'error': 'Recipe not found'}, 404
