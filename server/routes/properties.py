@@ -1,4 +1,4 @@
-from flask_restful import Resource, Api
+from flask_restful import Resource
 from models.models import User
 from config import *
 from flask import Flask, request, session, abort
@@ -28,7 +28,6 @@ class Properties(Resource):
         db.session.commit()
 
         response = new_property.to_dict(), 201
-
         return response
     
 class PropertiesByID(Resource):
@@ -42,32 +41,37 @@ class PropertiesByID(Resource):
     
     def patch(self, id):
         prop = Property.query.filter_by(id=id).first()
+        if not prop:
+            return {'error': 'Property not found'}, 404
         current_user = User.query.filter_by(id=session.get('user_id')).first()
         if prop:
             if prop.entered_by_id == session.get('user_id') or current_user.admin == 1:
-                try: 
                     data = request.get_json()
 
                     for key in data.keys():
                         if key !="id" and hasattr(prop,key):
                             setattr(prop, key, data[key])
-                    db.session.add(prop)
                     db.session.commit()
 
-                    response= prop.to_dict(), 200
+                    response= prop.to_dict(), 202
                     return response
-                except:
-                    return {'error': 'Property not found'}, 404
+            else:  
+                return {'error':'Unauthorized'}, 401     
     
     def delete(self, id):
         prop = Property.query.filter_by(id=id).first()
         if not prop:
             return {'error': 'Property not found'}, 404
-        db.session.delete(prop)
-        db.session.commit()
+        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        if prop:
+            if prop.entered_by_id == session.get('user_id') or current_user.admin == 1:
+                db.session.delete(prop)
+                db.session.commit()
 
-        response = 'Property deleted', 204
-        return response  
+                return {'message': 'Property deleted'}, 204 
+            
+            else:
+                return {'error':'Unauthorized'}, 401
 
 api.add_resource(Properties, '/properties')
 api.add_resource(PropertiesByID, '/properties/<int:id>')

@@ -74,25 +74,32 @@ class HerbsByID(Resource):
                     herb.dosages = [Dosage(**dosage_data) for dosage_data in dosages_data]
 
                 else:
-                    for attr, value in data.items():
-                        setattr(herb, attr, value)
+                    for key in data.keys():
+                        if key !="id" and hasattr(herb,key):
+                            setattr(herb, key, data[key])
+                    db.session.commit()
 
-            
-                print(f'Committing to db...')
-                db.session.commit()
-
-                response= herb.to_dict(), 200
+                response= herb.to_dict(), 202
                 return response
+            else:
+                return {'error':'Unauthorized'}, 401
     
     def delete(self, id):
         herb = Herb.query.filter_by(id=id).first()
-        if not herb:
-            return {'error': 'Not found'}, 404
-        db.session.delete(herb)
-        db.session.commit()
 
-        response = 'Herb deleted', 204
-        return response        
+        if not herb:
+            return {'error': 'Herb not found'}, 404
+        
+        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        if herb:
+            if herb.entered_by_id == session.get('user_id') or current_user.admin == 1:
+                db.session.delete(herb)
+                db.session.commit()
+            
+                return {'message':'Herb deleted'}, 204
+
+            else:
+                return {'error':'Unauthorized'}  , 401     
     
 api.add_resource(Herbs, '/herbs')
 api.add_resource(HerbsByID, '/herbs/<int:id>')

@@ -1,12 +1,10 @@
-from flask_restful import Resource, Api
-from models.models import User
+from flask_restful import Resource
 from config import *
-from flask import Flask, request, session, abort
-from models.models import Recipe, Ingredient, Herb
+from flask import Flask, request, session
+from models.models import Recipe, Ingredient, Herb, User
 
 class Recipes(Resource):
     def get(self):
-        # import pdb; pdb.set_trace()
         all_recipes = [recipe.to_dict() for recipe in Recipe.query.all()]
         return all_recipes, 200
     
@@ -58,31 +56,42 @@ class RecipesByID(Resource):
             return {'error': 'Recipe not found'}, 404
 
         if recipe:
+            current_user = User.query.filter_by(id=session.get('user_id')).first()
+            if recipe.entered_by_id == session.get('user_id') or current_user.admin == 1:
 
-            if 'ingredients' in data:
-                ingredients_data = data['dosages']
-                recipe.ingredients = [Ingredient(**ingredient_data) for ingredient_data in ingredients_data]
+                if 'ingredients' in data:
+                    ingredients_data = data['dosages']
+                    recipe.ingredients = [Ingredient(**ingredient_data) for ingredient_data in ingredients_data]
 
+                else:
+                    for attr, value in data.items():
+                        setattr(recipe, attr, value)
+            
+                db.session.commit()
+
+                response = recipe.to_dict(), 201
+                return response
+            
             else:
-                for attr, value in data.items():
-                    setattr(recipe, attr, value)
-        
-            db.session.commit()
-
-            response = recipe.to_dict(), 201
-            return response
+                return {'error':'Unauthorized'}, 401
     
     def delete(self, id):
         recipe = Recipe.query.filter_by(id=id).first()
 
         if not recipe:
             return {'error':'Recipe not found'}, 404
-        
-        db.session.delete(recipe)
-        db.session.commit()
 
-        response = 'Recipe deleted', 204
-        return response
+        if recipe:
+            current_user = User.query.filter_by(id=session.get('user_id')).first()
+            if recipe.entered_by_id == session.get('user_id') or current_user.admin == 1:
+        
+                db.session.delete(recipe)
+                db.session.commit()
+
+                return {'message':'Recipe deleted'}, 204
+            
+            else:
+                return {'error':'Unauthorized'}, 401
 
     
 api.add_resource(Recipes, '/recipes')
