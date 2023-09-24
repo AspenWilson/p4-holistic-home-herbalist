@@ -3,13 +3,15 @@ from models.models import User
 from config import *
 from flask import Flask, request, session, abort
 from models.models import Property, User
+from .helpers import get_all, get_first, get_current_user, unauth_error, unfound_error, deleted_msg
 
 class Properties(Resource):
     def get(self):
-        property_list = [prop.to_dict() for prop in Property.query.all()]
-        response = property_list, 200
+        all_properties = get_all(Property)
+        # property_list = [prop.to_dict() for prop in Property.query.all()]
+        # response = property_list, 200
 
-        return response
+        return all_properties, 200
     
     def post(self):
         data = request.get_json()
@@ -27,25 +29,23 @@ class Properties(Resource):
         db.session.add(new_property)
         db.session.commit()
 
-        response = new_property.to_dict(), 201
-        return response
+        return new_property.to_dict(), 201
     
 class PropertiesByID(Resource):
     def get(self, id):
-        prop = Property.query.filter_by(id=id).first()
+        prop = get_first(Property, 'id', id)
         if not prop:
-            return {'error': 'Property not found'}, 404
+            return unfound_error('Property')
         
-        response = prop.to_dict(), 200
-        return response
+        return prop.to_dict(), 200
     
     def patch(self, id):
-        prop = Property.query.filter_by(id=id).first()
+        prop = get_first(Property, 'id', id)
         if not prop:
-            return {'error': 'Property not found'}, 404
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+            return unfound_error('Property')
+        current_user = get_current_user()
         if prop:
-            if prop.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if prop.entered_by_id == session.get('user_id') or current_user.admin == '1':
                     data = request.get_json()
 
                     for key in data.keys():
@@ -56,22 +56,23 @@ class PropertiesByID(Resource):
                     response= prop.to_dict(), 202
                     return response
             else:  
-                return {'error':'Unauthorized'}, 401     
+                return unauth_error    
     
     def delete(self, id):
-        prop = Property.query.filter_by(id=id).first()
+        prop = get_first(Property, 'id', id)
         if not prop:
-            return {'error': 'Property not found'}, 404
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+            return unfound_error('Property')
+        
+        current_user = get_current_user()
         if prop:
-            if prop.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if prop.entered_by_id == session.get('user_id') or current_user.admin == '1':
                 db.session.delete(prop)
                 db.session.commit()
 
-                return {'message': 'Property deleted'}, 204 
+                return deleted_msg('Property')
             
             else:
-                return {'error':'Unauthorized'}, 401
+                return unauth_error
 
 api.add_resource(Properties, '/properties')
 api.add_resource(PropertiesByID, '/properties/<int:id>')

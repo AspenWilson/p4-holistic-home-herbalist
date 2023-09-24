@@ -19,6 +19,8 @@ class Ingredient(db.Model, SerializerMixin):
     herb = db.relationship('Herb', back_populates='ingredients')
     recipe = db.relationship('Recipe', back_populates='ingredients')
 
+    serialize_rules = ('-herb.recipes', '-herb.dosages', '-herb.entered_by', '-herb.properties', '-recipe', '-herb.latin_name', '-herb.description', '-herb.image_url', '-herb.entered_on', '-herb.ingredients', '-herb.warnings', '-herb.id')
+
 
     @validates('amount')
     def validate_amount(self, key, amount):

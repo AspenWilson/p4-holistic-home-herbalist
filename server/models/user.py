@@ -24,7 +24,7 @@ class User(db.Model, SerializerMixin):
     entered_properties = db.relationship('Property', back_populates='entered_by')
     comments = db.relationship('Comment', back_populates = 'user')
 
-    serialize_rules = ('-entered_herbs.entered_by_id', '-saved_herbs.entered_by_id', '-entered_herbs.entered_by', '-entered_herbs.description', '-entered_herbs.warnings', '-entered_herbs.saved_by', '-entered_herbs.dosages', '-entered_herbs.ingredients', '-entered_herbs.recipes', '-entered_herbs.properties')
+    serialize_rules = ('-saved_herbs.entered_by_id',   '-entered_herbs', '-entered_properties', '-entered_recipes', '-saved_recipes.ingredients', '-saved_recipes.comments', '-saved_recipes.properties', '-saved_recipes.directions', '-saved_recipes.herbs', '-saved_herbs.recipes', '-saved_herbs.properties', '-saved_herbs.description', '-saved_herbs.warnings', '-saved_herbs.latin_name','-saved_herbs.dosages', '-saved_herbs.ingredients', '-saved_recipes.entered_on', '-saved_herbs.entered_on', '-saved_recipes.entered_by_id')
 
     @hybrid_property
     def password_hash(self):

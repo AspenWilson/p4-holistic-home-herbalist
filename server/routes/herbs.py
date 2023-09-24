@@ -1,13 +1,13 @@
-from flask_restful import Resource, Api
-from models.models import User
+from flask_restful import Resource
 from config import *
-from flask import Flask, request, session, abort, make_response
-from models.models import Herb, User, Property, Dosage
+from flask import Flask, request, session, abort
+from models.models import Herb, Property, Dosage
+from .helpers import get_current_user, get_all, unauth_error, unfound_error, get_first, deleted_msg
 
 
 class Herbs(Resource):
     def get(self):
-        all_herbs = [herb.to_dict() for herb in Herb.query.all()]
+        all_herbs = get_all(Herb)
         return all_herbs, 200
     
     def post(self):
@@ -37,30 +37,28 @@ class Herbs(Resource):
             db.session.add(new_herb)
             db.session.commit()
 
-            response = new_herb.to_dict(), 201
-
-            return response
+            return new_herb.to_dict(), 201
         
         except ValueError as e:
             abort(422, e.args[0])
 
 class HerbsByID(Resource):
     def get(self, id):
-        herb = Herb.query.filter_by(id=id).first()
+        herb = get_first(Herb, 'id', id)
         if not herb:
-            return {'error': 'Not found'}, 404
-        response = herb.to_dict(), 200
-        return response
+            return unfound_error('Herb')
+        
+        return herb.to_dict(), 200
     
     def patch(self, id):
-        herb = Herb.query.filter_by(id=id).first()
+        herb = get_first(Herb, 'id', id)
 
         if not herb:
-            return {'error': 'Herb not found'}, 404
+            return unfound_error('Herb')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if herb:
-            if herb.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if herb.entered_by_id == session.get('user_id') or current_user.admin == '1':
                 data = request.get_json()
 
                 if 'property_ids' in data:
@@ -79,27 +77,27 @@ class HerbsByID(Resource):
                             setattr(herb, key, data[key])
                     db.session.commit()
 
-                response= herb.to_dict(), 202
-                return response
+                return herb.to_dict(), 202
+
             else:
-                return {'error':'Unauthorized'}, 401
+                return unauth_error
     
     def delete(self, id):
-        herb = Herb.query.filter_by(id=id).first()
+        herb = get_first(Herb, 'id', id)
 
         if not herb:
-            return {'error': 'Herb not found'}, 404
+            return unfound_error('Herb')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if herb:
-            if herb.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if herb.entered_by_id == session.get('user_id') or current_user.admin == '1':
                 db.session.delete(herb)
                 db.session.commit()
             
-                return {'message':'Herb deleted'}, 204
+                return deleted_msg('Herb')
 
             else:
-                return {'error':'Unauthorized'}  , 401     
+                return unauth_error    
     
 api.add_resource(Herbs, '/herbs')
 api.add_resource(HerbsByID, '/herbs/<int:id>')

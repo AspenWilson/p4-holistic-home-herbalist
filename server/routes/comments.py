@@ -2,28 +2,31 @@ from flask_restful import Resource
 from models.models import User, Comment, Recipe
 from config import *
 from flask import Flask, request, session
+from .helpers import get_current_user, get_all, get_first, unauth_error, unfound_error, unrelated_err
 
 class Comments(Resource):
     def get(self):
-        all_comments = [comment.to_dict() for comment in Comment.query.all()]
-        return all_comments, 200
+        return get_all(Comment), 200   
     
 
 class CommentsByID(Resource):
     def get(self, id):
-        comment = Comment.query.filter_by(id=id).first()
-        return comment.to_dict(), 200
+        comment = get_first(Comment, 'id', id)
+        if comment:
+            return comment.to_dict(), 200
+        if not comment:
+            return unfound_error('Comment')
 
     def patch(self, id):
-        comment = Comment.query.filter_by(id=id).first()
+        comment = get_first(Comment, 'id', id)
         data = request.get_json()
         
         if not comment:
-            return {'error':'Comment not found'}, 404
+            return unfound_error('Comment')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if comment:
-            if comment.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if comment.user_id == session.get('user_id') or current_user.admin == '1':
                 for attr, value in data.items():
                     setattr(comment, attr, value)
 
@@ -31,75 +34,76 @@ class CommentsByID(Resource):
                 response = comment.to_dict(), 201
                 return response
 
-            return {'error':'Unauthorized'}, 404  
+            return unauth_error 
 
     def delete(self, id):
-        comment = Comment.query.filter_by(id=id).first()
+        comment = get_first(Comment, 'id', id)
         
         if not comment:
-            return {'error':'Comment not found'}, 404
+            return unfound_error('Comment')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if comment:
-            if comment.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if comment.user_id == session.get('user_id') or current_user.admin == '1':
                 db.session.delete(comment)
+                db.session.commit()
                 return {'message':'Comment deleted'}, 204
             
-            return {'error':'Unauthorized'}, 401 
+            return unauth_error 
 
 class UserComments(Resource):
     def get(self, id):
-        user = User.query.filter_by(id=id).first()
+        user = get_first(User, 'id', id)
         if not user:
-            return {'error': 'User not found'}, 404
+            return unfound_error('User')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if user:
-            if user.id == session.get('user_id') or current_user.admin == 1:
+            if user.id == session.get('user_id') or current_user.admin == '1':
                 comments = [comment.to_dict() for comment in user.comments]
                 return comments, 200
             
-            return {'error':'Unauthorized'}, 401
+            return unauth_error
         
     
 class UserCommentsByID(Resource):
     def get(self, id, comment_id):
-        user = User.query.filter_by(id=id).first()
+        user = get_first(User, 'id', id)
         if not user:
-            return {'error': 'User not found'}, 404
+            return unfound_error('User')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if user:
-            if user.id == session.get('user_id') or current_user.admin == 1:
-                comment = Comment.filter_by(id=comment_id).first()
+            if user.id == session.get('user_id') or current_user.admin == '1':
+                comment = get_first(Comment, 'id', comment_id)
                 if not comment:
-                    return {'error':'Comment not found.'}, 404
+                    return unfound_error('Comment')
                 
-                if comment.entered_by_id is not user.id:
+                if comment.user_id is not user.id:
                     return {'error':'This comment was not posted by this user. '}, 409
                 
                 if comment:
                     response = comment.to_dict(), 200
                     return response
             
-            return {'error':'Unauthorized'}, 401
+            return unauth_error
     
     def patch(self, id, comment_id):
-        user = User.query.filter_by(id=id).first()
+        user = get_first(User, 'id', id)
         if not user:
-            return {'error': 'User not found'}, 404
+            return unfound_error('User')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if user:
-            if user.id == session.get('user_id') or current_user.admin == 1:
-                comment = Comment.filter_by(id=comment_id).first()
+            if user.id == session.get('user_id') or current_user.admin == '1':
+                comment = get_first(Comment, 'id', comment_id)
                 if not comment:
-                    return {'error':'Comment not found.'}, 404
+                    return unfound_error('Comment')
                 
-                if comment.entered_by_id is not current_user.id:
+                if comment.user_id is not user.id:
                     return {'error':'This comment was not posted by this user. '}, 409
                 
-                if comment.entered_by_id == current_user.id:
+                if comment.user_id == user.id :
                     data = request.get_json()
                     for attr, value in data.items():
                         setattr(comment, attr, value)
@@ -109,42 +113,42 @@ class UserCommentsByID(Resource):
                 response= comment.to_dict(), 202
                 return response
 
-            return {'error':'Unauthorized'}, 401  
+            return unauth_error  
 
     def delete(self, id, comment_id):
-        user = User.query.filter_by(id=id).first()
+        user = get_first(User, 'id', id)
         if not user:
-            return {'error': 'User not found'}, 404
+            return unfound_error('User')
         
-        comment = Comment.query.filter_by(id=comment_id).first()
+        comment = get_first(Comment, 'id', comment_id)
         
         if not comment:
-            return {'error': 'Comment not found.'}, 404
+            return unfound_error('Comment')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if comment:
-            if comment.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if comment.user_id == session.get('user_id') or current_user.admin == '1':
                 db.session.delete(comment)
                 db.session.commit()
 
                 return {'message': 'Comment deleted.'}, 204
         
-        return {'error': 'Unauthorized'}, 401 
+        return unauth_error 
 
 class RecipeComments(Resource):
     def get(self, id):
-        recipe = Recipe.query.filter_by(id=id).first()
+        recipe = get_first(Recipe, 'id', id)
         recipe_comments = [comment.to_dict() for comment in recipe.comments]
 
         return recipe_comments, 200
 
     def post(self, id):
-        recipe = Recipe.query.filter_by(id=id).first()
+        recipe = get_first(Recipe, 'id', id)
 
         data = request.get_json()
 
         if not recipe:
-            return {'error':'Recipe not found.'}, 404
+            return unfound_error('Recipe')
         
         if recipe:
             new_comment = Comment(
@@ -159,70 +163,71 @@ class RecipeComments(Resource):
 
 class RecipeCommentsByID(Resource):
     def get(self, id, comment_id):
-        recipe = Recipe.query.filter_by(id=id).first()
-        comment = Comment.query.filter_by(id=comment_id).first()
+        recipe = get_first(Recipe, 'id', id)
+        comment = get_first(Comment, 'id', comment_id)
         if not recipe:
-            return {'error':'Recipe not found.'}, 404
+            return unfound_error('Recipe')
         
         if not comment:
-            return {'error':'Comment not found'}, 404
+            return unfound_error('Comment')
         
         if recipe:
             if comment.recipe_id == id:
                 return comment.to_dict(), 200
             
             else:
-                return {'error':'Comment is not for this recipe.'}, 409
+                return unrelated_err('Comment', 'Recipe') 
         
 
     def patch(self, id, comment_id):
-        recipe = Recipe.query.filter_by(id=id).first()
-        comment = Comment.query.filter_by(id=comment_id)
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        recipe = get_first(Recipe, 'id', id)
+        comment = get_first(Comment, 'id', comment_id)
+        current_user = get_current_user()
         if not recipe:
-            return {'error':'Recipe not found.'}, 404
+            return unfound_error('Recipe')
         
         if recipe:
             if not comment:
-                return {'error':'Comment not found'}, 404
+                return unfound_error('Comment')
             
             if comment.recipe_id is not id:
-                return {'error':'Comment is not for this recipe'}, 409
+                return unrelated_err('Comment', 'Recipe') 
             
-            if comment.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if comment.user_id == session.get('user_id') or current_user.admin == '1':
                 data = request.get_json()
                 for attr, value in data.items():
                     setattr(comment, attr, value)
                     db.session.commit()
-                    return comment.to_dict(), 204
+                    return comment.to_dict(), 202
             
             else:
-                return {'error':'Unauthorized'}, 401
+                return unauth_error
             
 
     def delete(self, id, comment_id):
-        recipe = Recipe.query.filter_by(id=id).first()
-        comment = Comment.query.filter_by(id=comment_id)
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        recipe = get_first(Recipe, 'id', id)
+        comment = get_first(Comment, 'id', comment_id)
+        current_user = get_current_user()
         if not recipe:
-            return {'error':'Recipe not found.'}, 404
+            return unfound_error('Recipe')
         
         if recipe:
             if not comment:
-                return {'error':'Comment not found'}, 404
+                return unfound_error('Comment')
             
             if comment.recipe_id is not id:
-                return {'error':'Comment is not for this recipe'}, 409
+                return unrelated_err('Comment', 'Recipe') 
             
-            if comment.entered_by_id == session.get('user_id') or current_user.admin == 1:
+            if comment.user_id == session.get('user_id') or current_user.admin == '1':
                 db.session.delete(comment)
+                db.session.commit()
                 return {'message':'Comment deleted'}, 204
             
             else:
-                return {'error':'Unauthorized'}, 401
+                return unauth_error
 
 api.add_resource(Comments, '/comments')
-api.add_resource(CommentsByID, 'comments/<int:id>')
+api.add_resource(CommentsByID, '/comments/<int:id>')
 api.add_resource(UserComments, '/users/<int:id>/comments')
 api.add_resource(UserCommentsByID, '/users/<int:id>/comments/<int:comment_id>')
 api.add_resource(RecipeComments, '/recipes/<int:id>/comments')

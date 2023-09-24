@@ -1,7 +1,8 @@
 from flask_restful import Resource
 from models.models import User
 from config import api, db
-from flask import Flask, request, session, abort
+from flask import Flask, request, session
+from .helpers import unfound_error, unauth_error, get_all, get_first, get_current_user
 
 class SignUp(Resource):
     def post(self):
@@ -12,14 +13,13 @@ class SignUp(Resource):
         db.session.add(new_user)
         db.session.commit()
 
-        response = new_user.to_dict(), 201
-
-        return response
+        return new_user.to_dict(), 201
 
 class Login(Resource):
     def post(self):
         data = request.get_json()
         user=User.query.filter_by(username=data['username']).first()
+        
         if user and user.authenticate(data['password']):
             session['user_id'] = user.id 
             response = user.to_dict(), 202
@@ -30,12 +30,12 @@ class Login(Resource):
 
 class CheckSession(Resource):
     def get(self):
-        user = User.query.filter_by(id=session.get('user_id')).first()
+        user = get_current_user()
         if user:
-            response = user.to_dict(), 200
-            return response
+            return user.to_dict(), 200
+        
         else:
-            return {'error': 'Unauthorized'}, 401
+            return unauth_error
 
 
 class Logout(Resource):
@@ -45,64 +45,62 @@ class Logout(Resource):
 
 class Users(Resource):
     def get(self):
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
-        if current_user.admin == 1:
-            all_users = [user.to_dict() for user in User.query.all()]
-            response = all_users, 200
-            return response
-        
-        return {'error':'Unauthorized'}, 401
+        current_user = get_current_user()
+
+        if current_user.admin == '1':
+            all_users = get_all(User)
+            return all_users, 200
+
+        if current_user.admin == '0':
+            return unauth_error
 
 class UsersByID(Resource):
     def get(self, id):
-        user = User.query.filter_by(id=id).first()
+        user = get_first(User, 'id', id)
         if not user:
-            return {'error': 'User not found'}, 404
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+            return unfound_error('User')
+        current_user = get_current_user()
         if user:
-            if user.id == session.get('user_id') or current_user.admin == 1:
-                response = user.to_dict(), 200
-                return response
+            if user.id == session.get('user_id') or current_user.admin == '1':
+                return user.to_dict(), 200
             
-            return {'error':'Unauthorized'}, 401
+            return unauth_error
     
     def patch(self, id):
-        user = User.query.filter_by(id=id).first()
+        user = get_first(User, 'id', id)
 
         if not user:
-            return {'error': 'User not found'}, 404
+            return unfound_error('User')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
+        current_user = get_current_user()
         if user:
-            if user.id == session.get('user_id') or current_user.admin == 1:
+            if user.id == session.get('user_id') or current_user.admin == '1':
                 data = request.get_json()
                 for attr, value in data.items():
                     setattr(user, attr, value)
                 
                 db.session.commit()
 
-                response= user.to_dict(), 202
-                return response
+                return user.to_dict(), 202
 
-            return {'error':'Unauthorized'}, 401
+            return unauth_error
     
     def delete(self, id):
-        user = User.query.filter_by(id=id).first()
+        user = get_first(User, 'id', id)
 
         if not user:
-            return {'error': 'User not found'}, 404
+            return unfound_error('User')
         
-        current_user = User.query.filter_by(id=session.get('user_id')).first()
-        if current_user.admin == 1:
+        current_user = get_current_user()
+        if current_user.admin == '1':
 
             db.session.delete(user)
             db.session.commit()
 
             return {'message':'User deleted'}, 204
         
-        return {'error':'Unauthorized'}, 401
+        return unauth_error
     
-
 
 
 api.add_resource(SignUp, '/signup')

@@ -30,7 +30,7 @@ class Herb(db.Model, SerializerMixin):
     dosages = db.relationship('Dosage', back_populates='herb', cascade='all, delete-orphan')
     ingredients = db.relationship('Ingredient', back_populates='herb')
 
-    serialize_rules = ('-recipes.herbs', '-saved_by', '-entered_by', '-properties.entered_on', '-properties.recipes', '-dosages.herb', '-dosages.herb_id','-ingredients.herb', '-ingredients.recipe')
+    serialize_rules = ('-recipes.herbs', '-saved_by', '-entered_by', '-properties.entered_on', '-properties.recipes', '-dosages.herb', '-dosages.herb_id','-recipes')
 
     @validates('name')
     def validate_name(self, key, name):

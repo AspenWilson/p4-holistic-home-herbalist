@@ -1,24 +1,23 @@
-from flask_restful import Resource, Api
-from models.models import User
+from flask_restful import Resource
 from config import *
 from flask import Flask, request, session, abort, make_response
-from models.models import Herb, User, Property, Dosage
+from models.models import Herb, User, Dosage
+from .helpers import get_current_user, get_all, get_first, unauth_error, unfound_error, unrelated_err
 
 class HerbDosages(Resource):
     def get(self, id):
-        herb = Herb.query.filter_by(id=id)
+        herb = get_first(Herb, 'id', id)
         if not herb:
-            return {'error':'Herb not found'}, 404
+            return unfound_error('Herb')
         
         if herb:
-            dosages = [dosage.to_dict() for dosage in herb.dosages]
-
-            return dosages, 200
+            herb_dosages = [dosage.to_dict() for dosage in herb.dosages]
+            return herb_dosages, 200
     
     def post(self, id):
-        herb = Herb.query.filter_by(id=id)
+        herb = get_first(Herb, 'id', id)
         if not herb:
-            return {'error':'Herb not found'}, 404
+            return unfound_error('Herb')
         
         if herb:
             data = request.get_json()
@@ -27,76 +26,79 @@ class HerbDosages(Resource):
               dosage_description = data['dosage_description'],
               herb_id = id  
             ) 
-            herb.dosage.append(new_dosage)
+            herb.dosages.append(new_dosage)
             db.session.commit()
             return new_dosage.to_dict()
 
 
 class HerbDosagesByID(Resource):
     def get(self, id, dosage_id):
-        herb = Herb.query.filter_by(id=id)
+        herb = get_first(Herb, 'id', id)
         if not herb:
-            return {'error':'Herb not found'}, 404
+            return unfound_error('Herb')
         
         if herb:
-            dosage = Dosage.query.filter_by(id = dosage_id).first()
+            dosage = get_first(Dosage, 'id', dosage_id)
 
             if not dosage:
-                return {'error':'Dosage not found'}, 404
+                return unfound_error('Dosage')
 
             if dosage.herb_id == id:
                 return dosage.to_dict(), 200
             
             else:
-                return {'error':'This dosage is not for this herb.'}, 409
+                return unrelated_err('Dosage', 'Herb')
         
     
     def patch(self, id, dosage_id):
-        herb = Herb.query.filter_by(id=id)
+        herb = get_first(Herb, 'id', id)
         if not herb:
-            return {'error':'Herb not found'}, 404
+            return unfound_error('Herb')
         
         if herb:
-            dosage = Dosage.query.filter_by(id = dosage_id)
+            dosage = get_first(Dosage, 'id', dosage_id)
 
             if not dosage:
-                return {'error':'Dosage not found'}, 404
+                return unfound_error('Dosage')
 
             if dosage.herb_id == id:
-                current_user = User.query.filter_by(id=session.get('user_id')).first()
+                current_user = get_current_user()
                 data = request.get_json()
-                if herb.entered_by_id == session.get('user_id') or current_user.admin == 1: 
+                if herb.entered_by_id == session.get('user_id') or current_user.admin == '1': 
                     for attr, value in data.items():
                         setattr(dosage, attr, value)
                         db.session.commit()
-                        return dosage.to_dict(), 204
+                        return dosage.to_dict(), 202
                 
                 else:
-                    return {'error':'Unauthorized'}, 401
+                    return unauth_error
             
             else:
-                return {'error':'This dosage is not for this herb.'}, 409
+                return unrelated_err('Dosage', 'Herb')
     
     def delete(self, id, dosage_id):
-        herb = Herb.query.filter_by(id=id)
+        herb = get_first(Herb, 'id', id)
         if not herb:
-            return {'error':'Herb not found'}, 404
+            return unfound_error('Herb')
         
         if herb:
-            dosage = Dosage.query.filter_by(id = dosage_id)
+            dosage = get_first(Dosage, 'id', dosage_id)
+
+            if not dosage:
+                return unfound_error('Dosage')
 
             if dosage.herb_id == id:
-                current_user = User.query.filter_by(id=session.get('user_id')).first()
-                if dosage.entered_by_id == current_user.id or current_user.admin == 1:
+                current_user = get_current_user()
+                if herb.entered_by_id == current_user.id or current_user.admin == '1':
                     db.session.delete(dosage)
-                    db.session.commit
+                    db.session.commit()
                     return {'message':'Dosage deleted.'}, 204
                 
                 else:
-                    return {'error':'Unauthorized'}, 401
+                    return unauth_error
             
             else:
-                return {'error':'This dosage is not for this herb.'}, 409
+                return unrelated_err('Dosage', 'Herb')
         
 api.add_resource(HerbDosages, '/herbs/<int:id>/dosages')
 api.add_resource(HerbDosagesByID, '/herbs/<int:id>/dosages/<int:dosage_id>')
