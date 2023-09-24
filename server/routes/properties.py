@@ -1,16 +1,12 @@
 from flask_restful import Resource
-from models.models import User
 from config import *
 from flask import Flask, request, session, abort
-from models.models import Property, User
+from models.models import Property
 from .helpers import get_all, get_first, get_current_user, unauth_error, unfound_error, deleted_msg
 
 class Properties(Resource):
     def get(self):
         all_properties = get_all(Property)
-        # property_list = [prop.to_dict() for prop in Property.query.all()]
-        # response = property_list, 200
-
         return all_properties, 200
     
     def post(self):
@@ -49,14 +45,12 @@ class PropertiesByID(Resource):
                     data = request.get_json()
 
                     for key in data.keys():
-                        if key !="id" and hasattr(prop,key):
+                        if key not in ['id', 'entered_by_id']:
                             setattr(prop, key, data[key])
-                    db.session.commit()
-
-                    response= prop.to_dict(), 202
-                    return response
-            else:  
-                return unauth_error    
+                            db.session.commit()
+                            return prop.to_dict(), 202
+            
+            return unauth_error    
     
     def delete(self, id):
         prop = get_first(Property, 'id', id)

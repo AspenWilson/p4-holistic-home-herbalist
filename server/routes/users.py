@@ -76,12 +76,13 @@ class UsersByID(Resource):
         if user:
             if user.id == session.get('user_id') or current_user.admin == '1':
                 data = request.get_json()
-                for attr, value in data.items():
-                    setattr(user, attr, value)
+                for key in data.keys():
+                    if key not in ['id', 'admin']:
+                        setattr(user, key, data[key])
                 
-                db.session.commit()
+                        db.session.commit()
 
-                return user.to_dict(), 202
+                        return user.to_dict(), 202
 
             return unauth_error
     

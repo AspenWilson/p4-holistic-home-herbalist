@@ -65,22 +65,27 @@ class HerbsByID(Resource):
                     property_ids = data['property_ids']
 
                     properties = Property.query.filter(Property.id.in_(property_ids)).all()
-                    herb.properties = properties
+                    herb.properties.extend(properties)
 
                 if 'dosages' in data:
                     dosages_data = data['dosages']
-                    herb.dosages = [Dosage(**dosage_data) for dosage_data in dosages_data]
+                    for dosage_data in dosages_data:
+                        new_dosage = Dosage(**dosage_data)
+                        herb.dosages.append(new_dosage)
 
                 else:
                     for key in data.keys():
-                        if key !="id" and hasattr(herb,key):
+                        if key not in ['id', 'entered_by_id']:
                             setattr(herb, key, data[key])
-                    db.session.commit()
-
+                            db.session.commit()
+                            return herb.to_dict(), 202
+                        
+                        return unauth_error
+                                        
+                db.session.commit()
                 return herb.to_dict(), 202
 
-            else:
-                return unauth_error
+            return unauth_error
     
     def delete(self, id):
         herb = get_first(Herb, 'id', id)
@@ -91,6 +96,12 @@ class HerbsByID(Resource):
         current_user = get_current_user()
         if herb:
             if herb.entered_by_id == session.get('user_id') or current_user.admin == '1':
+                for ingredient in herb.ingredients:
+                    db.session.delete(ingredient)
+                
+                for dosage in herb.dosages:
+                    db.session.delete(dosage)
+                    
                 db.session.delete(herb)
                 db.session.commit()
             

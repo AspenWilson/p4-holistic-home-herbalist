@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from config import *
 from flask import Flask, request, session
-from models.models import Recipe, Ingredient, Herb, User
+from models.models import Recipe, Ingredient, Herb
 from .helpers import get_all, get_current_user, get_first, unauth_error, unfound_error
 
 class Recipes(Resource):
@@ -49,7 +49,6 @@ class RecipesByID(Resource):
 
     def patch(self,id):
         recipe = get_first(Recipe,'id', id)
-        data = request.get_json()
 
         if not recipe:
             return unfound_error('Recipe')
@@ -57,32 +56,39 @@ class RecipesByID(Resource):
         if recipe:
             current_user = get_current_user()
             if recipe.entered_by_id == session.get('user_id') or current_user.admin == '1':
+                data = request.get_json()
 
                 if 'ingredients' in data:
                     ingredients_data = data['ingredients']
-                    recipe.ingredients = [Ingredient(**ingredient_data) for ingredient_data in ingredients_data]
-                    
-                    herb_ids = data.get('herb_id')
+                    for ingredient_data in ingredients_data:
+                        new_ingredient = Ingredient(
+                            herb_id = ingredient_data['herb_id'],
+                            amount = ingredient_data['amount'],
+                            amount_type = ingredient_data['amount_type'],
+                            herb_type = ingredient_data['herb_type'],
+                            recipe_id = recipe.id
+                        )
+                        recipe.ingredients.append(new_ingredient)
+                        herb = get_first(Herb, 'id', ingredient_data['herb_id'])
+                        if herb not in recipe.herbs:
+                            recipe.herbs.append(herb)
 
-                    if herb_ids:
-                        herbs = [Herb.query.get(herb_id) for herb_id in herb_ids]
-                        recipe.herbs = herbs
-
-                        properties = []
-                        for herb in herbs:
-                                properties.extend(herb.properties)
-                        recipe.properties = list(set(properties))
+                        for property in herb.properties:
+                            if property not in recipe.properties:
+                                recipe.properties.append(property)
 
                 else:
-                    for attr, value in data.items():
-                        setattr(recipe, attr, value)
+                    for key in data.keys():
+                        if key not in ['id', 'entered_by_id']:
+                            setattr(recipe, key, data[key])
+                            db.session.commit()
+                            return recipe.to_dict(), 202
+                        return unauth_error
             
                 db.session.commit()
-
-                return recipe.to_dict(), 201
+                return recipe.to_dict(), 202
             
-            else:
-                return unauth_error
+            return unauth_error
     
     def delete(self, id):
         recipe = get_first(Recipe,'id', id)
@@ -93,14 +99,18 @@ class RecipesByID(Resource):
         if recipe:
             current_user = get_current_user()
             if recipe.entered_by_id == session.get('user_id') or current_user.admin == '1':
-        
+                for ingredient in recipe.ingredients:
+                    db.session.delete(ingredient)
+                
+                for comment in recipe.comments:
+                    db.session.delete(comment)
+
                 db.session.delete(recipe)
                 db.session.commit()
 
                 return {'message':'Recipe deleted'}, 204
-            
-            else:
-                return unauth_error
+
+            return unauth_error
 
     
 api.add_resource(Recipes, '/recipes')

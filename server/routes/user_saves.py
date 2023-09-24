@@ -2,7 +2,7 @@ from flask_restful import Resource
 from models.models import User, Recipe, Herb
 from config import api, db
 from flask import Flask, request, session
-from .helpers import get_current_user, get_all, get_first, unauth_error, unfound_error, unrelated_err
+from .helpers import get_current_user, get_first, unauth_error, unfound_error
 
 class UserSavedRecipes(Resource):
     def get(self,id):
@@ -60,14 +60,16 @@ class UserSavedRecipesByID(Resource):
         current_user = get_current_user()
         if user:
             if user.id == session.get('user_id') or current_user.admin == '1':
-                saved_recipes = [saved_recipe.to_dict() for saved_recipe in user.saved_recipes]
-                
-                for recipe in saved_recipes:
-                    if recipe['id'] ==recipe_id:
-                        return recipe, 200
+                recipe = get_first(Recipe, 'id', recipe_id)
 
-                    else:
-                        return {'error':'Recipe not found in saved recipes.'}, 404
+                if not recipe:
+                    return unfound_error('Recipe')
+                
+                if recipe in user.saved_recipes:
+                    return recipe.to_dict(), 200
+                
+                if recipe not in user.saved_recipes:
+                    return {'error':'Recipe not found in saved recipes.'}, 404
         
         return unauth_error
 

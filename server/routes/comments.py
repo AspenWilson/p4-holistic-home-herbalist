@@ -27,12 +27,11 @@ class CommentsByID(Resource):
         current_user = get_current_user()
         if comment:
             if comment.user_id == session.get('user_id') or current_user.admin == '1':
-                for attr, value in data.items():
-                    setattr(comment, attr, value)
-
-                db.session.commit() 
-                response = comment.to_dict(), 201
-                return response
+                for key in data.keys():
+                    if key not in ['id', 'user_id', 'recipe_id']:
+                        setattr(comment, key, data[key])
+                        db.session.commit() 
+                        return comment.to_dict(), 201
 
             return unauth_error 
 
@@ -105,13 +104,11 @@ class UserCommentsByID(Resource):
                 
                 if comment.user_id == user.id :
                     data = request.get_json()
-                    for attr, value in data.items():
-                        setattr(comment, attr, value)
-                
-                        db.session.commit()
-
-                response= comment.to_dict(), 202
-                return response
+                    for key in data.keys():
+                        if key not in ['id', 'user_id', 'recipe_id']:
+                            setattr(comment, key, data[key])
+                            db.session.commit()
+                            return comment.to_dict(), 202
 
             return unauth_error  
 
@@ -144,7 +141,6 @@ class RecipeComments(Resource):
 
     def post(self, id):
         recipe = get_first(Recipe, 'id', id)
-
         data = request.get_json()
 
         if not recipe:
@@ -195,13 +191,13 @@ class RecipeCommentsByID(Resource):
             
             if comment.user_id == session.get('user_id') or current_user.admin == '1':
                 data = request.get_json()
-                for attr, value in data.items():
-                    setattr(comment, attr, value)
-                    db.session.commit()
-                    return comment.to_dict(), 202
+                for key in data.keys():
+                    if key not in ['id', 'user_id', 'recipe_id']:
+                        setattr(comment, key, data[key])
+                        db.session.commit()
+                        return comment.to_dict(), 202
             
-            else:
-                return unauth_error
+            return unauth_error
             
 
     def delete(self, id, comment_id):
@@ -223,8 +219,7 @@ class RecipeCommentsByID(Resource):
                 db.session.commit()
                 return {'message':'Comment deleted'}, 204
             
-            else:
-                return unauth_error
+            return unauth_error
 
 api.add_resource(Comments, '/comments')
 api.add_resource(CommentsByID, '/comments/<int:id>')

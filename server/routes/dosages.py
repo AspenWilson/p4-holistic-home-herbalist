@@ -1,8 +1,8 @@
 from flask_restful import Resource
 from config import *
-from flask import Flask, request, session, abort, make_response
-from models.models import Herb, User, Dosage
-from .helpers import get_current_user, get_all, get_first, unauth_error, unfound_error, unrelated_err
+from flask import Flask, request, session
+from models.models import Herb, Dosage
+from .helpers import get_current_user, get_first, unauth_error, unfound_error, unrelated_err
 
 class HerbDosages(Resource):
     def get(self, id):
@@ -46,8 +46,7 @@ class HerbDosagesByID(Resource):
             if dosage.herb_id == id:
                 return dosage.to_dict(), 200
             
-            else:
-                return unrelated_err('Dosage', 'Herb')
+            return unrelated_err('Dosage', 'Herb')
         
     
     def patch(self, id, dosage_id):
@@ -65,16 +64,15 @@ class HerbDosagesByID(Resource):
                 current_user = get_current_user()
                 data = request.get_json()
                 if herb.entered_by_id == session.get('user_id') or current_user.admin == '1': 
-                    for attr, value in data.items():
-                        setattr(dosage, attr, value)
-                        db.session.commit()
-                        return dosage.to_dict(), 202
-                
-                else:
-                    return unauth_error
+                    for key in data.keys():
+                        if key not in ['id', 'herb_id']:
+                            setattr(dosage, key, data[key])
+                            db.session.commit()
+                            return dosage.to_dict(), 202
+
+                return unauth_error
             
-            else:
-                return unrelated_err('Dosage', 'Herb')
+            return unrelated_err('Dosage', 'Herb')
     
     def delete(self, id, dosage_id):
         herb = get_first(Herb, 'id', id)
@@ -94,11 +92,9 @@ class HerbDosagesByID(Resource):
                     db.session.commit()
                     return {'message':'Dosage deleted.'}, 204
                 
-                else:
-                    return unauth_error
+                return unauth_error
             
-            else:
-                return unrelated_err('Dosage', 'Herb')
+            return unrelated_err('Dosage', 'Herb')
         
 api.add_resource(HerbDosages, '/herbs/<int:id>/dosages')
 api.add_resource(HerbDosagesByID, '/herbs/<int:id>/dosages/<int:dosage_id>')

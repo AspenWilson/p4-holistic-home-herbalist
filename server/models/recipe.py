@@ -27,7 +27,7 @@ class Recipe(db.Model, SerializerMixin):
 
     herbs = db.relationship('Herb', secondary='herb_recipe_association', back_populates='recipes')
     
-    comments = db.relationship('Comment', back_populates='recipe')
+    comments = db.relationship('Comment', back_populates='recipe', cascade='all, delete-orphan')
 
     serialize_rules=('-herbs.recipes','-properties.recipes', '-comments.recipes', '-saved_by', '-entered_by', '-ingredients.recipe', '-ingredients.herb', '-herbs.entered_on', '-herbs.dosages', '-herbs.ingredients', '-herbs.image_url', '-herbs.properties', '-herbs.description', '-properties.entered_on', '-properties.description')
     

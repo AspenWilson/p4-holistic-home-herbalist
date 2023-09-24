@@ -1,8 +1,8 @@
 from flask_restful import Resource
 from config import *
 from flask import Flask, request, session
-from models.models import Recipe, Ingredient, Herb, User
-from .helpers import get_all, get_current_user, get_first, unauth_error, unfound_error, unrelated_err
+from models.models import Recipe, Ingredient, Herb
+from .helpers import get_current_user, get_first, unauth_error, unfound_error, unrelated_err
 
 class RecipeIngredients(Resource):
     def get(self, id):
@@ -23,29 +23,31 @@ class RecipeIngredients(Resource):
             return unfound_error('Recipe')
 
         if recipe:
-            new_ingredient = Ingredient(
-                amount = data['amount'],
-                amount_type = data['amount_type'],
-                herb_type = data['herb_type'],
-                recipe_id = id,
-                herb_id = data['herb_id']
-            )
-
-            herb_id = data.get('herb_id')
+            herb_id = data.get('herb_id') 
 
             if herb_id:
-                herb = Herb.query.get(herb_id) 
-                recipe.herbs.append = herb
+                herb = get_first(Herb, 'id', herb_id)
 
-                properties = []
+                if herb:
+                    if herb not in recipe.herbs:
+                        recipe.herbs.append(herb)
 
-                properties.extend(herb.properties)
-                recipe.properties.append = list(set(properties))
-            
+                        for property in herb.properties:
+                            if property not in recipe.properties:
+                                recipe.properties.append(property)
+
+            new_ingredient = Ingredient(
+                amount=data['amount'],
+                amount_type=data['amount_type'],
+                herb_type=data['herb_type'],
+                recipe_id=id,
+                herb_id=herb_id  
+            )
+
             db.session.add(new_ingredient)
             db.session.commit()
 
-        recipe.ingredients.append(new_ingredient)
+            recipe.ingredients.append(new_ingredient)
 
         return new_ingredient.to_dict(), 201
 
@@ -86,13 +88,13 @@ class RecipeIngredientsByID(Resource):
                 return unrelated_err('Ingredient', 'Recipe')
                     
             else:
-                for attr, value in data.items():
-                    setattr(ingredient, attr, value)
-                    db.session.commit()
-                    return ingredient.to_dict(), 204
-        
-        else:
-            return unauth_error
+                for key in data.keys():
+                    if key not in ['id', 'herb_id', 'recipe_id']:
+                        setattr(ingredient, key, data[key])
+                        db.session.commit()
+                        return ingredient.to_dict(), 202
+
+        return unauth_error
 
     def delete(self, id, ingredient_id):
         recipe = get_first(Recipe, 'id', id)
@@ -115,8 +117,7 @@ class RecipeIngredientsByID(Resource):
                 db.session.commit()
                 return {'message':'Ingredient deleted'}, 204
         
-        else:
-            return unauth_error
+        return unauth_error
 
 
 api.add_resource(RecipeIngredients, '/recipes/<int:id>/ingredients')
