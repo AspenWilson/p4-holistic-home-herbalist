@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+//{ useEffect, useState } 
 // import { Switch, Route } from "react-router-dom";
 // import {createGlobalStyle} from 'styled-components';
 
 
 function App() {
 
-  const [herbs, setHerbs] = useState([])
+  // const [herbs, setHerbs] = useState([])
   // const [properties, setProperties] = useState([])
   // const [recipes, setRecipes] = useState([])
   // const [user, setUser] = useState(null)
@@ -17,11 +18,13 @@ function App() {
   //   fetchRecipes()
   // },[])
 
-  useEffect(() => {
-    fetch('/herbs')
-    .then(resp => resp.json())
-    .then(herbs => setHerbs(herbs))
-  }, [])
+  // useEffect(() => {
+  //   fetch('/herbs')
+  //   .then(resp => resp.json())
+  //   .then(herbs => setHerbs(herbs))
+  // }, [])
+
+ 
 
   // const fetchProperties = () => (
   //   fetch('/properties')
