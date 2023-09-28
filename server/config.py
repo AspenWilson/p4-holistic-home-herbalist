@@ -1,23 +1,31 @@
 # Standard library imports
 import os
 # Remote library imports
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
+load_dotenv()
 
 # Local imports
 
 # Instantiate app, set attributes
-app = Flask(__name__)
-app.secret_key = b'\x0f\xf1\xd6\xd4\x8fS0m\xad\xb2t\x97\xa5\x0eAc'
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/build',
+    template_folder='..client/build')
+# app.secret_key = b'\x0f\xf1\xd6\xd4\x8fS0m\xad\xb2t\x97\xa5\x0eAc'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
+
+app.secret_key = os.environ.get('SESSION_KEY')
 
 # Define metadata, instantiate db
 metadata = MetaData(naming_convention={

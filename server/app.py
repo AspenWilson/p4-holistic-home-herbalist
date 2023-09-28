@@ -7,7 +7,7 @@ from flask import request
 from flask_restful import Resource
 
 # Local imports
-from config import app, db, api
+from config import *
 # Add your model imports
 from models.models import *
 from routes.routes import *
@@ -16,8 +16,9 @@ from routes.routes import *
 # Views go here!
 
 @app.route('/')
-def index():
-    return '<h1>Phase 4 Project Server</h1>'
+@app.route('/<int:id>')
+def index(id=0):
+    return render_template("index.html")
 
 
 if __name__ == '__main__':
