@@ -5,7 +5,7 @@ from sqlalchemy.orm import validates
 from datetime import datetime
 from .association_tables import *
 
-from config import db, bcrypt
+from app import db, bcrypt
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'

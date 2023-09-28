@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from config import *
+from app import api, db
 from flask import Flask, request, session
 from models.models import Herb, Dosage
 from .helpers import get_current_user, get_first, unauth_error, unfound_error, unrelated_err

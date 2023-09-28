@@ -4,7 +4,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from datetime import datetime
 
-from config import db
+from app import db
 
 class Dosage(db.Model, SerializerMixin):
     __tablename__ = 'dosages'

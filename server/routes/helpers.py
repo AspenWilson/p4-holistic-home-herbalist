@@ -1,5 +1,5 @@
 from models.models import User
-from config import db
+from app import db
 from flask import Flask, session
 
 # Declared variables:

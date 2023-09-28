@@ -3,7 +3,7 @@
 # Standard library imports
 from random import randint, choice as rc
 from models.models import *
-from config import app, db, api
+from app import app, db
 
 # Remote library imports
 from faker import Faker

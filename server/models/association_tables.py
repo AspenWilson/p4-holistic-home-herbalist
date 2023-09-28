@@ -1,4 +1,4 @@
-from config import db
+from app import db
 from sqlalchemy_serializer import SerializerMixin
 
 user_saved_herbs = db.Table('user_saved_herbs',

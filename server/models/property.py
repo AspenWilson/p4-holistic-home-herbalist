@@ -5,7 +5,7 @@ from sqlalchemy.orm import validates
 from datetime import datetime
 from .association_tables import *
 
-from config import db
+from app import db
 
 class Property(db.Model, SerializerMixin):
     __tablename__ = 'properties'

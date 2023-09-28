@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from config import *
+from app import api, db
 from flask import Flask, request, session, abort
 from models.models import Property
 from .helpers import get_all, get_first, get_current_user, unauth_error, unfound_error, deleted_msg

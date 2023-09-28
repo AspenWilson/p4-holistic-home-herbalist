@@ -3,7 +3,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 
-from config import db
+from app import db
 
 class Ingredient(db.Model, SerializerMixin):
     __tablename__ = 'ingredients'
