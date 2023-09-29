@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from models.models import User
-from app import api, db
-from flask import Flask, request, session
+from config import api, db
+from flask import request, session
 from .helpers import unfound_error, unauth_error, get_all, get_first, get_current_user
 
 class SignUp(Resource):

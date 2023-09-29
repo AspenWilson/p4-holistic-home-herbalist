@@ -1,6 +1,6 @@
 from flask_restful import Resource
-from app import api, db
-from flask import Flask, request, session, abort
+from config import api, db
+from flask import request, session, abort
 from models.models import Herb, Property, Dosage
 from .helpers import get_current_user, get_all, unauth_error, unfound_error, get_first, deleted_msg
 

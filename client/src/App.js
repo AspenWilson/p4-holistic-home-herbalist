@@ -1,7 +1,7 @@
 import React from "react";
 //{ useEffect, useState } 
 // import { Switch, Route } from "react-router-dom";
-// import {createGlobalStyle} from 'styled-components';
+import {createGlobalStyle} from 'styled-components';
 
 
 function App() {
@@ -56,8 +56,18 @@ function App() {
   //   })
   // }
   return (
-  <h1>Phase 4 Project Client</h1>
+    <>
+    <GlobalStyle />
+    <h1>Phase 4 Project Client</h1>
+    </>
   )
 }
 
 export default App;
+
+const GlobalStyle = createGlobalStyle`
+    body{
+      background-color: black; 
+      color:white;
+    }
+    `

@@ -1,5 +1,5 @@
-from app import db
-from sqlalchemy_serializer import SerializerMixin
+from config import db
+
 
 user_saved_herbs = db.Table('user_saved_herbs',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
