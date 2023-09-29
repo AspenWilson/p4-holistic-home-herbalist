@@ -26,10 +26,10 @@ app.json.compact = False
 app.secret_key = os.environ.get('SESSION_KEY')
 
 # Define metadata, instantiate db
-metadata = MetaData(naming_convention={
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-})
-db = SQLAlchemy(metadata=metadata)
+# metadata = MetaData(naming_convention={
+#     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+# })
+db = SQLAlchemy()
 migrate = Migrate(app, db)
 db.init_app(app)
 

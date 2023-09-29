@@ -2,8 +2,6 @@
 
 # Remote library imports
 from flask import render_template
-from dotenv import load_dotenv
-load_dotenv()
 from config import app
 from routes.routes import *
 from models.models import *
@@ -15,5 +13,5 @@ def index(id=0):
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5555, debug=True)
 
