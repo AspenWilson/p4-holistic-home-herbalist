@@ -3,6 +3,11 @@ import { Switch, Route } from "react-router-dom";
 import {createGlobalStyle} from 'styled-components';
 import Authentication from './components/Authentication'
 import NavBar from './components/NavBar'
+import Herbs from './components/Herbs'
+// import { Grid } from 'semantic-ui-react'
+import Recipes from './components/Recipes'
+import Properties from './components/Properties'
+import Home from './components/Home'
 
 
 
@@ -25,18 +30,18 @@ function App() {
   const fetchHerbs = () => (
     fetch('http://localhost:5555/herbs')
     .then(resp => resp.json())
-    .then(data => setHerbs(data))
+    .then(setHerbs)
   )
   const fetchProperties = () => (
     fetch('http://localhost:5555/properties')
     .then(resp => resp.json())
-    .then(data => setProperties(data))
+    .then(setProperties)
   )
 
   const fetchRecipes = () => (
     fetch('http://localhost:5555/recipes')
     .then(resp => resp.json())
-    .then(data => setRecipes(data))
+    .then(setRecipes)
   )
 
   const fetchUser = () => (
@@ -59,23 +64,32 @@ function App() {
   const updateUser = (user) => setUser(user)
   if(!user) return (
     <>
-    <GlobalStyle />
-    <NavBar />
-    <Authentication updateUser={updateUser}/>
+      <GlobalStyle />
+      <NavBar />
+      <Authentication updateUser={updateUser}/>
     </>
   )
   return (
     <>
     <GlobalStyle />
     <h1>Welcome!</h1>
-    <NavBar updateUser={updateUser} />
+    <NavBar updateUser={updateUser} user={user}/>
       <Switch>
-        <Route path='http://localhost:5555/herbs'>
-
+        <Route exact path="/herbs">
+          <Herbs herbs={herbs}/>
         </Route>
+        <Route exact path="/recipes">
+          <Recipes recipes={recipes}/>
+        </Route>
+        <Route exact path="/properties">
+          <Properties properties={properties}/>
         <Route exact path='/authentication'>
           <Authentication updateUser={updateUser}/>
         </Route>
+        </Route>
+        <Route exact path='/'>
+          <Home />
+        </Route>            
       </Switch>
     </>
   )
@@ -85,7 +99,7 @@ export default App;
 
 const GlobalStyle = createGlobalStyle`
     body{
-      background-color: black; 
+      background-color: #3A7C0A4D; 
       color:white;
     }
     `

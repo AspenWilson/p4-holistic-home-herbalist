@@ -1,13 +1,20 @@
 import { useState } from 'react'
-import {Link} from 'react-router-dom'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { GiHamburgerMenu } from 'react-icons/gi'
+import { Link } from 'react-router-dom'
+import { Icon } from 'semantic-ui-react'
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import '../stylesheets/NavBar.css'
 
-function NavBar({updateUser}) {
-    const [menu, setMenu] = useState(false)
+
+function NavBar({updateUser, user}) {
+    const [menuCollapse, setMenuCollapse] = useState(false)
     const history = useHistory()
    
+    const menuIconClick = () => {
+      //condition checking to change state from true to false and vice versa
+      menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
+    };
     const handleLogout = () => {
        fetch("http://localhost:5555/logout", {
          method: "DELETE",
@@ -19,52 +26,71 @@ function NavBar({updateUser}) {
        })
     }
     return (
-        <Nav> 
-         <NavH1>Holistic Home Herbalist</NavH1>
-         <Menu>
-           {!menu?
-           <div onClick={() => setMenu(!menu)}>
-             <GiHamburgerMenu size={30}/> 
-           </div>:
-           <ul>
-            <li onClick={() => setMenu(!menu)}>x</li>
-            <li><Link to='http://localhost:5555/herbs'>New Herb</Link></li>
-            <li><Link to='/'> Home</Link></li>
-            <li><Link to='/authentication'> Login/Signup</Link></li>
-            <li onClick={handleLogout}> Logout </li>
-           </ul>
-           }
-         </Menu>
+        <>
+          <div id="header">
+              {/* collapsed props to change menu size using menucollapse state */}
+            <Sidebar >
+                <Menu iconShape="circle">
+                  <MenuItem active={true} component={<Link to="/" exact/>} icon={<Icon name='home' />}>
+                    Home
+                  </MenuItem>
+                  <MenuItem component={<Link to="/profile" />} icon={<Icon name='user circle' />}>Profile</MenuItem>
+                  <MenuItem component={<Link to="/herb" />} icon={<Icon name='leaf' />}>Herbs</MenuItem>
+                  <MenuItem component={<Link to="/recipes" />} icon={<Icon name='utensils' />}>Recipes</MenuItem>
+                  <MenuItem component={<Link to="/properties" />} icon={<Icon name='unordered list' />}>Properties</MenuItem>
+                </Menu>
+                <Menu iconShape="circle">
+                  <MenuItem component={<Link to="/logout" />} icon={<Icon name='sign-out'/>}>Logout</MenuItem>
+                </Menu>
+            </Sidebar>
+          </div>
+        </>
+        // <Menu inverted vertical>
+        //     <Menu.Item>
+        //         <NavLink to="/" exact> Home </NavLink>
+        //     </Menu.Item>
+        //     <Menu.Item>
+        //         <NavLink to="/profile"> Profile </NavLink>
+        //     </Menu.Item>
+        //     <Menu.Item>
+        //         <NavLink to="/herbs"> Herbs </NavLink>
+        //     </Menu.Item>
+        //     <Menu.Item>
+        //         <NavLink to="/recipes"> Recipes </NavLink>
+        //     </Menu.Item>
+        //     <Menu.Item>
+        //         <NavLink to="/properties"> Properties </NavLink>
+        //     </Menu.Item>
+        // </Menu>
 
-        </Nav>
     )
 
 }
 
 export default NavBar
 
-    const NavH1 = styled.h1`
-font-family: 'Splash', cursive;
-`
-const Nav = styled.div`
-  display: flex;
-  justify-content:space-between;
+//     const NavH1 = styled.h1`
+// font-family: 'Splash', cursive;
+// `
+// const Nav = styled.div`
+//   display: flex;
+//   justify-content:space-between;
   
-`;
+// `;
 
-const Menu = styled.div`
-  display: flex;
-  align-items: center;
-  a{
-    text-decoration: none;
-    color:white;
-    font-family:Arial;
-  }
-  a:hover{
-    color:pink
-  }
-  ul{
-    list-style:none;
-  }
+// const Menu = styled.div`
+//   display: flex;
+//   align-items: center;
+//   a{
+//     text-decoration: none;
+//     color:white;
+//     font-family:Arial;
+//   }
+//   a:hover{
+//     color:pink
+//   }
+//   ul{
+//     list-style:none;
+//   }
   
-`;
+// `;

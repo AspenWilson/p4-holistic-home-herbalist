@@ -5,3 +5,22 @@
   --text: hsla(0, 0%, 100%, 0.88);
 }
 
+.herbImg {
+  height: 140px;
+  width: 150px
+}
+
+.herbCard {
+  margin: 2px;
+  padding:2px;
+  display: flex;
+  padding-left: 2px;
+  max-height: min-content;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  }
