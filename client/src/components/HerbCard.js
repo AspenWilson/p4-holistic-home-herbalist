@@ -1,54 +1,40 @@
 import React, {useState} from 'react'
-import { Card, Button, Grid, Image, Label } from 'semantic-ui-react'
+import { Card, Image, Label, Button } from 'semantic-ui-react'
 import "../index.css"
+import {Link} from 'react-router-dom'
+import { propertyTags } from '../helpers'
 
 function HerbCard ({herb}) {
-    const [isSelected, setIsSelected] = useState(false)
-
-    function handleClick () {
-        setIsSelected(!isSelected)
-    }
-    const herbProperties = herb.properties.map((property) => {
-        return (
-            <Label color="red" tag>{property.name}</Label>
-        )
-    })
 
     return (
-        <div>
+        <div key={herb.id}>
             <Card raised>
-                <Image
-                    src={herb.image_url}
-                    floated="left"
-                    size="small"
-                    className="herbImg"
-                    />
-                <Card.Content as='h3'>{herb.name}</Card.Content>
+                <Card.Content>
+                    <Image
+                        src={herb.image_url}
+                        floated='left'
+                        size="small"
+                        // className="herbImg"
+                        />
+                    <Card.Header>{herb.name}</Card.Header>
+                    <Card.Meta>{herb.latin_name}</Card.Meta>
+                    <Card.Description >
+                        <h3>Properties</h3>
+                        <Label.Group tag>
+                            {herb.properties.length > 0 ? (
+                            propertyTags(herb) 
+                            ) : (null)}
+                        </Label.Group>
+                    </Card.Description>
+                </Card.Content>
                 <Card.Content extra>
-                    <Label.Group tag>
-                        {herbProperties}
-                    </Label.Group>
+                        <Button basic color='green'>
+                        <Link to={`/herbs/${herb.id}`}>View Details</Link> 
+                    </Button>
                 </Card.Content>
             </Card>
         </div>
     )
 }
-
-
-                {/* <Card.Content extra>
-                    <div className='ui two buttons'>
-                    <Button basic color='green'>
-                        Approve
-                    </Button>
-                    <Button basic color='red'>
-                        Decline
-                    </Button>
-                    </div>
-                </Card.Content>
-            </Card>
-                <Card.Content extra>
-                    {isSelected ? <Button basic color='red' onClick={handleClick} className='btn'>Unsave</Button> : <Button basic color='green' onClick={handleClick}className='btn'>Saved</Button>}
-                </Card.Content>
-        </div> */}
 
     export default HerbCard

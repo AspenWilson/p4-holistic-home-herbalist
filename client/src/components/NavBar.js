@@ -1,69 +1,97 @@
-import { useState } from 'react'
-import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import React, { useContext } from 'react'
+// import { useHistory } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
-import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-import '../stylesheets/NavBar.css'
+// import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react'
+// import { UserContext } from '../context/UserContext'
 
 
-function NavBar({updateUser, user}) {
-    const [menuCollapse, setMenuCollapse] = useState(false)
-    const history = useHistory()
-   
-    const menuIconClick = () => {
-      //condition checking to change state from true to false and vice versa
-      menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
-    };
-    const handleLogout = () => {
-       fetch("http://localhost:5555/logout", {
-         method: "DELETE",
-       }).then(resp => {
-         if(resp.ok){
-             updateUser(null)
-             history.push('/authentication')
-         }
-       })
-    }
+function NavBar({user}) {
+    
+    // const handleLogout = e => {
+    //    e.preventDefault()
+    //    fetch('http://localhost:5555/logout', {
+    //     method: 'DELETE'
+    //    })
+    //    .then(() => onLogout())
+    // }
+
     return (
-        <>
-          <div id="header">
-              {/* collapsed props to change menu size using menucollapse state */}
-            <Sidebar >
-                <Menu iconShape="circle">
-                  <MenuItem active={true} component={<Link to="/" exact/>} icon={<Icon name='home' />}>
-                    Home
-                  </MenuItem>
-                  <MenuItem component={<Link to="/profile" />} icon={<Icon name='user circle' />}>Profile</MenuItem>
-                  <MenuItem component={<Link to="/herb" />} icon={<Icon name='leaf' />}>Herbs</MenuItem>
-                  <MenuItem component={<Link to="/recipes" />} icon={<Icon name='utensils' />}>Recipes</MenuItem>
-                  <MenuItem component={<Link to="/properties" />} icon={<Icon name='unordered list' />}>Properties</MenuItem>
-                </Menu>
-                <Menu iconShape="circle">
-                  <MenuItem component={<Link to="/logout" />} icon={<Icon name='sign-out'/>}>Logout</MenuItem>
-                </Menu>
-            </Sidebar>
-          </div>
-        </>
-        // <Menu inverted vertical>
-        //     <Menu.Item>
-        //         <NavLink to="/" exact> Home </NavLink>
-        //     </Menu.Item>
-        //     <Menu.Item>
-        //         <NavLink to="/profile"> Profile </NavLink>
-        //     </Menu.Item>
-        //     <Menu.Item>
-        //         <NavLink to="/herbs"> Herbs </NavLink>
-        //     </Menu.Item>
-        //     <Menu.Item>
-        //         <NavLink to="/recipes"> Recipes </NavLink>
-        //     </Menu.Item>
-        //     <Menu.Item>
-        //         <NavLink to="/properties"> Properties </NavLink>
-        //     </Menu.Item>
-        // </Menu>
+        <header>
+          <h1>
+            <Link to="/">Home</Link>
+          </h1>
+          {user ? (
+            <div>
+                {/* <li><Link to="#" onClick={ handleLogout }>Logout</Link></li> */}
+                <li><Link to="/herbs">Herbs</Link></li>
+                <li><Link to="/recipes">Recipes</Link></li>
+                <li><Link to="/properties">Properties</Link></li>
+                <li><Link to="/profile">Profile</Link></li>
+            </div>
+          ) : (
+            <Link to="/authentication">Click Here to Login</Link>
+          )}
+        </header>
+      );
 
-    )
+    // const displayOptions = 
+    // <>
+    // <li><Link to="#" onClick={ handleLogout }>Logout</Link></li>
+    // <li><Link to="/herbs">Herbs</Link></li>
+    // <li><Link to="/recipes">Recipes</Link></li>
+    // <li><Link to="/profile/:id">Profile</Link></li>
+    // </> 
+
+    // return (
+    //     <ul>
+    //     <li><Link to="/">Home</Link></li>
+    //     { displayOptions }
+    //     </ul>
+    // )
+
+    // const displayedOptions = loggedIn ? <>
+    //     <Menu.Item as={Link} to="/herbs">
+    //         <Icon name='leaf' />
+    //           Herbs
+    //     </Menu.Item>
+    //     <Menu.Item as={Link} to="/recipes">
+    //         <Icon name='utensils' />
+    //           Recipes
+    //     </Menu.Item>
+    //     <Menu.Item as={Link} to="/properties">
+    //         <Icon name='unordered list'/>
+    //           Properties
+    //     </Menu.Item>
+    //     <Menu.Item as={Link} to="/logout" onClick={handleLogout}>
+    //         <Icon name='sign-out'/>
+    //           Logout
+    //     </Menu.Item>
+    // </> : <>
+    //     <Menu.Item as={Link} to="/authentication">
+    //         <Icon name='sign in' />
+    //           Sign in/Sign up
+    //     </Menu.Item>  
+    // </>
+
+    // return (
+    //     <Sidebar.Pushable as={Segment}>
+    //       <Sidebar
+    //         as={Menu}
+    //         animation='overlay'
+    //         icon='labeled'
+    //         inverted
+    //         vertical
+    //         visible
+    //         width='thin'
+    //       >
+    //         <Menu.Item as={Link} to="/">
+    //           <Icon name='home' />
+    //           Home
+    //         </Menu.Item>
+    //         {displayedOptions}
+    //       </Sidebar>
+    //     </Sidebar.Pushable>
+    // )
 
 }
 

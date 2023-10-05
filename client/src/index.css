@@ -1,3 +1,5 @@
+@import 'semantic-ui-css/semantic.min.css';
+
 :root {
   --bg: #282c34;
   --header: #fff;
@@ -20,7 +22,62 @@
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* grid-template-columns: repeat(4, 1fr); */
   grid-column-gap: 10px;
   grid-row-gap: 10px;
   }
+
+  /* Profile.js css */
+  .profile {
+    padding: 20px;
+  }
+  
+  .avatar-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #007bff; /* Blue background color */
+    color: #fff; /* Text color */
+    border-radius: 50%; /* Circle shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .profile h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  /* Tabs Styles */
+  
+  .ui.fluid.vertical.tabular.menu {
+    border: none;
+    border-radius: 0;
+  }
+  
+  .ui.vertical.tabular.menu .item {
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .ui.vertical.tabular.menu .active.item {
+    background-color: #007bff; /* Active tab background color */
+    color: #fff; /* Active tab text color */
+  }
+
+  .App {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2.5rem 1rem;
+    max-width: 700px;
+  }
+
+  .filter {
+    margin: 2px;
+    padding-right: 80px;
+    display: flex;
+    width:fit-content; 
+}

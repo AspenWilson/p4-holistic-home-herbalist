@@ -1,8 +1,18 @@
 import React from 'react'
+import PropertyCard from './PropertyCard'
 
-function Properties() {
+function Properties({properties, user}) {
+
+    const allProperties = properties.map((property) =>{
+        return (
+        <PropertyCard property={property}/>
+        )
+    })
     return (
-        <h1>Properties page</h1>
+        <div className='card-grid'>
+            <h3>User = {user.username}</h3>
+        {allProperties}
+    </div>
     )
 }
 

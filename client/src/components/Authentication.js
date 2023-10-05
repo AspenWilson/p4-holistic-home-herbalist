@@ -12,7 +12,7 @@ function Authentication({updateUser}) {
 
   const handleClick = () => setSignUp((signUp) => !signUp)
   const formSchema = yup.object().shape({
-    username: yup.string().required("Please enter a username")
+    username: yup.string().required("Please enter a user name"),
   })
 
   const formik = useFormik({
@@ -29,19 +29,17 @@ function Authentication({updateUser}) {
           },
           body: JSON.stringify(values, null, 2),
         })
-        .then(resp => {
-          if(resp.ok){
-            resp.json().then(user => {
+        .then(res => {
+          if(res.ok){
+            res.json().then(user => {
               console.log(user)
               updateUser(user)
               history.push('/')
             })
           } else {
-
-            resp.json().then(error => setError(error.message))
+            res.json().then(error => setError(error.message))
           }
         })
-       
     },
   })
 
@@ -61,7 +59,6 @@ function Authentication({updateUser}) {
            Password
            </label>
            <input type='password' name='password' value={formik.values.password} onChange={formik.handleChange} />
-
         <input type='submit' value={signUp?'Sign Up!':'Log In!'} />
       </Form>
         </>
