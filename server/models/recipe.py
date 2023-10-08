@@ -27,7 +27,7 @@ class Recipe(db.Model, SerializerMixin):
     
     comments = db.relationship('Comment', back_populates='recipe', cascade='all, delete-orphan')
 
-    serialize_rules=('-herbs.recipes','-properties.recipes', '-comments.recipes', '-saved_by', '-entered_by', '-ingredients.recipe', '-ingredients.herb', '-herbs.entered_on', '-herbs.dosages', '-herbs.ingredients', '-herbs.image_url', '-herbs.properties', '-herbs.description', '-properties.entered_on', '-properties.description')
+    serialize_rules=('-herbs.recipes','-properties.recipes', '-comments.recipes', '-saved_by', '-entered_by', '-ingredients.recipe', '-ingredients.herb', '-herbs.entered_on', '-herbs.dosages', '-herbs.ingredients', '-herbs.image_url', '-herbs.properties', '-herbs.description', '-properties.entered_on')
     
     @property
     def unique_properties(self):

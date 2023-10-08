@@ -1,66 +1,50 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import HerbCard from './HerbCard'
 import {Grid, Card} from 'semantic-ui-react'
 import "../index.css"
 import Search from './Search'
 import Filter from './Filter'
-import { handleSearches } from '../helpers'
+import { handleSearches, handleFilterChange } from '../helpers'
+import { UserContext } from '../context/UserContext';
+import ModalPopout from './ModalPopout'
 
-function Herbs({herbs, properties}) {
+
+function Herbs({profileHerbs}) {
+    const { herbs, properties, savedHerbs, user, fetchUpdatedData} = useContext(UserContext)
     const [searchResults, setSearchResults] = useState([]);
-    const [filteredHerbs, setFilteredHerbs] = useState(herbs);
+    const [filteredHerbs, setFilteredHerbs] = useState(profileHerbs === true ? savedHerbs : herbs);
     const [selectedProperties, setSelectedProperties] = useState([]);
-  
-    // const handleSearchHerbs = (searchTerm) => {
-    //   console.log(searchTerm)
-    //   const searchedHerbs = herbs.filter((herb) => 
-    //     herb.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-    //   )
-    //   setSearchResults(searchedHerbs)
-    //   console.log(searchResults)
-    // };
+    const [searchTerm, setSearchTerm] = useState('');
 
-    const allHerbs = herbs.map((herb) => {
-        return (
-            <HerbCard herb={herb} key={herb.id}/>
-        )
-    })
 
-    const handleFilterChange = (selectedProps) => {
-        setSelectedProperties(selectedProps); // Update selected properties state
-        if (selectedProps.length === 0) {
-          setFilteredHerbs(herbs);
-        } else {
-          const filtered = herbs.filter((herb) =>
-            selectedProps.every((prop) =>
-              herb.properties.some((herbProp) => herbProp.name === prop)
-            )
-          );
-          setFilteredHerbs(filtered);
-          console.log(selectedProperties)
-          console.log(filteredHerbs)
-        }
-      };
-
-    // const searchResutsList = searchResults.map((herb) => {
-    //     return (
-    //         <HerbCard herb={herb} hey = {herb.id} />
-    //     )
-    // })
+    const displayedHerbs = searchTerm && searchResults.length > 0
+        ? searchResults.map((herb) => <HerbCard herb={herb} />)
+        : searchTerm && searchResults.length === 0
+        ? <h3>No herbs match your search.</h3>
+        : selectedProperties && filteredHerbs.length === 0
+        ? <h3>No herbs match your filter.</h3>
+        : filteredHerbs.map((herb) => <HerbCard herb={herb} />);
+    
+    const filterArray = profileHerbs === true 
+        ? savedHerbs
+        : herbs
 
     return (
         <>
+        <ModalPopout newHerb={true} msg='Add a new herb!' msg2='Add dosages to your herb'/>
         <Search 
-            onSearch={handleSearches(searchTerm, herbs, setSearchResults)} 
+            onSearch={(searchTerm) => handleSearches(searchTerm, filterArray, setSearchResults)} 
             searchedHerbs={searchResults}
+            searchTerm = {searchTerm}
+            setSearchTerm = {setSearchTerm}
         />
         <Filter 
-          onFilterChange={handleFilterChange}
+          onFilterChange={(selectedProperties) => handleFilterChange(selectedProperties, setSelectedProperties, filterArray, setFilteredHerbs)}
           selectedProperties={selectedProperties} 
           properties={properties}/>
           <br />
         <Card.Group itemsPerRow={4}>
-            {allHerbs}
+            {displayedHerbs}
         </Card.Group>
         </>
     )

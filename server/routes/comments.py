@@ -221,9 +221,9 @@ class RecipeCommentsByID(Resource):
             
             return unauth_error
 
-api.add_resource(Comments, '/comments')
-api.add_resource(CommentsByID, '/comments/<int:id>')
-api.add_resource(UserComments, '/users/<int:id>/comments')
-api.add_resource(UserCommentsByID, '/users/<int:id>/comments/<int:comment_id>')
-api.add_resource(RecipeComments, '/recipes/<int:id>/comments')
-api.add_resource(RecipeCommentsByID, '/recipes/<int:id>/comments/<int:comment_id>')
+api.add_resource(Comments, '/api/comments')
+api.add_resource(CommentsByID, '/api/comments/<int:id>')
+api.add_resource(UserComments, '/api/users/<int:id>/comments')
+api.add_resource(UserCommentsByID, '/api/users/<int:id>/comments/<int:comment_id>')
+api.add_resource(RecipeComments, '/api/recipes/<int:id>/comments')
+api.add_resource(RecipeCommentsByID, '/api/recipes/<int:id>/comments/<int:comment_id>')

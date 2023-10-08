@@ -104,9 +104,9 @@ class UsersByID(Resource):
     
 
 
-api.add_resource(SignUp, '/signup')
-api.add_resource(Login, '/login')
-api.add_resource(CheckSession, '/checksession')
-api.add_resource(Logout, '/logout')
-api.add_resource(Users, '/users')
-api.add_resource(UsersByID, '/users/<int:id>')
+api.add_resource(SignUp, '/api/signup')
+api.add_resource(Login, '/api/login')
+api.add_resource(CheckSession, '/api/checksession')
+api.add_resource(Logout, '/api/logout')
+api.add_resource(Users, '/api/users')
+api.add_resource(UsersByID, '/api/users/<int:id>')

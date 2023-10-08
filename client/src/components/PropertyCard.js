@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Card } from 'semantic-ui-react'
+import { UserContext } from '../context/UserContext';
+
 
 function PropertyCard({property}){
 

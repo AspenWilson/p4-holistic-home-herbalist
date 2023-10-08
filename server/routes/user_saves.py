@@ -116,29 +116,32 @@ class UserSavedHerbs(Resource):
             return unfound_error('User')
         
         current_user = get_current_user()
+        print(f"current_user: {current_user}")
+
         if user:
-            if user.id == session.get('user_id') or current_user.admin == '1':
-                data = request.get_json()
-                herb_id = data.get('herb_id')
+            # if user.id == session.get('user_id'): 
+            # # or current_user.admin == '1':
+            data = request.get_json()
+            herb_id = data.get('herb_id')
 
-                if not herb_id:
-                    return {'error':'Missing herb id.'}, 422
+            if not herb_id:
+                return {'error':'Missing herb id.'}, 422
                 
-                herb = Herb.query.filter_by(id=herb_id).first()
+            herb = Herb.query.filter_by(id=herb_id).first()
 
-                if not herb:
-                    return unfound_error('Herb')
+            if not herb:
+                return unfound_error('Herb')
 
-                if herb in user.saved_herbs:
-                    return {'error': 'Herb is already in your saved herbs.'}, 409
+            if herb in user.saved_herbs:
+                return {'error': 'Herb is already in your saved herbs.'}, 409
                 
-                user.saved_herbs.append(herb)
-                db.session.commit()
+            user.saved_herbs.append(herb)
+            db.session.commit()
 
-                response = herb.to_dict(), 202
-                return response
-            else:
-                return unauth_error
+            response = herb.to_dict(), 202
+            return response
+        else:
+            return unauth_error
 
 class UserSavedHerbsByID(Resource):
     def get(self, id, herb_id):
@@ -184,7 +187,7 @@ class UserSavedHerbsByID(Resource):
         
             return unauth_error
 
-api.add_resource(UserSavedRecipes, '/users/<int:id>/saved-recipes')
-api.add_resource(UserSavedRecipesByID, '/users/<int:id>/saved-recipes/<int:recipe_id>')
-api.add_resource(UserSavedHerbs, '/users/<int:id>/saved-herbs')
-api.add_resource(UserSavedHerbsByID, '/users/<int:id>/saved-herbs/<int:herb_id>')
+api.add_resource(UserSavedRecipes, '/api/users/<int:id>/saved-recipes')
+api.add_resource(UserSavedRecipesByID, '/api/users/<int:id>/saved-recipes/<int:recipe_id>')
+api.add_resource(UserSavedHerbs, '/api/users/<int:id>/saved-herbs')
+api.add_resource(UserSavedHerbsByID, '/api/users/<int:id>/saved-herbs/<int:herb_id>')

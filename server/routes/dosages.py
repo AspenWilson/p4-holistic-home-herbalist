@@ -96,5 +96,5 @@ class HerbDosagesByID(Resource):
             
             return unrelated_err('Dosage', 'Herb')
         
-api.add_resource(HerbDosages, '/herbs/<int:id>/dosages')
-api.add_resource(HerbDosagesByID, '/herbs/<int:id>/dosages/<int:dosage_id>')
+api.add_resource(HerbDosages, '/api/herbs/<int:id>/dosages')
+api.add_resource(HerbDosagesByID, '/api/herbs/<int:id>/dosages/<int:dosage_id>')

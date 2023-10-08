@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { Image } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
+
 
 
 function Recipe(){
@@ -8,7 +10,7 @@ function Recipe(){
     const [recipe, setRecipe] = useState(null)
 
     useEffect(() => {
-        fetch(`http://localhost:5555/recipes/${id}`)
+        fetch(`/api/recipes/${id}`)
           .then((resp) => resp.json())
           .then((data) => {
             setRecipe(data);

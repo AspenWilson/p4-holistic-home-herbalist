@@ -1,14 +1,16 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import {useHistory} from 'react-router-dom'
 import styled from "styled-components";
 import { useFormik } from "formik"
 import * as yup from "yup"
+import { UserContext } from '../context/UserContext';
 
 
-function Authentication({updateUser}) {
+function Authentication() {
   const [signUp, setSignUp] = useState(false)
   const history = useHistory()
   const [error, setError] = useState(null)
+  const { handleLogin } = useContext(UserContext)
 
   const handleClick = () => setSignUp((signUp) => !signUp)
   const formSchema = yup.object().shape({
@@ -22,22 +24,22 @@ function Authentication({updateUser}) {
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-        fetch(signUp?'http://localhost:5555/signup':'http://localhost:5555/login',{
+        fetch(signUp?'/api/signup':'/api/login',{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(values, null, 2),
         })
-        .then(res => {
-          if(res.ok){
-            res.json().then(user => {
+        .then(resp => {
+          if(resp.ok){
+            resp.json().then(user => {
               console.log(user)
-              updateUser(user)
+              handleLogin(user)
               history.push('/')
             })
           } else {
-            res.json().then(error => setError(error.message))
+            resp.json().then(error => setError(error.message))
           }
         })
     },

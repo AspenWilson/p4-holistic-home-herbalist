@@ -1,10 +1,53 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import { Card, Image, Label, Button } from 'semantic-ui-react'
 import "../index.css"
 import {Link} from 'react-router-dom'
-import { propertyTags } from '../helpers'
+import { propertyTags, url } from '../helpers'
+import { UserContext } from '../context/UserContext';
+
 
 function HerbCard ({herb}) {
+    const { savedHerbs, user, fetchUpdatedData} = useContext(UserContext)
+    const [isSaved, setIsSaved] = useState(savedHerbs.some((savedHerb) => savedHerb.id === herb.id))
+    
+    useEffect(() => {
+        fetchUpdatedData()
+        console.log('useEffect from HerbCard')
+    },[])
+
+    const handleSave = () => {
+        fetch(`/api/users/${user.id}/saved-herbs`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({herb_id: herb.id})
+        })
+        .then((resp) => {
+            if (resp.ok) {
+                setIsSaved(!isSaved)
+                fetchUpdatedData()
+                
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error)
+        })
+    }
+
+    const handleUnSave = () => {
+        fetch (`/api/users/${user.id}/saved-herbs/${herb.id}`, {
+            method:'DELETE'
+        })
+        .then((resp) => {
+            setIsSaved(!isSaved)
+            fetchUpdatedData()
+        })
+        .catch((error) => {
+            console.error('Error: ', error)
+        })
+    }
+
 
     return (
         <div key={herb.id}>
@@ -14,7 +57,6 @@ function HerbCard ({herb}) {
                         src={herb.image_url}
                         floated='left'
                         size="small"
-                        // className="herbImg"
                         />
                     <Card.Header>{herb.name}</Card.Header>
                     <Card.Meta>{herb.latin_name}</Card.Meta>
@@ -28,9 +70,13 @@ function HerbCard ({herb}) {
                     </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
-                        <Button basic color='green'>
+                    <Button basic color='green'>
                         <Link to={`/herbs/${herb.id}`}>View Details</Link> 
                     </Button>
+                    {isSaved ? 
+                        <Button basic color='orange' onClick={handleUnSave}>Saved</Button> :
+                        <Button basic color='yellow' onClick={handleSave}>Save</Button>
+                    }
                 </Card.Content>
             </Card>
         </div>

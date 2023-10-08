@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { UserContext } from '../context/UserContext';
 
-function Search({ onSearch, searchedHerbs }) {
-  const [searchTerm, setSearchTerm] = useState('');
+
+function Search({ onSearch, searchTerm, setSearchTerm }) {
 
   const handleInputChange = (e) => {
-    setSearchTerm(e.target.value);
+    const userInput = e.target.value
+    setSearchTerm(userInput);
+    onSearch(userInput)
   };
 
-  const handleSearch = () => {
-    onSearch(searchTerm);
-    console.log(searchTerm)
 
+  const handleClear = () => {
+    setSearchTerm('');
   };
 
   return (
@@ -21,7 +23,7 @@ function Search({ onSearch, searchedHerbs }) {
         value={searchTerm}
         onChange={handleInputChange}
       />
-      <button onClick={handleSearch}>Search</button>
+      <button onClick={handleClear}>Clear</button>
     </div>
   );
 }

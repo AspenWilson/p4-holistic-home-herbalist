@@ -2,13 +2,15 @@ import React, {useEffect, useState} from "react";
 import { Image } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom';
 import { url } from "../helpers";
+import { UserContext } from '../context/UserContext';
+
 
 function Herb(){
     const { id } = useParams();
     const [herb, setHerb] = useState(null)
 
     useEffect(() => {
-        fetch(url + `/herbs/${id}`)
+        fetch(`/api/herbs/${id}`)
           .then((resp) => resp.json())
           .then((data) => {
             setHerb(data);

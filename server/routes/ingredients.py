@@ -120,5 +120,5 @@ class RecipeIngredientsByID(Resource):
         return unauth_error
 
 
-api.add_resource(RecipeIngredients, '/recipes/<int:id>/ingredients')
-api.add_resource(RecipeIngredientsByID, '/recipes/<int:id>/ingredients/<int:ingredient_id>')
+api.add_resource(RecipeIngredients, '/api/recipes/<int:id>/ingredients')
+api.add_resource(RecipeIngredientsByID, '/api/recipes/<int:id>/ingredients/<int:ingredient_id>')

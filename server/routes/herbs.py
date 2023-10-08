@@ -110,5 +110,5 @@ class HerbsByID(Resource):
             else:
                 return unauth_error    
     
-api.add_resource(Herbs, '/herbs')
-api.add_resource(HerbsByID, '/herbs/<int:id>')
+api.add_resource(Herbs, '/api/herbs')
+api.add_resource(HerbsByID, '/api/herbs/<int:id>')

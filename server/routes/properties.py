@@ -68,7 +68,7 @@ class PropertiesByID(Resource):
             else:
                 return unauth_error
 
-api.add_resource(Properties, '/properties')
-api.add_resource(PropertiesByID, '/properties/<int:id>')
+api.add_resource(Properties, '/api/properties')
+api.add_resource(PropertiesByID, '/api/properties/<int:id>')
 
 
