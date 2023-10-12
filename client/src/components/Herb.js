@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { Image } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom';
-import { url } from "../helpers";
-import { UserContext } from '../context/UserContext';
-
 
 function Herb(){
     const { id } = useParams();

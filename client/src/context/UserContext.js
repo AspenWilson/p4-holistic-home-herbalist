@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { basicFetch } from "../helpers";
+import { Card, Button } from 'semantic-ui-react' 
 
 const UserContext = createContext();
 
@@ -12,6 +13,8 @@ const UserProvider = ({ children }) => {
   const [savedHerbs, setSavedHerbs] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false)
+  const [secondOpen, setSecondOpen] = useState(false)
+  const [deleted, setDeleted] = useState(false)
   
   useEffect(() => {
     fetch('/api/checksession')
@@ -56,6 +59,15 @@ const UserProvider = ({ children }) => {
     {dataName: 'herb_id', formName: 'Herb', options: herbs.map((herb) => ({ value: herb.herb_id, label: herb.name }))}
     ]
 
+    const handleModalSuccess = () => {
+        setSecondOpen(!secondOpen)
+        console.log('modal success called from user contaxt!')
+    }
+
+    const handleDeleteEdit = () => {
+        setDeleted(!deleted)
+    }
+
   return (
     <UserContext.Provider value={{
         user, 
@@ -75,7 +87,11 @@ const UserProvider = ({ children }) => {
         fetchUpdatedData, 
         setLoggedIn, 
         loggedIn,
-        ingredientDropdowns
+        ingredientDropdowns, 
+        handleModalSuccess, 
+        secondOpen,
+        handleDeleteEdit, 
+        deleted
     }}
     >
         {children}

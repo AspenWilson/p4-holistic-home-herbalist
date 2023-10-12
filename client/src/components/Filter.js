@@ -1,6 +1,5 @@
 import React from 'react'
 import { Dropdown } from 'semantic-ui-react'
-import { UserContext } from '../context/UserContext';
 
 function Filter({ properties, selectedProperties, onFilterChange }) {
     const options = properties.map((property) => ({

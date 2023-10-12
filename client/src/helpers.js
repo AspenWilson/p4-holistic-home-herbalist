@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Label, Popup } from 'semantic-ui-react'
+import {Label, Popup, Form } from 'semantic-ui-react'
 import { UserContext } from './context/UserContext';
 
 // const {herbs} = useContext(UserContext)
@@ -46,6 +46,10 @@ export function handleFilterChange (selectedProperties, propertySetter, arr, sea
 }
 
 // Form Values and Functions
+function optionsArr(arr) {
+    const options= arr.map((item) => ({key: item,text: item, value: item, name: item, id:item }))
+    return options 
+  }
 
 export const herbFormInputs = [
     {dataName: 'name', formName: 'Herb Name', type: 'text'},
@@ -54,21 +58,48 @@ export const herbFormInputs = [
     {dataName: 'warnings', formName: 'Warnings', type: 'text'},
     {dataName: 'image_url', formName: 'Image Link', type: 'text'}
 ]
-export const herbInitialValues = {
-    name: '', 
-    latin_name: '',
-    description: '',
-    warnings: '',
-    image_url: ''
+
+
+export const dosageInputs = (valueKey, changeValue) => {
+    const dosageFormInputs = [
+    {dataName: 'dosage_description', formName: 'Dosage Description', type: 'text'}]
+    const formInputs = dosageFormInputs.map((input) => {
+        return (
+            <Form.Field key={input.dataName}>
+                <label>{input.formName}</label>
+                <input 
+                    fluid
+                    name={input.dataName}
+                    value={{valueKey}.dosage_description}
+                    onChange={changeValue}
+                />
+            </Form.Field>
+        )
+    })
+    return formInputs
 }
 
-export const dosageFormInputs = [
-    {dataName: 'dosage_description', formName: 'Dosage Description', type: 'text'}
-]
+export const dosageDropdowns = (valueKey, changeValue) => {
+    const dropdowndata = [
+        {dataName: 'dosage_form', formName: 'Dosage Form', options: ['Capsule', 'Capsule or Powder', 'Decoction - Southern','Decoction - Standard','Decoction - Weak', 'Dried', 'Dried Herb', 'Dried or Powdered', 'Dried Seed', 'Essential Oil', 'Extract - Fluid', 'Extract - Solid', 'Extract - Standardized', 'Fresh', 'Fresh Herb', 'Fresh Leaves', 'Fresh or Dried', 'Glycerite', 'Infusion - Cold', 'Infusion - Standard', 'Infusion - Strong', 'Infusion - Weak', 'Infusion - Wine', 'Juice', 'Oil', 'Oil & Salve', 'Powder', 'Syrup', 'Tea', 'Tincture', 'Topical Use']}
 
-export const dosageDropdowns = [
-    {dataName: 'dosage_form', formName: 'Dosage Form', options: ['Capsule', 'Capsule or Powder', 'Decoction - Southern','Decoction - Standard','Decoction - Weak', 'Dried', 'Dried Herb', 'Dried or Powdered', 'Dried Seed', 'Essential Oil', 'Extract - Fluid', 'Extract - Solid', 'Extract - Standardized', 'Fresh', 'Fresh Herb', 'Fresh Leaves', 'Fresh or Dried', 'Glycerite', 'Infusion - Cold', 'Infusion - Standard', 'Infusion - Strong', 'Infusion - Weak', 'Infusion - Wine', 'Juice', 'Oil', 'Oil & Salve', 'Powder', 'Syrup', 'Tea', 'Tincture', 'Topical Use']}
-]
+        ]
+    const formDrops = dropdowndata.map((data) => {
+        const options = optionsArr(data.options)
+        return (
+            <Form.Select 
+                fluid
+                key= {data.dataName}
+                name= {data.dataName}
+                value= {valueKey.dataName}
+                placeholder= {data.formName}
+                options = {options}
+                onChange={changeValue}
+            />
+        )
+    })
+    return formDrops
+}
 
 export const dosageInitialValues = {
     dosage_form: '',
@@ -86,15 +117,46 @@ export const recipeInitialValues = {
     directions: ''
 }
 
-export const ingredientsFormInputs = [
-    {dataName: 'amount', formName: 'Amount',type: 'number'}
-]
+export const ingredientsInputs = (valueKey, changeValue) => {
+    const dosageFormInputs = [
+        {dataName: 'amount', formName: 'Amount',type: 'number'}]
+    const formInputs = dosageFormInputs.map((input) => {
+        return (
+            <Form.Field key={input.dataName}>
+                <label>{input.formName}</label>
+                <input 
+                    fluid
+                    name={input.dataName}
+                    value={{valueKey}.dosage_description}
+                    onChange={changeValue}
+                />
+            </Form.Field>
+        )
+    })
+    return formInputs
+}
 
-// export const ingredientDropdowns = [
-//     {dataName: 'amount_type', formName: 'Amount Type', options: ['Part(s)', 'Cup']},
-//     {dataName: 'herb_type', formName: 'Herb Type', options: ['Key Herb', 'Supporting Herb', 'Catalyst', 'Optional Catalyst', 'Balancing Herb', 'Optional Balancing Herb']},
-//     {dataName: 'herb_id', formName: 'Herb', options: herbs.map((herb) => ({ value: herb.herb_id, label: herb.name }))}
-// ]
+export const ingredientsDropdowns = (valueKey, changeValue) => {
+    const dropdowndata = [
+        {dataName: 'amount_type', formName: 'Amount Type', options: ['Part(s)', 'Cup']},
+        {dataName: 'herb_type', formName: 'Herb Type', options: ['Key Herb', 'Supporting Herb', 'Catalyst', 'Optional Catalyst', 'Balancing Herb', 'Optional Balancing Herb']}
+        ]
+    const formDrops = dropdowndata.map((data) => {
+        const options = optionsArr(data.options)
+        return (
+            <Form.Select 
+                fluid
+                key= {data.dataName}
+                name= {data.dataName}
+                placeholder= {data.formName}
+                value= {valueKey.dataName}
+                options = {options}
+                onChange={changeValue}
+            />
+        )
+    })
+    return formDrops
+}
 
 export const ingredientInitialValues = {
     amount: '',
@@ -102,55 +164,3 @@ export const ingredientInitialValues = {
     herb_type: '',
     herb_id: ''
 }
-
-
-// export const herbFormInputs = () => {
-//     return (
-//         <>
-//             <div key='name'>
-//             <label>Name</label>
-//             <input 
-//                 type='text'
-//                 name='name'
-//                 value={formik.values[input.dataName]}
-//                 onChange={formik.handleChange}
-//             />
-//             </div>
-//             <div key={input.dataName}>
-//             <label>{input.formName}</label>
-//             <input 
-//                 type={input.type}
-//                 name={input.dataName}
-//                 value={formik.values[input.dataName]}
-//                 onChange={formik.handleChange}
-//             />
-//             </div>
-//             <div key={input.dataName}>
-//             <label>{input.formName}</label>
-//             <input 
-//                 type={input.type}
-//                 name={input.dataName}
-//                 value={formik.values[input.dataName]}
-//                 onChange={formik.handleChange}
-//             />
-//             </div>
-//             <div key={input.dataName}>
-//             <label>{input.formName}</label>
-//             <input 
-//                 type={input.type}
-//                 name={input.dataName}
-//                 value={formik.values[input.dataName]}
-//                 onChange={formik.handleChange}
-//             />
-//             </div>
-//             <div key={input.dataName}>
-//             <label>{input.formName}</label>
-//             <input 
-//                 type={input.type}
-//                 name={input.dataName}
-//                 value={formik.values[input.dataName]}
-//                 onChange={formik.handleChange}
-//             />
-//             </div>
-//         </>
-// )}

@@ -5,7 +5,7 @@ import Search from './Search';
 import Filter from './Filter';
 import { Card } from 'semantic-ui-react'
 import { UserContext } from '../context/UserContext';
-import NewForm from './MainForm';
+import ModalPopout from './ModalPopout';
 
 
 function Recipes({profileRecipes}) {
@@ -29,7 +29,7 @@ function Recipes({profileRecipes}) {
 
     return (
         <>
-        <NewForm newHerb={false} />
+        <ModalPopout modalType='new recipe' msg='Add a new recipe'/>
         <Search 
             onSearch={(searchTerm) => handleSearches(searchTerm, filterArray, setSearchResults)} 
             searchedRecipes= {searchResults}

@@ -1,9 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react'
-import { Card, Image, Label, Button } from 'semantic-ui-react'
+import { Card, Image, Label, Button, Icon } from 'semantic-ui-react'
 import "../index.css"
 import {Link} from 'react-router-dom'
 import { propertyTags, url } from '../helpers'
 import { UserContext } from '../context/UserContext';
+import ModalPopout from './ModalPopout'
 
 
 function HerbCard ({herb}) {
@@ -48,11 +49,14 @@ function HerbCard ({herb}) {
         })
     }
 
-
     return (
         <div key={herb.id}>
             <Card raised>
                 <Card.Content>
+                    <Button>
+                        <Icon name='edit'/>
+                        <ModalPopout modalType='herb edits' msg='Edit' id={herb.id}/>
+                    </Button>
                     <Image
                         src={herb.image_url}
                         floated='left'

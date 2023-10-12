@@ -81,3 +81,10 @@
     display: flex;
     width:fit-content; 
 }
+
+.textArea {
+  width: 100%;
+  height: fit-content;
+  resize: vertical
+}
+

@@ -6,6 +6,7 @@ import Search from './Search'
 import Filter from './Filter'
 import { handleSearches, handleFilterChange } from '../helpers'
 import { UserContext } from '../context/UserContext';
+import FormBeta from './HerbForm'
 import ModalPopout from './ModalPopout'
 
 
@@ -31,7 +32,8 @@ function Herbs({profileHerbs}) {
 
     return (
         <>
-        <ModalPopout newHerb={true} msg='Add a new herb!' msg2='Add dosages to your herb'/>
+        {/* <ModalPopout newHerb={true} msg='Add a new herb!' msg2='Add dosages to your herb'/> */}
+        <ModalPopout modalType='new herb' msg='Add a new herb' />
         <Search 
             onSearch={(searchTerm) => handleSearches(searchTerm, filterArray, setSearchResults)} 
             searchedHerbs={searchResults}
