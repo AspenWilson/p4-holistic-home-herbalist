@@ -1,14 +1,19 @@
 import React from "react"
-import { UserContext } from '../context/UserContext';
+import { Container } from 'semantic-ui-react'
 
 
 function Home() {
     return(
         <div>
-            <header>Welcome to Holistic Home Herbalist</header>
-            <h1>space for what herbalism is</h1>
-            <h1>space for why it's important</h1>
-            <h1>space for what the site is and how to use it</h1>
+            <Container  fluid style= {{backgroundColor: 'rgba(52, 52, 52, 0.8)', padding: '10px'}}>
+
+            <h1>What is Herbalism? </h1>
+            <p style = {{fontSize: '16pt'}}>Herbalism is a time-honored practice that harnesses the healing power of plants to promote well-being and vitality. For centuries, herbalists have studied the unique properties of herbs and plants, using them to create natural remedies for a wide range of health concerns. From soothing herbal teas to potent tinctures, herbalism offers a holistic approach to health that focuses on the intricate connection between nature and the human body.</p>
+            <h1>Why Herbalism Matters</h1>
+            <p style = {{fontSize: '16pt'}}>Herbalism matters because it empowers individuals to take control of their health and connect with the natural world. Unlike many conventional approaches, herbalism offers gentle, yet effective, solutions that work in harmony with the body. It's a sustainable and eco-friendly practice that respects the environment and supports local communities. By embracing herbalism, you can explore the profound impact that nature's bounty can have on your health and well-being.</p>
+            <h1>How can Holistic Home Herbalist Help?</h1>
+            <p style = {{fontSize: '16pt'}}>Welcome to our herbalist's toolkit, a unique platform designed to simplify your herbal journey. Here, you can explore a vast collection of herbs, their properties, and practical applications. Use our search feature to discover the right herbs for your specific needs, whether it's for relaxation, immune support, or vitality. Dive into detailed dosage information and herb properties. We're here to guide you in making informed choices about your health. Embrace the wisdom of herbalism and begin your journey toward a healthier, more balanced life.</p>
+            </Container>
         </div>
     )
 }

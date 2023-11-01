@@ -1,88 +1,74 @@
-import React, {useState, useContext} from 'react'
-import {useHistory} from 'react-router-dom'
-import styled from "styled-components";
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../context/AppContext';
+import { Card, Button, Image } from 'semantic-ui-react'
+import { displayErrors } from './helpers/FormHelpers';
+import { FormHeader, StyledInput, Form } from "./helpers/StylingHelpers"
+
 
 
 function Authentication() {
   const [signUp, setSignUp] = useState(false)
   const history = useHistory()
-  const [error, setError] = useState(null)
   const { handleLogin } = useContext(UserContext)
-
+    
   const handleClick = () => setSignUp((signUp) => !signUp)
   const formSchema = yup.object().shape({
-    username: yup.string().required("Please enter a user name"),
+    username: yup.string().required("Please enter a user name."),
+    password: yup.string().required("Please enter a password.")
   })
-
   const formik = useFormik({
     initialValues: {
-      username:'',
+      name:'',
       password:''
     },
     validationSchema: formSchema,
-    onSubmit: (values) => {
-        fetch(signUp?'/api/signup':'/api/login',{
+      onSubmit: (values) => {
+        fetch(signUp ? '/api/signup' : '/api/login',{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(values, null, 2),
         })
-        .then(resp => {
-          if(resp.ok){
-            resp.json().then(user => {
-              console.log(user)
+        .then(res => {
+          if(res.ok){
+            res.json().then(user => {
               handleLogin(user)
               history.push('/')
-            })
-          } else {
-            resp.json().then(error => setError(error.message))
-          }
+          })} 
         })
-    },
+      },
   })
 
-    return (
-        <> 
-        <h2 style={{color:'red'}}> {formik.errors.name}</h2>
-        {error&& <h2 style={{color:'red'}}> {error}</h2>}
-        <h2>Please Log in or Sign up!</h2>
-        <h2>{signUp?'Already a member?':'Not a member?'}</h2>
-        <button onClick={handleClick}>{signUp?'Log In!':'Register now!'}</button>
-        <Form onSubmit={formik.handleSubmit}>
-        <label>
-          Username
-          </label>
-        <input type='text' name='username' value={formik.values.username} onChange={formik.handleChange} />
-        <label>
-           Password
-           </label>
-           <input type='password' name='password' value={formik.values.password} onChange={formik.handleChange} />
-        <input type='submit' value={signUp?'Sign Up!':'Log In!'} />
-      </Form>
-        </>
-    )
+  return (
+    <> 
+      <Card raised centered >
+        <br />
+        <Image centered style={{background: 'none'}}src={'/Logo-black.png'} size='small'/>
+        <FormHeader as='h2'>Log In!</FormHeader>
+        <Card.Content>
+          <Form onSubmit={formik.handleSubmit}>
+            <FormHeader as='h3'>Username</FormHeader>
+            <StyledInput name='username' value={formik.values.username} onChange={formik.handleChange} />
+            {displayErrors(formik.errors.username)}
+
+            <FormHeader as='h3'>Password</FormHeader>
+            <StyledInput type='password' id='password' name='password' value={formik.values.password} onChange={formik.handleChange} />
+            {displayErrors(formik.errors.password)}
+                    
+            <Button style={{backgroundColor: '#056d52', color:'white', font:'Arial', margin: '10px', display:'inline-block'}} type='submit'>{signUp?'Sign Up!':'Log In!'}</Button>
+            
+            <FormHeader as='h3'>{signUp?'Already a member?':'Not a member?'}</FormHeader>
+            <Button style={{backgroundColor: '#056d52', color:'white', font:'Arial', margin: '10px', display:'inline-block'}} onClick={handleClick}>{signUp?'Log In!':'Register now!'}</Button>
+          </Form>
+        </Card.Content>
+      </Card>
+    </>
+  )
 }
 
 export default Authentication
 
-export const Form = styled.form`
-display:flex;
-flex-direction:column;
-width: 400px;
-margin:auto;
-font-family:Arial;
-font-size:30px;
-input[type=submit]{
-  background-color:#42ddf5;
-  color: white;
-  height:40px;
-  font-family:Arial;
-  font-size:30px;
-  margin-top:10px;
-  margin-bottom:10px;
-}
-`

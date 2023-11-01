@@ -1,82 +1,79 @@
-import React, {useState, useEffect, useContext} from 'react'
-import { UserContext } from '../../context/UserContext'
-import { Form } from 'semantic-ui-react'
-import { useFormik } from 'formik'
+import React from 'react'
 
+// Initial Values
 
+// ---> Herbs
 
-  export const herbFormInputs = [
-    {dataName: 'name', formName: 'Herb Name', type: 'text'},
-    {dataName: 'latin_name', formName: 'Latin Name', type: 'text'},
-    {dataName: 'description', formName: 'Description', type: 'text'},
-    {dataName: 'warnings', formName: 'Warnings', type: 'text'},
-    {dataName: 'image_url', formName: 'Image Link', type: 'text'},
-    {dataName: 'dosage_description', formName: 'Image Link', type: 'text'}
-]
-
-export const dosageForm = (valueKey, changeKey) => {
-    const options = ['Capsule', 'Capsule or Powder', 'Decoction - Southern','Decoction - Standard','Decoction - Weak', 'Dried', 'Dried Herb', 'Dried or Powdered', 'Dried Seed', 'Essential Oil', 'Extract - Fluid', 'Extract - Solid', 'Extract - Standardized', 'Fresh', 'Fresh Herb', 'Fresh Leaves', 'Fresh or Dried', 'Glycerite', 'Infusion - Cold', 'Infusion - Standard', 'Infusion - Strong', 'Infusion - Weak', 'Infusion - Wine', 'Juice', 'Oil', 'Oil & Salve', 'Powder', 'Syrup', 'Tea', 'Tincture', 'Topical Use']
-    const drops = options.map((option) => {
-        return (
-            <option name={option} key={option} value={option}>{option}</option>
-        )
-    })
-    return (
-        <>
-        <label>Dosage Description </label>
-        <input type='text' name='dosage_description' value={valueKey.dosage_description} onChange={changeKey} />
-
-        <label>Dosage Form </label>
-        <select name='dosage_form'>
-            <option></option>
-            {drops}
-        </select> 
-        {/* <input type='submit' /> */}
-        </>
-    )
+export const HerbInitialValues = {
+    name:"", 
+    latin_name:"",
+    description:"",
+    warnings:"",
+    image_url:"",
+    dosages: [{
+            dosage_form:"",
+            dosage_description:""
+    }],
+    property_ids: []
 }
 
+// ---> Recipes
 
-export const recipeFormInputs = [
-    {dataName: 'name', formName: 'Recipe Name', type: 'text'},
-    {dataName: 'directions', formName: 'Directions', type: 'text'},
-    {dataName: 'ingredients', formName: 'Ingredients'}
-]
-
-export const recipeInitialValues = {
-    name: '',
-    directions: ''
+export const RecipeInitialValues = {
+    name: "", 
+    directions: "", 
+    ingredients: [{
+        amount: "", 
+        amount_type: "", 
+        herb_type: "", 
+        herb_id: ""
+    }]
 }
 
-export const ingredientsInputs = (valueKey, changeValue) => {
-    const dosageFormInputs = [
-        {dataName: 'amount', formName: 'Amount',type: 'number'}]
-    const formInputs = dosageFormInputs.map((input) => {
-        return (
-            <>
-                <label>{input.formName}</label>
-                <input 
-                    // fluid
-                    name={input.dataName}
-                    value={valueKey[input.dataName]}
-                    onChange={changeValue}
-                />
-            </>
-        )
-    })
-    return formInputs
+// ---> Comments
+
+export const CommentInitalValues = {
+    comment: ""
+  }
+
+//Dropdown values
+
+// ---> Option lists
+
+const options = ['Capsule', 'Capsule or Powder', 'Decoction - Southern','Decoction - Standard','Decoction - Weak', 'Dried', 'Dried Herb', 'Dried or Powdered', 'Dried Seed', 'Essential Oil', 'Extract - Fluid', 'Extract - Solid', 'Extract - Standardized', 'Fresh', 'Fresh Herb', 'Fresh Leaves', 'Fresh or Dried', 'Glycerite', 'Infusion - Cold', 'Infusion - Standard', 'Infusion - Strong', 'Infusion - Weak', 'Infusion - Wine', 'Juice', 'Oil', 'Oil & Salve', 'Powder', 'Syrup', 'Tea', 'Tincture', 'Topical Use']
+
+const amountTypeOptions = ['Part(s)', 'Cup']
+
+const herbTypeOptions = ['Key Herb', 'Supporting Herb', 'Catalyst', 'Optional Catalyst', 'Balancing Herb', 'Optional Balancing Herb']
+
+// ---> DRY Function
+
+const dropdowns = (arr) => {
+    return arr.map((item) => ({
+        value: item,
+        label: item
+    }))
 }
 
-export const ingredientsDropdowns = (valueKey, changeValue) => {
-    const dropdowndata = [
-        {dataName: 'amount_type', formName: 'Amount Type', options: ['Part(s)', 'Cup']},
-        {dataName: 'herb_type', formName: 'Herb Type', options: ['Key Herb', 'Supporting Herb', 'Catalyst', 'Optional Catalyst', 'Balancing Herb', 'Optional Balancing Herb']}
-        ]
-    }
-
-export const ingredientInitialValues = {
-    amount: '',
-    amount_type: '',
-    herb_type: '',
-    herb_id: ''
+export const IDDropdowns = (arr) => {
+    return arr.map((item) => ({
+        value: item.id,
+        label: item.name
+    }))
 }
+
+// ---> Exported Dropdown values
+
+
+export const dosageDrops = dropdowns(options)
+
+export const amountTypeDrops = dropdowns(amountTypeOptions)
+
+export const herbTypeDrops = dropdowns(herbTypeOptions)
+
+// Error Messages
+
+export const displayErrors = (error) => {
+    return error ? <p style={{ color: "red" }}>{ error }</p> : null
+}
+

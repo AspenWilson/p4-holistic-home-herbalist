@@ -20,22 +20,21 @@ class Login(Resource):
         data = request.get_json()
         user=User.query.filter_by(username=data['username']).first()
         
-        if user and user.authenticate(data['password']):
-            session['user_id'] = user.id 
-            response = user.to_dict(), 202
-            return response
-        else:
+        if not user or not user.authenticate(data['password']):
             return {'error': 'Incorrect username or password'}, 401
+        
+        session['user_id'] = user.id 
+        response = user.to_dict(), 202
+        return response
 
 
 class CheckSession(Resource):
     def get(self):
         user = get_current_user()
-        if user:
-            return user.to_dict(), 200
-        
-        else:
+        if not user:
             return unauth_error
+        
+        return user.to_dict(), 200
 
 
 class Logout(Resource):
@@ -47,63 +46,60 @@ class Users(Resource):
     def get(self):
         current_user = get_current_user()
 
-        if current_user.admin == '1':
-            all_users = get_all(User)
-            return all_users, 200
-
-        if current_user.admin == '0':
+        if current_user.admin != '1':
             return unauth_error
+        
+        all_users = get_all(User)
+        return all_users, 200
+
 
 class UsersByID(Resource):
     def get(self, id):
         user = get_first(User, 'id', id)
+        current_user = get_current_user()
         if not user:
             return unfound_error('User')
-        current_user = get_current_user()
-        if user:
-            if user.id == session.get('user_id') or current_user.admin == '1':
-                return user.to_dict(), 200
-            
+        
+        if user.id != session.get('user_id') or current_user.admin != "1":
             return unauth_error
-    
+        
+        return user.to_dict(), 200
+            
     def patch(self, id):
         user = get_first(User, 'id', id)
+        current_user = get_current_user()
+        data = request.get_json()
 
         if not user:
             return unfound_error('User')
         
-        current_user = get_current_user()
-        if user:
-            if user.id == session.get('user_id') or current_user.admin == '1':
-                data = request.get_json()
-                for key in data.keys():
-                    if key not in ['id', 'admin']:
-                        setattr(user, key, data[key])
-                
-                        db.session.commit()
-
-                        return user.to_dict(), 202
-
+        if user.id != session.get('user_id') or current_user.admin != '1':
             return unauth_error
+        
+        for key in data.keys():
+            if key not in ['id', 'admin']:
+                setattr(user, key, data[key])
+                
+        db.session.commit()
+        return user.to_dict(), 202
+
     
     def delete(self, id):
         user = get_first(User, 'id', id)
+        current_user = get_current_user()
 
         if not user:
             return unfound_error('User')
         
-        current_user = get_current_user()
-        if current_user.admin == '1':
+        if current_user.admin != '1':
+            return unauth_error
 
-            db.session.delete(user)
-            db.session.commit()
+        db.session.delete(user)
+        db.session.commit()
 
-            return {'message':'User deleted'}, 204
+        return {'message':'User deleted'}, 204
         
-        return unauth_error
     
-
-
 api.add_resource(SignUp, '/api/signup')
 api.add_resource(Login, '/api/login')
 api.add_resource(CheckSession, '/api/checksession')

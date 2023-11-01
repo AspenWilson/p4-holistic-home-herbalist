@@ -1,54 +1,82 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import HerbCard from './HerbCard'
-import {Grid, Card} from 'semantic-ui-react'
+import { Card, Grid, Divider } from 'semantic-ui-react'
 import "../index.css"
 import Search from './Search'
 import Filter from './Filter'
 import { handleSearches, handleFilterChange } from '../helpers'
-import { UserContext } from '../context/UserContext';
-import FormBeta from './HerbForm'
+import { UserContext } from '../context/AppContext';
 import ModalPopout from './ModalPopout'
+import { useParams } from 'react-router-dom'
+import { StyledSelect } from "./helpers/StylingHelpers"
+import { IDDropdowns } from "./helpers/FormHelpers"
 
 
-function Herbs({profileHerbs}) {
-    const { herbs, properties, savedHerbs, user, fetchUpdatedData} = useContext(UserContext)
+function Herbs({ page }) {
+    const { id } = useParams()
+    const { properties, herbs, savedHerbs, enteredHerbs } = useContext(UserContext)
+
     const [searchResults, setSearchResults] = useState([]);
-    const [filteredHerbs, setFilteredHerbs] = useState(profileHerbs === true ? savedHerbs : herbs);
+    const [filteredHerbs, setFilteredHerbs] = useState([])
     const [selectedProperties, setSelectedProperties] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [propertyHerbs, setPropertyHerbs] = useState([])
 
-
-    const displayedHerbs = searchTerm && searchResults.length > 0
-        ? searchResults.map((herb) => <HerbCard herb={herb} />)
-        : searchTerm && searchResults.length === 0
-        ? <h3>No herbs match your search.</h3>
-        : selectedProperties && filteredHerbs.length === 0
-        ? <h3>No herbs match your filter.</h3>
-        : filteredHerbs.map((herb) => <HerbCard herb={herb} />);
+    useEffect(() => {
+        const list = herbs.filter((herb) => {
+            return herb.properties.some((property) => property.id === id)
+        })
+        setPropertyHerbs(list)
+    }, [id])
     
-    const filterArray = profileHerbs === true 
-        ? savedHerbs
-        : herbs
+    const herbsList = 
+        page === 'home' ? herbs
+        : page === 'profile - saved' ? savedHerbs
+        : page === 'profile - entered' ? enteredHerbs
+        : page === 'properties' ? propertyHerbs
+        : null
+
+    const displayedHerbs = 
+        searchTerm && searchResults.length > 0
+            ? searchResults.map((herb) => <HerbCard key={herb.id} herb={herb} page={page}/>)
+        : searchTerm && searchResults.length === 0
+            ? <h3>No herbs match your search.</h3>
+        : selectedProperties.length > 0 && filteredHerbs.length > 0
+            ? filteredHerbs.map((herb) => <HerbCard key={herb.id} herb={herb} page={page}/>)
+        : selectedProperties.length > 0 && filteredHerbs.length === 0
+            ? <h3>No herbs match your filter.</h3>
+        : id && propertyHerbs.length > 0 
+            ? propertyHerbs.map((herb) => <HerbCard key={herb.id} herb={herb} />)
+        : id && propertyHerbs.length === 0
+            ? <h3>No herbs have this property.</h3>
+        : herbsList.map((herb) => <HerbCard key={herb.id} herb={herb} page={page}/>);
 
     return (
-        <>
-        {/* <ModalPopout newHerb={true} msg='Add a new herb!' msg2='Add dosages to your herb'/> */}
-        <ModalPopout modalType='new herb' msg='Add a new herb' />
-        <Search 
-            onSearch={(searchTerm) => handleSearches(searchTerm, filterArray, setSearchResults)} 
-            searchedHerbs={searchResults}
-            searchTerm = {searchTerm}
-            setSearchTerm = {setSearchTerm}
-        />
-        <Filter 
-          onFilterChange={(selectedProperties) => handleFilterChange(selectedProperties, setSelectedProperties, filterArray, setFilteredHerbs)}
-          selectedProperties={selectedProperties} 
-          properties={properties}/>
-          <br />
-        <Card.Group itemsPerRow={4}>
-            {displayedHerbs}
-        </Card.Group>
-        </>
+        <div>
+            <ModalPopout modalType='new herb' msg='Add a new herb' />
+            <Divider />
+            <Grid columns={2}>
+                <Grid.Column>
+                    <Search 
+                        onSearch={(searchTerm) => handleSearches(searchTerm, herbsList, setSearchResults)} 
+                        searchedHerbs={searchResults}
+                        searchTerm = {searchTerm}
+                        setSearchTerm = {setSearchTerm}
+                    />
+                </Grid.Column>
+
+                <Grid.Column>
+                <Filter 
+                    onFilterChange={(selectedProperties) => handleFilterChange(selectedProperties, setSelectedProperties, herbsList, setFilteredHerbs)}
+                    selectedProperties={selectedProperties} 
+                    properties={properties}/>
+                </Grid.Column>
+            </Grid>
+            <br />
+            <Card.Group itemsPerRow={4} >
+                {displayedHerbs}
+            </Card.Group>
+        </div>
     )
 }
 

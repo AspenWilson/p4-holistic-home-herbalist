@@ -17,7 +17,7 @@ class Comment(db.Model, SerializerMixin):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
     recipe = db.relationship('Recipe', back_populates='comments')
 
-    serialize_rules = ('-recipe.comments', '-recipe_id.recipe', '-recipe.herbs', '-recipe.directions', '-recipe.properties', '-recipe.ingredients', '-recipe.entered_on', '-recipe.id')
+    serialize_rules = ('-recipe.comments', '-recipe_id.recipe', '-recipe.herbs', '-recipe.directions', '-recipe.properties', '-recipe.ingredients', '-recipe.entered_on', '-recipe.id', '-user.saved_herbs', '-user.entered_herbs', '-user.entered_recipes', '-user.saved_recipes')
 
     @validates('comment')
     def validate_comment(self, key, comment):

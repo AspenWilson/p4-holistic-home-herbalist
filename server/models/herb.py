@@ -36,7 +36,8 @@ class Herb(db.Model, SerializerMixin):
         
         existing_herb = Herb.query.filter_by(name=name).first()
         if existing_herb:
-            raise ValueError('Herb already exists.')
+            if existing_herb.id != self.id:
+                raise ValueError('Herb already exists.')
         
         return name
     

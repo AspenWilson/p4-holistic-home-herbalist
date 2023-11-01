@@ -3,48 +3,62 @@ import RecipeCard from './RecipeCard'
 import { handleSearches, handleFilterChange } from '../helpers';
 import Search from './Search';
 import Filter from './Filter';
-import { Card } from 'semantic-ui-react'
-import { UserContext } from '../context/UserContext';
+import { Card, Grid, Divider } from 'semantic-ui-react'
+import { UserContext } from '../context/AppContext';
 import ModalPopout from './ModalPopout';
 
 
-function Recipes({profileRecipes}) {
-    const { recipes, properties, savedRecipes } = useContext(UserContext)
+function Recipes({ page }) {
+    const { recipes, properties, savedRecipes, enteredRecipes } = useContext(UserContext)
     const [searchResults, setSearchResults] = useState([]);
-    const [filteredRecipes, setFilteredRecipes] = useState(profileRecipes === true ? savedRecipes : recipes);
+    const [filteredRecipes, setFilteredRecipes] = useState([]);
     const [selectedProperties, setSelectedProperties] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const displayedRecipes = searchTerm && searchResults.length > 0
-        ? searchResults.map((recipe) => <RecipeCard recipe={recipe} />)
+    const recipesList = 
+        page === 'home' ? recipes
+        : page === 'profile - saved' ? savedRecipes
+        : page === 'profile - entered' ? enteredRecipes
+        : null
+
+    const displayedRecipes = 
+        searchTerm && searchResults.length > 0
+            ? searchResults.map((recipe) => <RecipeCard recipe={recipe} page={page}/>)
         : searchTerm && searchResults.length === 0
-        ? <h3>No recipes match your search.</h3>
-        : selectedProperties && filteredRecipes.length === 0
-        ? <h3>No recipes match your filter.</h3>
-        : filteredRecipes.map((recipe) => <RecipeCard recipe={recipe} />);
-    
-    const filterArray = profileRecipes === true
-        ? savedRecipes
-        : recipes
+            ? <h3>No recipes match your search.</h3>
+        : selectedProperties.length > 0 && filteredRecipes.length > 0
+            ? filteredRecipes.map((recipe) => <RecipeCard recipe={recipe} page={page} />)
+        : selectedProperties.length > 0 && filteredRecipes.length === 0
+            ? <h3>No recipes match your filter.</h3>
+        : recipesList.map((recipe) => <RecipeCard recipe={recipe} page={page}/>);
 
     return (
-        <>
-        <ModalPopout modalType='new recipe' msg='Add a new recipe'/>
-        <Search 
-            onSearch={(searchTerm) => handleSearches(searchTerm, filterArray, setSearchResults)} 
-            searchedRecipes= {searchResults}
-            searchTerm = {searchTerm}
-            setSearchTerm = {setSearchTerm}
-        />
-        <Filter 
-          onFilterChange={(selectedProperties) => handleFilterChange(selectedProperties, setSelectedProperties, filterArray, setFilteredRecipes)}
-          selectedProperties={selectedProperties} 
-          properties={properties}/>
-          <br />
-        <Card.Group itemsPerRow={4}>
-            {displayedRecipes}
-        </Card.Group>
-        </>
+        <div>
+            <ModalPopout modalType='new recipe' msg='Add a new recipe'/>
+            <Divider />
+            <Grid columns={2}>
+                <Grid.Column>
+                    <Search 
+                        onSearch={(searchTerm) => handleSearches(searchTerm, recipesList, setSearchResults)} 
+                        searchedRecipes= {searchResults}
+                        searchTerm = {searchTerm}
+                        setSearchTerm = {setSearchTerm}
+                    />
+                </Grid.Column>
+
+                <Grid.Column>
+                    <Filter 
+                    onFilterChange={(selectedProperties) => handleFilterChange(selectedProperties, setSelectedProperties, recipesList, setFilteredRecipes)}
+                    selectedProperties={selectedProperties} 
+                    properties={properties}
+                    />
+                </Grid.Column>
+            </Grid>
+            <br />
+            <Card.Group itemsPerRow={4}>
+                {displayedRecipes}
+            </Card.Group>
+        </div>
     )
 }
 

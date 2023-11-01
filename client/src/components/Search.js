@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserContext } from '../context/UserContext';
+import { Input, Icon } from 'semantic-ui-react'
 
 
 function Search({ onSearch, searchTerm, setSearchTerm }) {
@@ -10,20 +10,20 @@ function Search({ onSearch, searchTerm, setSearchTerm }) {
     onSearch(userInput)
   };
 
-
   const handleClear = () => {
     setSearchTerm('');
   };
 
   return (
     <div className="search">
-      <input
+      <Input
+        icon={<Icon name= 'remove circle' circular onClick={handleClear()} />}
+        fluid
         type="text"
         placeholder="Search..."
         value={searchTerm}
         onChange={handleInputChange}
       />
-      <button onClick={handleClear}>Clear</button>
     </div>
   );
 }

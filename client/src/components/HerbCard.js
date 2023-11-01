@@ -1,89 +1,93 @@
-import React, {useState, useEffect, useContext} from 'react'
-import { Card, Image, Label, Button, Icon } from 'semantic-ui-react'
-import "../index.css"
-import {Link} from 'react-router-dom'
-import { propertyTags, url } from '../helpers'
-import { UserContext } from '../context/UserContext';
+import React, {useState, useContext} from 'react'
+import { Link } from 'react-router-dom'
+import { Card, Image, Label, Button } from 'semantic-ui-react'
+import { propertyTags, headers } from '../helpers'
+import { UserContext } from '../context/AppContext';
 import ModalPopout from './ModalPopout'
 
-
-function HerbCard ({herb}) {
-    const { savedHerbs, user, fetchUpdatedData} = useContext(UserContext)
+function HerbCard ({herb, page}) {
+    const { savedHerbs, user, refreshSavedHerbs, refreshEnteredHerbs, refreshHerbs } = useContext(UserContext)
     const [isSaved, setIsSaved] = useState(savedHerbs.some((savedHerb) => savedHerb.id === herb.id))
-    
-    useEffect(() => {
-        fetchUpdatedData()
-        console.log('useEffect from HerbCard')
-    },[])
 
     const handleSave = () => {
         fetch(`/api/users/${user.id}/saved-herbs`, {
             method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-            },
+            headers,
             body: JSON.stringify({herb_id: herb.id})
         })
         .then((resp) => {
             if (resp.ok) {
                 setIsSaved(!isSaved)
-                fetchUpdatedData()
-                
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error)
-        })
+                refreshSavedHerbs(user)
+            }})
     }
 
     const handleUnSave = () => {
         fetch (`/api/users/${user.id}/saved-herbs/${herb.id}`, {
-            method:'DELETE'
+            method:'DELETE',
+            headers
         })
         .then((resp) => {
-            setIsSaved(!isSaved)
-            fetchUpdatedData()
+            if (resp.ok) {
+                setIsSaved(!isSaved)
+                refreshSavedHerbs(user)
+            }})
+    }
+
+    const handleDelete = () => {
+        fetch(`/api/herbs/${herb.id}`, {
+            method:'DELETE',
+            headers
         })
-        .catch((error) => {
-            console.error('Error: ', error)
-        })
+        .then((resp) => {
+            if (resp.ok) {
+                refreshEnteredHerbs(user)
+                refreshHerbs()
+            }})
     }
 
     return (
-        <div key={herb.id}>
-            <Card raised>
-                <Card.Content>
-                    <Button>
-                        <Icon name='edit'/>
-                        <ModalPopout modalType='herb edits' msg='Edit' id={herb.id}/>
-                    </Button>
-                    <Image
-                        src={herb.image_url}
-                        floated='left'
-                        size="small"
-                        />
-                    <Card.Header>{herb.name}</Card.Header>
-                    <Card.Meta>{herb.latin_name}</Card.Meta>
-                    <Card.Description >
-                        <h3>Properties</h3>
-                        <Label.Group tag>
-                            {herb.properties.length > 0 ? (
-                            propertyTags(herb) 
-                            ) : (null)}
-                        </Label.Group>
-                    </Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                    <Button basic color='green'>
-                        <Link to={`/herbs/${herb.id}`}>View Details</Link> 
-                    </Button>
-                    {isSaved ? 
-                        <Button basic color='orange' onClick={handleUnSave}>Saved</Button> :
-                        <Button basic color='yellow' onClick={handleSave}>Save</Button>
-                    }
-                </Card.Content>
-            </Card>
-        </div>
+        <Card raised>
+            <Card.Content>
+                <Image
+                    src={herb.image_url}
+                    floated='left'
+                    size="small"
+                />
+                {isSaved ? 
+                    <Button icon='star' circular style={{ color: "#056d52" }} floated='right' onClick={handleUnSave}/> :
+                    <Button icon='star outline' circular style={{ color: "#056d52" }} floated='right' onClick={handleSave}/>
+                }
+                <br />
+                <br />
+                { page === 'profile - entered' ?                     
+                    <div >
+                        <Button.Group vertical floated='right' >
+                            <ModalPopout modalType='herb edits' msg='Edit Herb' id={herb.id}/> 
+                            <Button circular  icon="trash" color='red' onClick={handleDelete}/>            
+                        </Button.Group>
+                    </div>
+                : null }
+            </Card.Content>
+
+            <Card.Content>
+                <Card.Header>{herb.name}</Card.Header>
+                <Card.Meta>{herb.latin_name}</Card.Meta>
+                <Card.Description >
+                    <h3>Properties</h3>
+                    <Label.Group tag>
+                        {herb.properties.length > 0 ? (
+                        propertyTags(herb.properties) 
+                        ) : (null)}
+                    </Label.Group>
+                </Card.Description>
+            </Card.Content>
+
+            <Button color='black'>
+                <Link to={`/herbs/${herb.id}`} style={{color: 'white'}}>View Details</Link> 
+            </Button>
+
+        </Card>
     )
 }
 

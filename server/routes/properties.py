@@ -12,15 +12,11 @@ class Properties(Resource):
     def post(self):
         data = request.get_json()
 
-        try:
-            new_property = Property(
-                name=data['name'], 
-                description=data['description'],
-                entered_by_id=session.get('user_id')
-            )
-        
-        except ValueError as e:
-            abort(422, e.args[0])
+        new_property = Property(
+            name=data['name'], 
+            description=data['description'],
+            entered_by_id=session.get('user_id')
+        )
 
         db.session.add(new_property)
         db.session.commit()
@@ -30,6 +26,7 @@ class Properties(Resource):
 class PropertiesByID(Resource):
     def get(self, id):
         prop = get_first(Property, 'id', id)
+        
         if not prop:
             return unfound_error('Property')
         
@@ -37,36 +34,36 @@ class PropertiesByID(Resource):
     
     def patch(self, id):
         prop = get_first(Property, 'id', id)
-        if not prop:
-            return unfound_error('Property')
         current_user = get_current_user()
-        if prop:
-            if prop.entered_by_id == session.get('user_id') or current_user.admin == '1':
-                    data = request.get_json()
+        data = request.get_json()
 
-                    for key in data.keys():
-                        if key not in ['id', 'entered_by_id']:
-                            setattr(prop, key, data[key])
-                            db.session.commit()
-                            return prop.to_dict(), 202
-            
-            return unauth_error    
-    
-    def delete(self, id):
-        prop = get_first(Property, 'id', id)
         if not prop:
             return unfound_error('Property')
         
-        current_user = get_current_user()
-        if prop:
-            if prop.entered_by_id == session.get('user_id') or current_user.admin == '1':
-                db.session.delete(prop)
-                db.session.commit()
+        if prop.entered_by_id != session.get('user_id') or current_user.admin != '1':
+            return unauth_error    
 
-                return deleted_msg('Property')
+        prop.name=data['name'], 
+        prop.description=data['description']
+
+        db.session.commit()
+        return prop.to_dict(), 202
             
-            else:
+    
+    def delete(self, id):
+        prop = get_first(Property, 'id', id)
+        current_user = get_current_user()
+        if not prop:
+            return unfound_error('Property')
+        
+        if prop.entered_by_id != session.get('user_id') or current_user.admin != '1':
                 return unauth_error
+        
+        db.session.delete(prop)
+        db.session.commit()
+
+        return deleted_msg('Property')
+            
 
 api.add_resource(Properties, '/api/properties')
 api.add_resource(PropertiesByID, '/api/properties/<int:id>')
