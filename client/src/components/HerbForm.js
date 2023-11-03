@@ -1,14 +1,14 @@
 import React, { useContext } from "react"
 import { Formik, Form, FieldArray } from "formik"
 import * as yup from "yup"
-import { UserContext } from "../context/AppContext"
-import { StyledSelect, FormHeader, StyledTextBox, StyledInput } from "./helpers/StylingHelpers"
-import { headers } from "../helpers"
+import { AppContext } from "../context/AppContext"
+import { FormHeader } from "./helpers/StylingHelpers"
+import { headers } from "./helpers/GeneralHelpers"
 import { Card, Grid, Image, Button } from 'semantic-ui-react'
-import { HerbInitialValues, IDDropdowns, dosageDrops, displayErrors } from "./helpers/FormHelpers"
+import { HerbInitialValues, IDDropdowns, dosageDrops, FormInputField, FormTextBoxField, FormSelectField, FormMultiSelectField } from "./helpers/FormHelpers"
 
 function HerbForm () {
-  const { properties, handleModalSuccess, user, refreshEnteredHerbs, refreshHerbs} = useContext(UserContext)
+  const { properties, handleModalSuccess, user, refreshEnteredHerbs, refreshHerbs } = useContext(AppContext)
   const imagePlaceholder = "https://i0.wp.com/wingsofchange.us/wp-content/uploads/2021/04/Leaf-placeholder-web-300px.png?fit=300%2C300&ssl=1"
 
   const formSchema = yup.object().shape({
@@ -55,7 +55,7 @@ function HerbForm () {
   return (
     <Formik 
       initialValues = { HerbInitialValues }
-      validationSchema={ formSchema }
+      validationSchema = { formSchema }
       onSubmit = { handleSubmit }
     >
     {(formik) => (
@@ -63,42 +63,30 @@ function HerbForm () {
       <Card fluid className='flex-outer'>
         <Form>
           <Card.Content className='allCards' >
-            <Grid columns={2}>
+            <Grid columns={ 2 }>
               <Grid.Column>
-                <FormHeader as='h3'>Herb Name</FormHeader>
-                <StyledInput name='name' onChange={formik.handleChange} value={formik.values.name} />
-                {displayErrors(formik.errors.name)}
-
-                <FormHeader as='h3'>Latin Name</FormHeader>
-                <StyledInput name='latin_name' onChange={formik.handleChange} value={formik.values.latin_name} />
-                {displayErrors(formik.errors.latin_name)}
+                <FormInputField label='Herb Name' name='name' type='text' formik={ formik } />
+                <FormInputField label='Latin Name' name='latin_name' type='text' formik={ formik } />
               </Grid.Column>
 
               <Grid.Column>
-                <FormHeader as='h3'>Image Link</FormHeader>
-                <StyledInput name='image_url' onChange={formik.handleChange} value={formik.values.image_url} />
-                {displayErrors(formik.errors.image_url)}
-
+                <FormInputField label='Image Link' name='image_url' type='text' formik={ formik } />
                 <FormHeader as='h3'>Image Preview</FormHeader>
                 <Image 
                   size='small'
                   centered
-                  src={formik.values.image_url || imagePlaceholder}
+                  src={ formik.values.image_url || imagePlaceholder }
                 />
               </Grid.Column>
             </Grid>
             <br />
-            <Grid columns={2}>
+            <Grid columns={ 2 }>
               <Grid.Column>
-                <FormHeader as='h3'>Description</FormHeader>
-                <StyledTextBox name='description' onChange={formik.handleChange} value={formik.values.description} />
-                {displayErrors(formik.errors.description)}
+                <FormTextBoxField label='Description' name='description' formik={ formik } />
               </Grid.Column>
 
               <Grid.Column>
-                <FormHeader as='h3'>Warnings</FormHeader>
-                <StyledTextBox name='warnings' onChange={formik.handleChange} value={formik.values.warnings} />
-                {displayErrors(formik.errors.warnings)}
+                <FormTextBoxField label='Warnings' name='warnings' formik={ formik } /> 
               </Grid.Column>
             </Grid>
             
@@ -108,27 +96,14 @@ function HerbForm () {
               <FormHeader as='h3'>Add Dosages</FormHeader>
               <br />
               {formik.values.dosages.map((_, index) => (
-                <div key={index}>
-                  <Grid columns={2}>
+                <div key={ index }>
+                  <Grid columns={ 2 }>
                     <Grid.Column>
-                      <FormHeader as='h3' >Dosage Description</FormHeader>
-                      <StyledInput
-                        name={`dosages[${index}].dosage_description`}
-                        value={formik.values.dosages.dosage_description}
-                        onChange={formik.handleChange}
-                      />
+                      <FormInputField label='Dosage Description' name={`dosages[${index}].dosage_description`} type='text' formik={ formik } />
                     </Grid.Column>
 
                     <Grid.Column>
-                      <FormHeader as='h3' >Dosage Form</FormHeader>
-                      <StyledSelect
-                        classNamePrefix="Select"
-                        name={`dosages[${index}].dosage_form`}
-                        options={dosageDrops}
-                        onChange={(selectedOption) => {
-                          formik.setFieldValue(`dosages[${index}].dosage_form`, selectedOption.value)
-                        }}
-                      />
+                      <FormSelectField label='Doage Form' name={`dosages[${index}].dosage_form`} formik={formik} options={dosageDrops} />
                     </Grid.Column>
                   </Grid>
 
@@ -146,23 +121,7 @@ function HerbForm () {
               </div>
             )}
             </FieldArray>
-
-            <FormHeader as='h3'>Add Properties</FormHeader>
-            <br />
-            <StyledSelect
-              classNamePrefix="Select"
-              isMulti
-              closeMenuOnSelect={false}
-              isClearable={true}
-              options={IDDropdowns(properties)}
-              onChange={(selectedOptions) => {
-                formik.setFieldValue(
-                  "property_ids",
-                  selectedOptions.map((option) => option.value)
-                );
-              }}
-            />
-            {displayErrors(formik.errors.property_ids)}
+            <FormMultiSelectField label='Add Properties' name='property_ids' formik={ formik } options={ IDDropdowns(properties) } />
             <br />
             <Button fluid type='submit' >Submit</Button>
           </Card.Content>

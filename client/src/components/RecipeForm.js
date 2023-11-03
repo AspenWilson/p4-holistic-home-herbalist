@@ -1,15 +1,15 @@
 import React, { useContext } from "react"
 import { Formik, Form, FieldArray } from "formik"
 import * as yup from "yup"
-import { UserContext } from "../context/AppContext"
-import { headers } from "../helpers"
+import { AppContext } from "../context/AppContext"
+import { headers } from "./helpers/GeneralHelpers"
 import { Card, Grid, Button } from 'semantic-ui-react'
-import { RecipeInitialValues, IDDropdowns, amountTypeDrops, herbTypeDrops, displayErrors } from "./helpers/FormHelpers"
-import { StyledSelect, FormHeader, StyledTextBox, StyledInput } from "./helpers/StylingHelpers"
+import { RecipeInitialValues, IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField } from "./helpers/FormHelpers"
+import { FormHeader } from "./helpers/StylingHelpers"
 
 
 function RecipeForm () {
-  const { herbs, handleModalSuccess, refreshEnteredRecipes, user, refreshRecipes } = useContext(UserContext)
+  const { herbs, handleModalSuccess, refreshEnteredRecipes, user, refreshRecipes } = useContext(AppContext)
 
   const formSchema = yup.object().shape({
     name: yup.string().required("Herb name is required."),
@@ -30,97 +30,63 @@ function RecipeForm () {
       directions: values.directions,
       ingredients: values.ingredients
     }
+    console.log('hit submit before fetch')
     fetch('/api/recipes', {
-      method:'POST',
+      method:"POST",
       headers,
       body: JSON.stringify(newRecipeValues, null, 2),
     })
     .then((resp) => {
       if(resp.ok) {
         resp.json().then(data => {
-            resetForm({
-              values:RecipeInitialValues
-            })
-            handleModalSuccess()
-            refreshEnteredRecipes(user)
-            refreshRecipes()
+          handleModalSuccess()
+          refreshEnteredRecipes(user)
+          refreshRecipes()
+          resetForm({ values:RecipeInitialValues })
           })
       }})
     }
 
   return (
     <Formik 
-      initialValues = {RecipeInitialValues}
-      validationSchema={formSchema}
-      onSubmit = {handleSubmit}
+      initialValues = { RecipeInitialValues }
+      validationSchema = { formSchema }
+      onSubmit = { handleSubmit }
     >
     {(formik) => (
       <div className="container">
         <Card fluid className="flex-outer">
         <Form>
           <Card.Content className="allCards">
-
-            <FormHeader as='h3' fluid>Name</FormHeader>
-            <StyledInput name='name' onChange={formik.handleChange} value={formik.values.name} />
-            {displayErrors(formik.errors.name)}
-
-            <FormHeader as='h3'>Directions</FormHeader>
-            <StyledTextBox  name='directions' onChange={formik.handleChange} value={formik.values.directions} />
-            {displayErrors(formik.errors.directions)}
+            <FormInputField label='Recipe Name' name='name' type='text' formik={ formik } />
+            <FormTextBoxField label='Directions' name='directions' formik={ formik } />
 
             <FieldArray name="ingredients">
             {({ push, remove }) => (
               <div>
                 <FormHeader as='h3'>Add Ingredients</FormHeader>
                 {formik.values.ingredients.map((_, index) => (
-                    <div key={index}>
-                    <Grid columns={2}>
+                    <div key={ index }>
+                    <Grid columns={ 2 }>
                       <Grid.Column>
-                        <FormHeader as='h3' fluid >Amount</FormHeader>
-                        <StyledInput 
-                          name={`ingredients[${index}].amount`}
-                          value={formik.values.ingredients.amount}
-                          onChange={formik.handleChange}
-                        />
+                      <FormInputField label='Amount' name={`ingredients[${index}].amount`} type='number' formik={ formik } />
                       </Grid.Column>
                         
                       <Grid.Column>
-                        <FormHeader as='h3'>Amount Type</FormHeader>
-                        <StyledSelect
-                          classNamePrefix="Select"
-                          name={`ingredients[${index}].amount_type`}
-                          options= {amountTypeDrops}
-                          onChange={(selectedOption) => {
-                            formik.setFieldValue(`ingredients[${index}].amount_type`, selectedOption.value)
-                          }}
-                        />
+                      <FormSelectField label='Amount Type' name={`ingredients[${index}].amount_type`} formik={formik} options={amountTypeDrops} />
+
                       </Grid.Column>
                     </Grid>
 
                     <Grid columns={2}>
                       <Grid.Column>
-                        <FormHeader as='h3'>Herb</FormHeader>
-                        <StyledSelect
-                          classNamePrefix="Select"
-                          name={`ingredients[${index}].herb_id`}
-                          isSearchable
-                          isClearable
-                          placeholder='Select an herb. Type to search.'
-                          options={IDDropdowns(herbs)}
-                          onChange={(selectedHerb) => {formik.setFieldValue(`ingredients[${index}].herb_id`, selectedHerb.value)}}
-                        />
+                        <FormSelectField label='Herb' name={`ingredients[${index}].herb_id`} formik={formik} options={IDDropdowns(herbs)} />
+
                       </Grid.Column>
 
                       <Grid.Column>
-                        <FormHeader as='h3'>Herb Type</FormHeader>
-                        <StyledSelect
-                          classNamePrefix="Select"
-                          name={`ingredients[${index}].herb_type`}
-                          options={herbTypeDrops}
-                          onChange={(selectedOption) => {
-                            formik.setFieldValue(`ingredients[${index}].herb_type`, selectedOption.value)
-                          }}
-                        />
+                      <FormSelectField label='Herb Type' name={`ingredients[${index}].herb_type`} formik={formik} options={herbTypeDrops} />
+
                       </Grid.Column>
                     </Grid>
                     <br/>

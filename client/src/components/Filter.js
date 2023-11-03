@@ -2,16 +2,7 @@ import React from 'react'
 import { Dropdown } from 'semantic-ui-react'
 
 function Filter({ properties, selectedProperties, onFilterChange }) {
-    const options = properties.map((property) => ({
-      key: property.name,
-      text: property.name,
-      value: property.name,
-    }));
-  
-    const handleFilterChange = (_, { value }) => {
-      onFilterChange(value);
-    };
-  
+
     return (
       <Dropdown
         placeholder="Select properties"
@@ -19,9 +10,13 @@ function Filter({ properties, selectedProperties, onFilterChange }) {
         multiple
         search
         selection
-        options={options}
+        options={properties.map((property) => ({
+          key: property.name,
+          text: property.name,
+          value: property.name,
+        }))}
         value={selectedProperties}
-        onChange={handleFilterChange}
+        onChange={(_, { value }) => onFilterChange(value)}
       />
     );
   }

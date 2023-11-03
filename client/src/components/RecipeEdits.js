@@ -1,15 +1,16 @@
-import React, {useContext, useEffect, useState} from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Formik, Form, FieldArray } from "formik"
 import * as yup from "yup"
-import { UserContext } from "../context/AppContext"
+import { AppContext } from "../context/AppContext"
 import { Card, Grid, Button, Icon } from 'semantic-ui-react'
 import { IngredientEditCards } from "./helpers/EditFormHelpers"
-import { StyledSelect, FormHeader, StyledTextBox, StyledInput } from "./helpers/StylingHelpers"
-import { IDDropdowns, amountTypeDrops, herbTypeDrops, displayErrors } from "./helpers/FormHelpers"
+import { FormHeader } from "./helpers/StylingHelpers"
+import { IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField } from "./helpers/FormHelpers"
+import { headers } from "./helpers/GeneralHelpers"
 
 
 function RecipeEdits ({ id }) {
-    const { handleModalSuccess, user, herbs, refreshRecipes, refreshEnteredRecipes } = useContext(UserContext)
+    const { handleModalSuccess, user, herbs, refreshRecipes, refreshEnteredRecipes } = useContext(AppContext)
     const [recipe, setRecipe] = useState(null)
     const [deletedIngredients, setDeletedIngredients] = useState([])
     const [show, setShow] = useState(null)
@@ -50,12 +51,9 @@ function RecipeEdits ({ id }) {
         }
         fetch(`/api/recipes/${id}`, {
             method:'PATCH',
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers,
             body: JSON.stringify(updatedRecipe, null, 2)
-        })
-        .then((resp) => {
+        }).then((resp) => {
             if(resp.ok) {
                 resp.json().then((data) => {
                     if (deletedIngredients.length > 0) {
@@ -68,8 +66,7 @@ function RecipeEdits ({ id }) {
                     refreshEnteredRecipes(user)
                     refreshRecipes()
                 })
-            } 
-        })
+            }})
     }
 
     if (!recipe) {
@@ -81,46 +78,43 @@ function RecipeEdits ({ id }) {
             initialValues={{
                 name: recipe.name || "",
                 directions: recipe.directions || "",
-                ingredients: show ? [{
-                    amount: "",
-                    amount_type: "",
-                    herb_id: "",
-                    herb_type: ""
-                }] : []
+                ingredients: show ? [{ amount: "", amount_type: "", herb_id: "", herb_type: "" }] : []
             }}
-            enableReinitialize={true}
-            validationSchema={formSchema}
-            onSubmit={handleSubmit}
+            enableReinitialize={ true }
+            validationSchema={ formSchema }
+            onSubmit={ handleSubmit }
         >
         {(formik) => (
             <div className='container'>
             <Card fluid className='flex-outer'>
             <Form>
                 <Card.Content className="allCards" >
-                    <Grid columns={2}>
+                    <Grid columns={ 2 }>
                         <Grid.Column>
-                            <FormHeader as='h3'>Recipe Name</FormHeader>
+                            <FormInputField label='Recipe Name' name='name' type='text' formik={ formik } />
+                            {/* <FormHeader as='h3'>Recipe Name</FormHeader>
                             <StyledInput
                                 name='name'
                                 onChange={formik.handleChange}
                                 value={formik.values.name}
                             />
-                            {displayErrors(formik.errors.name)}
+                            {displayErrors(formik.errors.name)} */}
                         </Grid.Column>
 
                         <Grid.Column>
-                            <FormHeader as='h3'>Directions</FormHeader>
+                        <FormTextBoxField label='Directions' name='directions' formik={ formik } />
+                            {/* <FormHeader as='h3'>Directions</FormHeader>
                             <StyledTextBox
                                 name='directions'
                                 onChange={formik.handleChange}
                                 value={formik.values.directions}
                             />
-                            {displayErrors(formik.errors.directions)}
+                            {displayErrors(formik.errors.directions)} */}
                         </Grid.Column>
                     </Grid>
 
                     <FieldArray name='ingredients'>
-                    {({push, remove}) => (
+                    {({ push, remove }) => (
                         <div>
                             <FormHeader as='h3'>Existing Ingredients</FormHeader>
                             <Card.Group>
@@ -134,16 +128,18 @@ function RecipeEdits ({ id }) {
                             {show === true ?
                             formik.values.ingredients.map((_, index) => {
                                 return (
-                                <div key={index} >
-                                    <Grid columns={2}>
+                                <div key={ index } >
+                                    <Grid columns={ 2 }>
                                         <Grid.Column>
-                                            <FormHeader as='h3'>Amount</FormHeader>
+                                        <FormInputField label='Amount' name={`ingredients[${index}].amount`} type='number' formik={ formik } />
+                                            {/* <FormHeader as='h3'>Amount</FormHeader>
                                             <StyledInput
                                                 name={`ingredients[${index}].amount`}
                                                 onChange={formik.handleChange}
                                                 value={formik.values.ingredients.amount}
-                                            />
-                                            <FormHeader as='h3'>Amount Type</FormHeader>
+                                            /> */}
+                                            <FormSelectField label='Amount Type' name={`ingredients[${index}].amount_type`} formik={formik} options={amountTypeDrops} />
+                                            {/* <FormHeader as='h3'>Amount Type</FormHeader>
                                             <StyledSelect
                                                 classNamePrefix="Select"
                                                 name={`ingredients[${index}].amount_type`}
@@ -151,11 +147,12 @@ function RecipeEdits ({ id }) {
                                                 onChange={(selectedOption) => {
                                                     formik.setFieldValue(`ingredients[${index}].amount_type`, selectedOption.value)
                                                 }}
-                                            />
+                                            /> */}
                                         </Grid.Column>
 
                                         <Grid.Column>
-                                            <FormHeader as='h3'>Herb</FormHeader>
+                                        <FormSelectField label='Herb' name={`ingredients[${index}].herb_id`} formik={formik} options={IDDropdowns(herbs)} />
+                                            {/* <FormHeader as='h3'>Herb</FormHeader>
                                             <StyledSelect
                                                 classNamePrefix="Select"
                                                 name={`ingredients[${index}].herb_id`}
@@ -164,9 +161,9 @@ function RecipeEdits ({ id }) {
                                                 placeholder='Select an herb. Type to search.'
                                                 options={IDDropdowns(herbs)}
                                                 onChange={(selectedHerb) => {formik.setFieldValue(`ingredients[${index}].herb_id`, selectedHerb.value)}}
-                                            />
-
-                                            <FormHeader as='h3'>Herb Type</FormHeader>
+                                            /> */}
+                                            <FormSelectField label='Herb Type' name={`ingredients[${index}].herb_type`} formik={formik} options={herbTypeDrops} />
+                                            {/* <FormHeader as='h3'>Herb Type</FormHeader>
                                             <StyledSelect
                                                 classNamePrefix="Select"
                                                 name={`ingredients[${index}].herb_type`}
@@ -174,7 +171,7 @@ function RecipeEdits ({ id }) {
                                                 onChange={(selectedOption) => {
                                                     formik.setFieldValue(`ingredients[${index}].herb_type`,selectedOption.value)
                                                 }}
-                                            />
+                                            /> */}
                                         </Grid.Column>
                                     </Grid>
                                     <Button  onClick={() => remove(index)}>Remove Ingredient</Button>

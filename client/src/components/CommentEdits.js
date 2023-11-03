@@ -1,17 +1,15 @@
 import React, {useContext, useEffect, useState} from "react"
 import { Formik, Form } from "formik"
 import * as yup from "yup"
-import { UserContext } from "../context/AppContext"
+import { AppContext } from "../context/AppContext"
 import { Card, Button } from 'semantic-ui-react'
-import { headers } from "../helpers"
-import { FormHeader, StyledTextBox } from "./helpers/StylingHelpers"
-import { displayErrors } from "./helpers/FormHelpers"
-
+import { headers } from "./helpers/GeneralHelpers"
+import { FormTextBoxField } from "./helpers/FormHelpers"
 
 
 function CommentEdits ({ id }) {
     const [comment, setComment] = useState(null)
-    const { handleModalSuccess, user, refreshEnteredComments, refreshComments } = useContext(UserContext)
+    const { handleModalSuccess, user, refreshEnteredComments } = useContext(AppContext)
 
     useEffect(() => {
         fetch(`/api/comments/${id}`)
@@ -26,20 +24,16 @@ function CommentEdits ({ id }) {
     })
 
     const handleSubmit = (values) => {
-        const updatedComment = {
-            comment: values.comment
-        }
+        const updatedComment = { comment: values.comment }
         fetch(`/api/comments/${id}`, {
             method:'PATCH',
             headers, 
             body: JSON.stringify(updatedComment, null, 2)
-        })
-        .then((resp) => {
+        }).then((resp) => {
             if(resp.ok) {
                 resp.json().then((data) => {
                     handleModalSuccess()
                     refreshEnteredComments(user)
-                    refreshComments()
                 })
             }
         })
@@ -51,25 +45,17 @@ function CommentEdits ({ id }) {
 
     return (
         <Formik
-            initialValues={{
-                comment: comment.comment || ""
-            }}
-            enableReinitialize={true}
-            validationSchema={formSchema}
-            onSubmit={handleSubmit}
+            initialValues={{ comment: comment.comment || "" }}
+            enableReinitialize={ true }
+            validationSchema={ formSchema }
+            onSubmit={ handleSubmit }
         >
             {(formik) => (
                 <div className='container'>
                     <Card fluid className='flex-outer'>
                         <Form>
                             <Card.Content className='allCards'>
-                                <FormHeader as='h3'>Edit Comment</FormHeader>
-                                <StyledTextBox
-                                    name='comment'
-                                    onChange={formik.handleChange}
-                                    value={formik.values.comment}
-                                />
-                                {displayErrors(formik.errors.comment)}
+                                <FormTextBoxField label='Edit Comment' name='comment' formik={ formik } />
                             </Card.Content>
                             <Button fluid type='submit'>Submit edits</Button>
                         </Form>

@@ -2,8 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
-import { UserProvider } from "./context/AppContext";
-
+import { AppProvider } from "./context/AppContext";
 
 import Herb from "./components/Herb";
 import Herbs from "./components/Herbs";
@@ -19,7 +18,7 @@ import Authentication from "./components/Authentication";
 function App() {
 
   return (
-    <UserProvider>
+    <AppProvider>
      <GlobalStyle />
      <NavBar />
       <Switch>
@@ -48,7 +47,7 @@ function App() {
             <Home/>
           </Route>
         </Switch>
-      </UserProvider>
+      </AppProvider>
   )
 }
 

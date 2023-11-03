@@ -1,18 +1,17 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Menu, Image } from 'semantic-ui-react'
-import { UserContext } from '../context/AppContext'
+import { AppContext } from '../context/AppContext'
 
 
 function NavBar() {
-    const { loggedIn, logout } = useContext(UserContext)
+    const { loggedIn, logout } = useContext(AppContext)
+    
     const handleLogout = () => {
        fetch('/api/logout', {
         method: 'DELETE'
-       })
-       .then(() => logout())
+       }).then(() => logout())
     }
-
 
     const authOptions =  
     <>
@@ -36,7 +35,7 @@ function NavBar() {
             <Icon name='unordered list'/>
                 Properties
         </Menu.Item>
-        <Menu.Item as={Link} to="/" onClick={handleLogout}>
+        <Menu.Item as={Link} to="/" onClick={ handleLogout }>
             <Icon name='sign out'/>
                 Logout
         </Menu.Item> 
@@ -53,21 +52,20 @@ function NavBar() {
     return (
         (loggedIn ? 
             <> 
-                <Menu icon='labeled' inverted fluid widths={6}>
-                    {authOptions}
+                <Menu icon='labeled' inverted fluid widths={ 6 }>
+                    { authOptions }
                 </Menu>
                 <br/>
                 <Image src={'/Logo-white.png'} size='small'/>
             </> : 
             <>
-                <Menu icon='labeled' inverted fluid widths={2}>
-                    {authRequiredOptions}
+                <Menu icon='labeled' inverted fluid widths={ 2 }>
+                    { authRequiredOptions }
                 </Menu>
                 <br/>
                 <Image src={'/Logo-white.png'} size='small'/>
             </> )
     ) 
-
 }
 
 export default NavBar

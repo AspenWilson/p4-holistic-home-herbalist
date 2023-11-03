@@ -1,4 +1,4 @@
-import React, { useState} from "react"
+import React, { useState } from "react"
 import { Button, Icon, Card, Header, Grid } from 'semantic-ui-react'
 
 export function DosageEditCards ({dosage, deletedDosages, setDeletedDosages}) {

@@ -1,4 +1,5 @@
 import React from 'react'
+import { StyledInput, FormHeader, StyledTextBox, StyledSelect } from './StylingHelpers'
 
 // Initial Values
 
@@ -75,5 +76,73 @@ export const herbTypeDrops = dropdowns(herbTypeOptions)
 
 export const displayErrors = (error) => {
     return error ? <p style={{ color: "red" }}>{ error }</p> : null
+}
+
+// Form Fields
+
+export const FormInputField = ({ label, name, type, formik }) => {
+    return (
+        <>
+        <FormHeader as='h3'>{label}</FormHeader>
+        <StyledInput
+            type={type}
+            id={name}
+            name={name}
+            value={formik.values[name]}
+            onChange={formik.handleChange}
+        />
+        {displayErrors(formik.errors[name])}
+        </>
+    )
+}
+
+export const FormTextBoxField = ({ label, name, formik }) => {
+    return (
+        <>
+        <FormHeader as='h3'>{label}</FormHeader>
+        <StyledTextBox
+            name={name}
+            id={name}
+            value={formik.values[name]}
+            onChange={formik.handleChange}
+        />
+        {displayErrors(formik.errors[name])}
+        </>
+    )
+}
+
+export const FormSelectField = ({ label, name, formik, options }) => {
+    return (
+    <>
+    <FormHeader as='h3'>{label}</FormHeader>
+    <StyledSelect 
+        classNamePrefix="Select"
+        name={name}
+        options={options}
+        onChange={(selectedOption) => {
+            formik.setFieldValue(name, selectedOption.value)
+        }}
+        />
+    </>
+    )
+}
+
+export const FormMultiSelectField = ({ label, name, formik, options}) => {
+    return (
+        <>
+        <FormHeader as='h3'>{label}</FormHeader>
+        <StyledSelect 
+            classNamePrefix="Select"
+            isClearable = { true }
+            isMulti
+            closeMenuOnSelect={ false }
+            name={name}
+            options={options}
+            onChange={(selectedOptions) => {
+                formik.setFieldValue(name, selectedOptions.map((option) => option.value))
+            }}
+            />
+        </>
+    )
 }
 

@@ -1,21 +1,19 @@
-import React, {useContext, useEffect, useState} from "react"
+import React, { useContext, useEffect, useState } from "react"
 import {  Formik, Form, FieldArray } from "formik"
 import * as yup from "yup"
-import { UserContext } from "../context/AppContext"
+import { AppContext } from "../context/AppContext"
 import { Card, Grid, Image, Icon, Button } from 'semantic-ui-react'
 import { DosageEditCards, PropertyEditCards } from "./helpers/EditFormHelpers"
-import { StyledSelect, FormHeader, StyledTextBox, StyledInput } from "./helpers/StylingHelpers"
-import { IDDropdowns, dosageDrops, displayErrors } from "./helpers/FormHelpers"
-
+import { FormHeader } from "./helpers/StylingHelpers"
+import { IDDropdowns, dosageDrops, FormInputField, FormTextBoxField, FormMultiSelectField, FormSelectField } from "./helpers/FormHelpers"
+import { headers } from "./helpers/GeneralHelpers"
 
 
 function HerbEdits ({ id }) {
-    const { properties, handleModalSuccess, user, refreshEnteredHerbs, refreshHerbs } = useContext(UserContext)
+    const { properties, handleModalSuccess, user, refreshEnteredHerbs, refreshHerbs } = useContext(AppContext)
     const [herb, setHerb] = useState(null)
-    const [herbProperties, setHerbProperties] = useState([])
     const [deletedDosages, setDeletedDosages] = useState([])
     const [deletedProperties, setDeletedProperties] = useState([])
-    const [error, setError] = useState(null)
     const [show, setShow] = useState(null)
 
     useEffect(() => {
@@ -23,7 +21,6 @@ function HerbEdits ({ id }) {
           .then((resp) => resp.json())
           .then((data) => {
             setHerb(data);
-            setHerbProperties(data.properties)
           })
       }, [id]);
     
@@ -44,7 +41,7 @@ function HerbEdits ({ id }) {
 
     const handleSubmit = (values) => {
         const propertyIdsToRemove = deletedProperties.map((property) => property.id);
-        const updatedProperties = values.property_ids.filter((propertyID )=> !propertyIdsToRemove.includes(propertyID))
+        const updatedProperties = values.property_ids.filter((propertyID)=> !propertyIdsToRemove.includes(propertyID))
         
         const updatedHerb = {
             name: values.name,
@@ -57,12 +54,9 @@ function HerbEdits ({ id }) {
         }
         fetch(`/api/herbs/${id}`, {
             method: 'PATCH',
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers,
             body: JSON.stringify(updatedHerb, null, 2)
-        })
-        .then((resp) => {
+        }).then((resp) => {
             if(resp.ok) {
                 resp.json().then((data) => {
                     if (deletedDosages.length > 0) {
@@ -91,37 +85,26 @@ function HerbEdits ({ id }) {
                 description: herb.description || "",
                 warnings: herb.warnings || "",
                 image_url: herb.image_url || "",
-                dosages: show ? [{
-                    dosage_form: "", 
-                    dosage_description: ""
-                }] : [],
+                dosages: show ? [{ dosage_form: "", dosage_description: "" }] : [],
                 property_ids: herb.properties.map((property) => property.id) || []
             }}
-            enableReinitialize={true}
-            validationSchema = {formSchema}
-            onSubmit = {handleSubmit}
+            enableReinitialize={ true }
+            validationSchema = { formSchema }
+            onSubmit = { handleSubmit }
         >
         {(formik) => (
             <div className='container'>
             <Card fluid className='flex-outer'>
                 <Form>
                     <Card.Content className='allCards'>
-                        <Grid columns={2}>
+                        <Grid columns={ 2 }>
                             <Grid.Column>
-                                <FormHeader as='h3'>Herb Name</FormHeader>
-                                <StyledInput name="name" onChange={formik.handleChange} value={formik.values.name} />
-                                {displayErrors(formik.errors.name)}
-
-                                <FormHeader as='h3' >Latin Name</FormHeader>
-                                <StyledInput name="latin_name" onChange={formik.handleChange} value={formik.values.latin_name} />
-                                {displayErrors(formik.errors.latin_name)}
+                                <FormInputField label='Herb Name' name='name' type='text' formik={ formik } />
+                                <FormInputField label='Latin Name' name='latin_name' type='text' formik={ formik } />
                             </Grid.Column>
 
                             <Grid.Column>
-                                <FormHeader as='h3'>Image Link</FormHeader>
-                                <StyledInput name='image_url' onChange={formik.handleChange} value={formik.values.image_url} />
-                                {displayErrors(formik.errors.image_url)}
-
+                                <FormInputField label='Image Link' name='image_url' type='text' formik={ formik } />
                                 <FormHeader as='h3' textAlign='center'>Current Image</FormHeader>
                                 <Image 
                                     size='small'
@@ -131,21 +114,13 @@ function HerbEdits ({ id }) {
                             </Grid.Column>
                         </Grid>
 
-                        <Grid columns={2}>
+                        <Grid columns={ 2 }>
                             <Grid.Column>
-
-                                <FormHeader as='h3' >Description</FormHeader>
-                                <StyledTextBox name="description" onChange={formik.handleChange} value={formik.values.description} />
-                                {displayErrors(formik.errors.description)}
-
+                                <FormTextBoxField label='Description' name='description' formik={ formik } />
                             </Grid.Column>
 
                             <Grid.Column>
-
-                                <FormHeader as='h3' >Warnings</FormHeader>
-                                <StyledTextBox name="warnings" onChange={formik.handleChange} value={formik.values.warnings} />
-                                {displayErrors(formik.errors.warnings)}
-                            
+                                <FormTextBoxField label='Warnings' name='warnings' formik={ formik } />                           
                             </Grid.Column>
                         </Grid>
 
@@ -156,28 +131,16 @@ function HerbEdits ({ id }) {
                                 <Card.Group>
                                     {herb.dosages.map((dosage, index) => {
                                         return (
-                                            <DosageEditCards  key={index} dosage={dosage} deletedDosages={deletedDosages} setDeletedDosages={setDeletedDosages} />
+                                            <DosageEditCards  key={ index } dosage={ dosage } deletedDosages={ deletedDosages } setDeletedDosages={ setDeletedDosages } />
                                         )
                                     })}
                                 </Card.Group>
                                 
-                                {show === true ?
-                                formik.values.dosages.map((_, index) =>  {
+                                {show === true ? formik.values.dosages.map((_, index) =>  {
                                     return (
-                                    <div key={index}>
-                                        <FormHeader as='h3'>Dosage Form</FormHeader>
-                                        <StyledSelect
-                                            classNamePrefix="Select"
-                                            name={`dosages[${index}].dosage_form`}
-                                            options={dosageDrops}
-                                            onChange={(selectedOption) => {
-                                                formik.setFieldValue(`dosages[${index}].dosage_form`, selectedOption.value)
-                                            }}
-                                        />
-
-
-                                        <FormHeader as='h3' textAlign='center'>Dosage Description</FormHeader>
-                                        <StyledInput name={`dosages[${index}].dosage_description`} onChange={formik.handleChange} value={formik.values.dosages.dosage_description}/>
+                                    <div key={ index }>
+                                        <FormInputField label='Dosage Description' name={`dosages[${index}].dosage_description`} type='text' formik={ formik } />
+                                        <FormSelectField label='Doage Form' name={`dosages[${index}].dosage_form`} formik={formik} options={dosageDrops} />
 
                                         <Button onClick={() => remove(index)}>
                                             Remove Dosage
@@ -189,13 +152,9 @@ function HerbEdits ({ id }) {
                                             Add another dosage <Icon name='add' />
                                         </Button>
                                     </div>
-                                )})
-                                : null }
+                                )}) : null }
 
-                                {show === null ? <Button
-                                    onClick={() => {
-                                        setShow(true)}}
-                                >
+                                {show === null ? <Button onClick={() => setShow(true)}>
                                    Add new dosages to this herb <Icon name='add' />
                                 </Button> : null}
                             </div>
@@ -208,31 +167,14 @@ function HerbEdits ({ id }) {
                                     <Card.Group>
                                         {herb.properties.map((property) => {
                                             return (
-                                                <PropertyEditCards property={property} deletedProperties={deletedProperties} setDeletedProperties={setDeletedProperties} />
+                                                <PropertyEditCards property={ property } deletedProperties={ deletedProperties } setDeletedProperties={ setDeletedProperties } />
                                                 )
                                             })}
                                     </Card.Group>
-
-                                    <FormHeader as='h3'>Add Properties</FormHeader>
-                                    <StyledSelect
-                                        classNamePrefix="Select"
-                                        isMulti
-                                        isClearable={true}
-                                        closeMenuOnSelect={false}
-                                        options={IDDropdowns(properties)}
-                                        onChange={(selectedOptions) => {
-                                            formik.setFieldValue(
-                                                "property_ids",
-                                                formik.values.property_ids.concat(
-                                                    selectedOptions.map((option) => option.value)
-                                                    ));
-                                        }}
-                                    />
-                                    {displayErrors(formik.errors.property_ids)}
+                                    <FormMultiSelectField label='Add Properties' name='property_ids' formik={ formik } options={ IDDropdowns(properties) } />
                             </div>
                         </FieldArray>
                     </Card.Content>
-
                     <Button fluid type='submit'>Submit edits</Button> 
                 </Form>
             </Card>

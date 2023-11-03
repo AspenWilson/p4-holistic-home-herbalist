@@ -1,29 +1,13 @@
-import React from 'react';
-import {Label, Popup } from 'semantic-ui-react'
+import React from 'react'
+import { Tab } from 'semantic-ui-react'
 
-// Property tags for recipe and herb cards
+// Fetch & Data Helpers
 
 export function filterAlphabetically (data) {
     const sortedData = [...data]
     sortedData.sort((a,b) => a.name.localeCompare(b.name))
     return sortedData
 }
-export const propertyTags = (arr) => {
-    const filteredArr = filterAlphabetically(arr)
-    return filteredArr.map((property) => (
-        <Popup content={property.description} trigger={
-            <Label style={{backgroundColor: '#056d52', color:'white'}} tag key={property.id}>
-                {property.name}
-            </Label>}
-        />
-    ));
-};
-export const headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json"
-  }
-
-// Functions for data fetching, searches, and filters
 
 export function basicFetch(tag, setter, filteredFunction = null){
     fetch(tag)
@@ -36,12 +20,24 @@ export function basicFetch(tag, setter, filteredFunction = null){
         }})
 }
 
+export const headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
+  }
 
+// Search & Filter Helpers
 
-export function handleSearches(searchTerm, arr, setter) {
-    const searchedItems = arr.filter((item) => item.name.toLowerCase().startsWith(searchTerm.toLowerCase()));
-    const results = filterAlphabetically(searchedItems)
-    setter(results)
+export function handleSearches(searchTerm, searchTermSetter, arr, setter) {
+    searchTermSetter(searchTerm)
+    if (searchTerm.length === 0) {
+        setter(arr)
+    } else {
+        const searchedItems = arr.filter((item) => item.name.toLowerCase().startsWith(searchTerm.toLowerCase()));
+        
+        const results = filterAlphabetically(searchedItems)
+        setter(results)
+    }
+
 }
 
 export function handleFilterChange (selectedProperties, propertySetter, arr, searchSetter) {
@@ -57,7 +53,14 @@ export function handleFilterChange (selectedProperties, propertySetter, arr, sea
     }
 }
 
+//Misc. General Helpers
 
-
-
-
+export const tabPane = (arr, component, msg) => (
+        <Tab.Pane attached={false}>
+            {arr.length > 0 ? (
+                <>
+                {component}
+                </>
+            ) : (<h3>{msg}</h3>)}
+        </Tab.Pane> 
+    )

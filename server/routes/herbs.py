@@ -60,8 +60,8 @@ class HerbsByID(Resource):
             return unfound_error('Herb')
         
 
-        if herb.entered_by_id != session.get('user_id') or current_user.admin != '1':
-            return unauth_error()
+        # if herb.entered_by_id != session.get('user_id') or current_user.admin != '1':
+        #     return unauth_error()
 
         
         herb.name = data['name']
@@ -94,8 +94,8 @@ class HerbsByID(Resource):
         if not herb:
             return unfound_error('Herb')
         
-        if herb.entered_by_id != session.get('user_id') or current_user.admin != '1':
-            return unauth_error    
+        # if herb.entered_by_id != session.get('user_id') or current_user.admin != '1':
+        #     return unauth_error    
                 
         for ingredient in herb.ingredients:
             db.session.delete(ingredient)

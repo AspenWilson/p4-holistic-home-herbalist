@@ -1,25 +1,21 @@
-import React, {useEffect, useState, useContext} from "react";
-import { useParams, Link, useHistory } from 'react-router-dom';
-import { Card, Comment, Button, Icon, Grid, Header, List, Divider } from 'semantic-ui-react'
+import React, { useEffect, useState, useContext } from "react";
+import { useParams } from 'react-router-dom';
+import { Card, Comment, Button, Grid, Header, Divider } from 'semantic-ui-react'
 import CommentCard from "./CommentRecipe";
 import { Formik, Form } from "formik"
 import * as yup from "yup"
-import { headers, filterAlphabetically, basicFetch } from "../helpers";
-import { UserContext } from "../context/AppContext";
+import { headers, filterAlphabetically, basicFetch } from "./helpers/GeneralHelpers";
+import { AppContext } from "../context/AppContext";
 import { CommentInitalValues } from "./helpers/FormHelpers";
-import { StyledCardDescription, StyledTextBox, } from "./helpers/StylingHelpers"
+import { StyledCardDescription, StyledTextBox } from "./helpers/StylingHelpers"
+import { GoBack, RecipeUnLinkedList, UnLinkedLists } from "./helpers/CardHelpers";
 
 
 function Recipe(){
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null)
   const [ingredients, setIngredients] = useState([])
-  const history = useHistory();
-  const { refreshComments, user } = useContext(UserContext)
-
-  const goBack = () => {
-    history.goBack()
-  }
+  const { refreshComments, user } = useContext(AppContext)
 
   useEffect(() => {
     fetch(`/api/recipes/${id}`)
@@ -61,32 +57,10 @@ function Recipe(){
     return <div>Loading...</div>;
   }
 
-  const ingredientsList = ingredients.length > 0 ? (
-    ingredients.map((ingredient) => {
-      return (
-        <Card raised key={ingredient.id} >
-          <Card.Header style={{color: 'black', padding:'10px'}} as='h3'>{ingredient.herb.name}, <small>{ingredient.herb_type}</small></Card.Header>
-          <Card.Description style={{color: 'black', padding:'10px'}}>Amount: {ingredient.amount} {ingredient.amount_type}</Card.Description>
-          <Card.Content style={{color: 'black'}}>
-            <Icon name='warning sign' color='white' /> {ingredient.herb.warnings}
-          </Card.Content>
-          <Button fluid as={Link} to={`/herbs/${ingredient.herb_id}`} style={{backgroundColor: '#056d52', color:'white'}}>See Herb Details</Button>
-        </Card>
-      );
-    })) : ( <h3>No ingredients listed for this recipe.</h3>);
+  const ingredientsList = ingredients.length > 0 ? <RecipeUnLinkedList arr={ ingredients} name={'Herb'} />
+    : ( <h3>No ingredients listed for this recipe.</h3>);
     
-  const recipeProperties = () => {
-    const filteredProperties = filterAlphabetically(recipe.properties)
-      return filteredProperties.map((property) => (
-        <List key={property.id} style={{ color:'white'}}>
-          <List.List>
-            <List.Header style={{fontWeight: 'bold'}}><Icon name='right triangle' />{property.name}
-            </List.Header>
-            <List.Description >{property.description}</List.Description>
-          </List.List>
-        </List>
-      )
-    )};
+  const filteredProperties = filterAlphabetically(recipe.properties)
   
   const comments = recipe.comments.length > 0 ? (
     recipe.comments.map((comment) => {
@@ -97,58 +71,55 @@ function Recipe(){
     
   return (
     <div>
-      <Button icon labelPosition='left' onClick={goBack} style={{backgroundColor: 'black', color:'white'}} >
-        <Icon name='backward' color='white' />
-          Go Back
-      </Button>
-      <Card raised fluid style= {{backgroundColor: 'rgba(52, 52, 52, 0.8)', padding: '10px'}} className='flex-outer'>
+      <GoBack />
+      <Card raised fluid style= {{ backgroundColor: 'rgba(52, 52, 52, 0.8)', padding: '10px' }} className='flex-outer'>
         <Card.Content>
-          <Header as='h1' style={{color: 'white'}}>{recipe.name}</Header>
-          <span style={{color: 'white'}}><i>Entered by: {recipe.entered_by.username}</i></span>
+          <Header as='h1' style={{ color: 'white' }}>{recipe.name}</Header>
+          <span style={{ color: 'white' }}><i>Entered by: {recipe.entered_by.username}</i></span>
           <Divider />
-          <Grid columns ={2}>
+          <Grid columns ={ 2 }>
             <Grid.Column>
               <StyledCardDescription>Directions</StyledCardDescription>
               <br />
-              {recipe.directions}
+              { recipe.directions }
               <Card.Content extra>
                 <br />
                 <StyledCardDescription as='h1'>Ingredients</StyledCardDescription>
                 <br />
-                  <Card.Group itemsPerRow={2}>
-                  {ingredientsList}
+                  <Card.Group itemsPerRow={ 2 }>
+                  { ingredientsList }
                   </Card.Group>
               </Card.Content>
             </Grid.Column>
 
             <Grid.Column>
               <StyledCardDescription>Properties:</StyledCardDescription>
-              {recipeProperties()}
+                <UnLinkedLists arr={ filteredProperties } variable1={ 'name' } variable2={ 'description' } />
             </Grid.Column>
           </Grid>
         </Card.Content>
         <Divider />
         <StyledCardDescription as='h1'>Comments</StyledCardDescription>
-          <Grid columns={2}>
+          <Grid columns={ 2 }>
             <Grid.Column>
               <Card.Content>
                 <Comment.Group>
-                  {comments}
+                  { comments }
                 </Comment.Group>
               </Card.Content>
             </Grid.Column>
             <Grid.Column>
               <Formik 
-                initialValues={CommentInitalValues}
-                validationSchema={formSchema}
-                onSubmit={handleSubmit}
+                initialValues={ CommentInitalValues }
+                validationSchema={ formSchema }
+                onSubmit={ handleSubmit }
               >
 
               {(formik) => (
                 <Form >
-                  <StyledTextBox name='comment' onChange={formik.handleChange} value={formik.values.comment} />
+                  <StyledTextBox name='comment' onChange={ formik.handleChange } value={ formik.values.comment } />
                 <Form/>
-                <Button content='Add Comment' type='submit' labelPosition='left' icon='edit' style={{backgroundColor: '#056d52', color:'white'}} />
+                <Button content='Add Comment' type='submit' labelPosition='left' icon='edit' style={{ backgroundColor: '#056d52', color:'white' }} />
               </Form>
               )}
               </Formik>

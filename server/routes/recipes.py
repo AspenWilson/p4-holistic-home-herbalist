@@ -55,8 +55,8 @@ class RecipesByID(Resource):
         if not recipe:
             return unfound_error('Recipe')
 
-        if recipe.entered_by_id != session.get('user_id') or current_user.admin != '1':
-                return unauth_error()
+        # if recipe.entered_by_id != session.get('user_id') or current_user.admin != '1':
+        #         return unauth_error()
             
         recipe.name = data['name']
         recipe.directions = data['directions']
@@ -91,8 +91,8 @@ class RecipesByID(Resource):
         if not recipe:
             return unfound_error('Recipe')
 
-        if recipe.entered_by_id != session.get('user_id') or current_user.admin != '1':
-            return unauth_error
+        # if recipe.entered_by_id != session.get('user_id') or current_user.admin != '1':
+        #     return unauth_error
         
         for ingredient in recipe.ingredients:
             db.session.delete(ingredient)

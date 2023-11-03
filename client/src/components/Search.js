@@ -1,28 +1,17 @@
 import React from 'react';
-import { Input, Icon } from 'semantic-ui-react'
+import { Input } from 'semantic-ui-react'
 
 
-function Search({ onSearch, searchTerm, setSearchTerm }) {
-
-  const handleInputChange = (e) => {
-    const userInput = e.target.value
-    setSearchTerm(userInput);
-    onSearch(userInput)
-  };
-
-  const handleClear = () => {
-    setSearchTerm('');
-  };
+function Search({ onSearch, searchTerm }) {
 
   return (
     <div className="search">
       <Input
-        icon={<Icon name= 'remove circle' circular onClick={handleClear()} />}
         fluid
         type="text"
         placeholder="Search..."
-        value={searchTerm}
-        onChange={handleInputChange}
+        value={ searchTerm }
+        onChange={(e) => onSearch(e.target.value)}
       />
     </div>
   );

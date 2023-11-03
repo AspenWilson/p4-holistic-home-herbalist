@@ -67,8 +67,8 @@ class RecipeIngredientsByID(Resource):
         if not recipe or not ingredient:
             return unfound_error('Item')
         
-        if recipe.entered_by_id != session.get('user_id') or current_user.admin != '1':   
-            return unauth_error
+        # if recipe.entered_by_id != session.get('user_id') or current_user.admin != '1':   
+        #     return unauth_error
                     
         if ingredient not in recipe.ingredients:
             return unrelated_err('Ingredient', 'Recipe')
@@ -91,8 +91,8 @@ class RecipeIngredientsByID(Resource):
         if not recipe or not ingredient:
             return unfound_error('Item')
         
-        if recipe.entered_by_id != session.get('user_id') or current_user.admin != '1':   
-            return unauth_error
+        # if recipe.entered_by_id != session.get('user_id') or current_user.admin != '1':   
+        #     return unauth_error
 
         if ingredient not in recipe.ingredients:
             return unrelated_err('Ingredient', 'Recipe')

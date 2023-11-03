@@ -1,9 +1,9 @@
 import React, { createContext, useState, useEffect } from "react";
-import { basicFetch, filterAlphabetically } from "../helpers";
+import { basicFetch, filterAlphabetically } from "../components/helpers/GeneralHelpers";
 
-const UserContext = createContext({});
+const AppContext = createContext({});
 
-const UserProvider = ({ children }) => {
+const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -111,13 +111,8 @@ const UserProvider = ({ children }) => {
 
   //Comments Context
 
-
   const refreshEnteredComments = (user) => {
-    fetch(`/api/users/${user.id}`)
-    .then((resp) => resp.json())
-    .then ((data) => {
-      setEnteredComments(filterAlphabetically(data.entered_comments))
-    }) 
+    basicFetch(`/api/users/${user.id}/comments`, setEnteredComments)
   }
 
   const refreshComments = (user) => {
@@ -129,11 +124,8 @@ const UserProvider = ({ children }) => {
         setSecondOpen(!secondOpen)
     }
 
-
-
-
   return (
-    <UserContext.Provider value={{
+    <AppContext.Provider value={{
         user, //CommentEdits, CommentProfile, HerbCard, HerbEdits, HerbForm, Profile, RecipeCard, RecipeEdits, RecipeForm
         handleLogin, //Authentication
         logout, // NavBar
@@ -161,8 +153,8 @@ const UserProvider = ({ children }) => {
     }}
     >
         {children}
-    </UserContext.Provider>
+    </AppContext.Provider>
   );
 };
 
-export { UserContext, UserProvider }
+export { AppContext, AppProvider }
