@@ -47,7 +47,7 @@ export const UnLinkedLists = ({ arr, variable1, variable2 }) => {
     )
 }
 
-export const LinkedList = ({ arr, url, variable }) => {
+export const LinkedList = ({ arr, url }) => {
     return arr.map((item) => (
         <List key={ item.id }>
             <List.List>

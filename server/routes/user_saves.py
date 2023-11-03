@@ -11,9 +11,6 @@ class UserSavedRecipes(Resource):
         if not user:
             return unfound_error('User')
         
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
-        
         saved_recipes = [saved_recipe.to_dict() for saved_recipe in user.saved_recipes]
 
         return saved_recipes, 200
@@ -27,9 +24,6 @@ class UserSavedRecipes(Resource):
         
         if not user or not recipe:
             return unfound_error('Item')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
 
         if not recipe_id:
             return {'error':'Missing recipe id.'}, 422
@@ -50,9 +44,6 @@ class UserSavedRecipesByID(Resource):
         
         if not user or not recipe:
             return unfound_error('Item')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
                 
         if recipe in user.saved_recipes:
             return recipe.to_dict(), 200
@@ -69,9 +60,6 @@ class UserSavedRecipesByID(Resource):
         if not user or not recipe:
             return unfound_error('Item')
         
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
-        
         user.saved_recipes.remove(recipe)
         db.session.commit()
         return {'message': 'Recipe removed from saved recipes.'}, 204
@@ -83,9 +71,6 @@ class UserSavedHerbs(Resource):
         current_user = get_current_user()
         if not user:
             return unfound_error('User')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
         
         saved_herbs = [saved_herb.to_dict() for saved_herb in user.saved_herbs]
         return saved_herbs, 200
@@ -119,9 +104,6 @@ class UserSavedHerbsByID(Resource):
         
         if not user or not herb:
             return unfound_error('Item')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
 
         if herb not in user.saved_herbs:
             return {'error':'Herb not found in saved herbs.'}, 404
@@ -135,9 +117,6 @@ class UserSavedHerbsByID(Resource):
         
         if not user or not herb:
             return unfound_error('Item')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
                 
         if herb not in user.saved_herbs:
             return {'error':'Herb not found in saved herbs.'}, 404

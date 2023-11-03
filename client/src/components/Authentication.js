@@ -43,7 +43,6 @@ function Authentication() {
         } else {
           resp.json().then((error) => {
             setError(error.error)
-            console.log(error)
           })
         }
         })
@@ -65,7 +64,11 @@ function Authentication() {
             <Button style={{backgroundColor: '#056d52', color:'white', font:'Arial', margin: '10px', display:'inline-block'}} type='submit'>{signUp?'Sign Up!':'Log In!'}</Button>
             
             <FormHeader as='h3'>{signUp?'Already a member?':'Not a member?'}</FormHeader>
-            <Button style={{backgroundColor: '#056d52', color:'white', font:'Arial', margin: '10px', display:'inline-block'}} onClick={handleClick}>{signUp?'Log In!':'Register now!'}</Button>
+            <Button 
+              style={{ backgroundColor: '#056d52', color:'white', font:'Arial', margin: '10px', display:'inline-block' }} 
+              onClick={handleClick}>
+                {signUp?'Log In!':'Register now!'}
+            </Button>
           </Form>
         </Card.Content>
       </Card>

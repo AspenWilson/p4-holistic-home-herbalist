@@ -30,7 +30,6 @@ function RecipeForm () {
       directions: values.directions,
       ingredients: values.ingredients
     }
-    console.log('hit submit before fetch')
     fetch('/api/recipes', {
       method:"POST",
       headers,
@@ -43,7 +42,7 @@ function RecipeForm () {
           refreshEnteredRecipes(user)
           refreshRecipes()
           resetForm({ values:RecipeInitialValues })
-          })
+        })
       }})
     }
 
@@ -73,19 +72,19 @@ function RecipeForm () {
                       </Grid.Column>
                         
                       <Grid.Column>
-                      <FormSelectField label='Amount Type' name={`ingredients[${index}].amount_type`} formik={formik} options={amountTypeDrops} />
+                      <FormSelectField label='Amount Type' name={`ingredients[${index}].amount_type`} formik={ formik } options={amountTypeDrops} />
 
                       </Grid.Column>
                     </Grid>
 
                     <Grid columns={2}>
                       <Grid.Column>
-                        <FormSelectField label='Herb' name={`ingredients[${index}].herb_id`} formik={formik} options={IDDropdowns(herbs)} />
+                        <FormSelectField label='Herb' name={`ingredients[${index}].herb_id`} formik={ formik } options={IDDropdowns(herbs)} />
 
                       </Grid.Column>
 
                       <Grid.Column>
-                      <FormSelectField label='Herb Type' name={`ingredients[${index}].herb_type`} formik={formik} options={herbTypeDrops} />
+                      <FormSelectField label='Herb Type' name={`ingredients[${index}].herb_type`} formik={ formik } options={herbTypeDrops} />
 
                       </Grid.Column>
                     </Grid>

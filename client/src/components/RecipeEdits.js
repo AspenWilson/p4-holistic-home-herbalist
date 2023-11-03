@@ -92,24 +92,10 @@ function RecipeEdits ({ id }) {
                     <Grid columns={ 2 }>
                         <Grid.Column>
                             <FormInputField label='Recipe Name' name='name' type='text' formik={ formik } />
-                            {/* <FormHeader as='h3'>Recipe Name</FormHeader>
-                            <StyledInput
-                                name='name'
-                                onChange={formik.handleChange}
-                                value={formik.values.name}
-                            />
-                            {displayErrors(formik.errors.name)} */}
                         </Grid.Column>
 
                         <Grid.Column>
                         <FormTextBoxField label='Directions' name='directions' formik={ formik } />
-                            {/* <FormHeader as='h3'>Directions</FormHeader>
-                            <StyledTextBox
-                                name='directions'
-                                onChange={formik.handleChange}
-                                value={formik.values.directions}
-                            />
-                            {displayErrors(formik.errors.directions)} */}
                         </Grid.Column>
                     </Grid>
 
@@ -132,46 +118,12 @@ function RecipeEdits ({ id }) {
                                     <Grid columns={ 2 }>
                                         <Grid.Column>
                                         <FormInputField label='Amount' name={`ingredients[${index}].amount`} type='number' formik={ formik } />
-                                            {/* <FormHeader as='h3'>Amount</FormHeader>
-                                            <StyledInput
-                                                name={`ingredients[${index}].amount`}
-                                                onChange={formik.handleChange}
-                                                value={formik.values.ingredients.amount}
-                                            /> */}
                                             <FormSelectField label='Amount Type' name={`ingredients[${index}].amount_type`} formik={formik} options={amountTypeDrops} />
-                                            {/* <FormHeader as='h3'>Amount Type</FormHeader>
-                                            <StyledSelect
-                                                classNamePrefix="Select"
-                                                name={`ingredients[${index}].amount_type`}
-                                                options={amountTypeDrops}
-                                                onChange={(selectedOption) => {
-                                                    formik.setFieldValue(`ingredients[${index}].amount_type`, selectedOption.value)
-                                                }}
-                                            /> */}
                                         </Grid.Column>
 
                                         <Grid.Column>
                                         <FormSelectField label='Herb' name={`ingredients[${index}].herb_id`} formik={formik} options={IDDropdowns(herbs)} />
-                                            {/* <FormHeader as='h3'>Herb</FormHeader>
-                                            <StyledSelect
-                                                classNamePrefix="Select"
-                                                name={`ingredients[${index}].herb_id`}
-                                                isSearchable
-                                                isClearable
-                                                placeholder='Select an herb. Type to search.'
-                                                options={IDDropdowns(herbs)}
-                                                onChange={(selectedHerb) => {formik.setFieldValue(`ingredients[${index}].herb_id`, selectedHerb.value)}}
-                                            /> */}
                                             <FormSelectField label='Herb Type' name={`ingredients[${index}].herb_type`} formik={formik} options={herbTypeDrops} />
-                                            {/* <FormHeader as='h3'>Herb Type</FormHeader>
-                                            <StyledSelect
-                                                classNamePrefix="Select"
-                                                name={`ingredients[${index}].herb_type`}
-                                                options={herbTypeDrops}
-                                                onChange={(selectedOption) => {
-                                                    formik.setFieldValue(`ingredients[${index}].herb_type`,selectedOption.value)
-                                                }}
-                                            /> */}
                                         </Grid.Column>
                                     </Grid>
                                     <Button  onClick={() => remove(index)}>Remove Ingredient</Button>

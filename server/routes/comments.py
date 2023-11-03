@@ -25,9 +25,6 @@ class CommentsByID(Resource):
         if not comment:
             return unfound_error('Comment')
         
-        # if comment.user_id != session.get('user_id') or current_user.admin != "1":
-        #     return unauth_error 
-        
         comment.comment = data['comment']
 
         db.session.commit()
@@ -40,9 +37,6 @@ class CommentsByID(Resource):
         
         if not comment:
             return unfound_error('Comment')
-        
-        # if comment.user_id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
          
         db.session.delete(comment)
         db.session.commit()
@@ -56,9 +50,6 @@ class UserComments(Resource):
         
         if not user:
             return unfound_error('User')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
                 
         comments = [comment.to_dict() for comment in user.comments]
         return comments, 200
@@ -73,9 +64,6 @@ class UserCommentsByID(Resource):
         
         if not user or not comment:
             return unfound_error('Item')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
                 
         if comment.user_id is not user.id:
             return {'error':'This comment was not posted by this user. '}, 409
@@ -92,9 +80,6 @@ class UserCommentsByID(Resource):
         
         if not user or not comment:
             return unfound_error('Item')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error  
                 
         if comment.user_id is not user.id:
             return {'error':'This comment was not posted by this user. '}, 409
@@ -112,9 +97,6 @@ class UserCommentsByID(Resource):
         
         if not user or not comment:
             return unfound_error('Item')
-        
-        # if comment.user_id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error 
         
         db.session.delete(comment)
         db.session.commit()
@@ -171,9 +153,6 @@ class RecipeCommentsByID(Resource):
             
         if comment.recipe_id is not id:
             return unrelated_err('Comment', 'Recipe') 
-            
-        # if comment.user_id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
         
         comment.comment = data['comment']
                         
@@ -191,9 +170,6 @@ class RecipeCommentsByID(Resource):
             
         if comment.recipe_id is not id:
                 return unrelated_err('Comment', 'Recipe') 
-            
-        # if comment.user_id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
                 
         db.session.delete(comment)
         db.session.commit()

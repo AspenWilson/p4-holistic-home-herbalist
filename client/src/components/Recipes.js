@@ -44,11 +44,11 @@ function Recipes({ page }) {
 
                 <Grid.Column>
                 <h3> OR filter recipes by their properties</h3>
-                    <Filter 
+                <Filter 
                     onFilterChange={(selectedProperties) => handleFilterChange(selectedProperties, setSelectedProperties, recipesList, setFilteredRecipes)}
                     selectedProperties={ selectedProperties } 
                     properties={ properties }
-                    />
+                />
                 </Grid.Column>
             </Grid>
             <br />

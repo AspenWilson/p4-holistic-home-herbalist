@@ -38,10 +38,7 @@ class PropertiesByID(Resource):
         data = request.get_json()
 
         if not prop:
-            return unfound_error('Property')
-        
-        # if prop.entered_by_id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error    
+            return unfound_error('Property')  
 
         prop.name=data['name'], 
         prop.description=data['description']
@@ -55,9 +52,6 @@ class PropertiesByID(Resource):
         current_user = get_current_user()
         if not prop:
             return unfound_error('Property')
-        
-        # if prop.entered_by_id != session.get('user_id') or current_user.admin != '1':
-        #         return unauth_error
         
         db.session.delete(prop)
         db.session.commit()

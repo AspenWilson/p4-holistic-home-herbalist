@@ -103,7 +103,7 @@ function HerbForm () {
                     </Grid.Column>
 
                     <Grid.Column>
-                      <FormSelectField label='Doage Form' name={`dosages[${index}].dosage_form`} formik={formik} options={dosageDrops} />
+                      <FormSelectField label='Doage Form' name={`dosages[${index}].dosage_form`} formik={ formik } options={ dosageDrops } />
                     </Grid.Column>
                   </Grid>
 

@@ -46,15 +46,17 @@ function Properties() {
         <div>
             <h3>Search for properties by name...</h3>
             <Search 
-            onSearch={(searchTerm) => handleSearches(searchTerm, setSearchTerm,properties, setSearchResults)}
-            searchedProperties={ searchResults }
-            searchTerm={ searchTerm }
+                onSearch={(searchTerm) => handleSearches(searchTerm, setSearchTerm,properties, setSearchResults)}
+                searchedProperties={ searchResults }
+                searchTerm={ searchTerm }
             />
             <Divider />
             <h3> OR filter properties by first letter</h3>
-            <Button circular style={{ backgroundColor: '#056d52', color:'white' }}
-            className={selectedLetter === '' ? 'active' : ''}
-            onClick={() => setSelectedLetter('')}>
+            <Button 
+                circular 
+                style={{ backgroundColor: '#056d52', color:'white' }}
+                className={selectedLetter === '' ? 'active' : ''}
+                onClick={() => setSelectedLetter('')}>
                 <strong>ALL</strong>
             </Button>
             {letters}

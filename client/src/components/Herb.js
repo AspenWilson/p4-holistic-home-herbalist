@@ -24,7 +24,7 @@ function Herb(){
   const herbProperties = <UnLinkedLists arr={ herb.properties } variable1={ 'name' } variable2={ 'description' } />
     
   const recipesList = herb.recipes.length > 0 ? 
-    <LinkedList arr={ herb.recipes } url={ `/recipes` } variable={ 'name '} />
+    <LinkedList arr={ herb.recipes } url={ `/recipes` } />
     : <p style={{ color:'white' }}>No recipes with this herb have been created.</p>;
     
   return (

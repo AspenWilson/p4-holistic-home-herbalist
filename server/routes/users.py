@@ -46,9 +46,6 @@ class Users(Resource):
     def get(self):
         current_user = get_current_user()
         user = get_first(User, 'id', id)
-
-        # if user.id != session.get('user.id') or current_user.admin != '1':
-        #     return unauth_error
         
         all_users = get_all(User)
         return all_users, 200
@@ -61,9 +58,6 @@ class UsersByID(Resource):
         if not user:
             return unfound_error('User')
         
-        # if user.id != session.get('user_id') or current_user.admin != "1":
-        #     return unauth_error
-        
         return user.to_dict(), 200
             
     def patch(self, id):
@@ -73,9 +67,6 @@ class UsersByID(Resource):
 
         if not user:
             return unfound_error('User')
-        
-        # if user.id != session.get('user_id') or current_user.admin != '1':
-        #     return unauth_error
         
         for key in data.keys():
             if key not in ['id', 'admin']:
