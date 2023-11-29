@@ -8,8 +8,12 @@ class UserSavedRecipes(Resource):
     def get(self,id):
         user = get_first(User, 'id', id)
         current_user = get_current_user()
+        
         if not user:
             return unfound_error('User')
+        
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
         
         saved_recipes = [saved_recipe.to_dict() for saved_recipe in user.saved_recipes]
 
@@ -30,6 +34,9 @@ class UserSavedRecipes(Resource):
 
         if recipe in user.saved_recipes:
             return {'error': 'Recipe is already in your saved recipes.'}, 409
+        
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
                 
         user.saved_recipes.append(recipe)
         db.session.commit()
@@ -51,7 +58,9 @@ class UserSavedRecipesByID(Resource):
         if recipe not in user.saved_recipes:
             return {'error':'Recipe not found in saved recipes.'}, 404
         
-
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
+        
     def delete(self, id, recipe_id):
         user = get_first(User, 'id', id)
         current_user = get_current_user()
@@ -59,6 +68,9 @@ class UserSavedRecipesByID(Resource):
         
         if not user or not recipe:
             return unfound_error('Item')
+        
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
         
         user.saved_recipes.remove(recipe)
         db.session.commit()
@@ -69,8 +81,12 @@ class UserSavedHerbs(Resource):
     def get(self, id):
         user = get_first(User, 'id', id)
         current_user = get_current_user()
+        
         if not user:
             return unfound_error('User')
+        
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
         
         saved_herbs = [saved_herb.to_dict() for saved_herb in user.saved_herbs]
         return saved_herbs, 200
@@ -108,6 +124,9 @@ class UserSavedHerbsByID(Resource):
         if herb not in user.saved_herbs:
             return {'error':'Herb not found in saved herbs.'}, 404
         
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
+        
         return herb.to_dict()
            
     def delete(self, id, herb_id):
@@ -120,6 +139,9 @@ class UserSavedHerbsByID(Resource):
                 
         if herb not in user.saved_herbs:
             return {'error':'Herb not found in saved herbs.'}, 404
+        
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
         
         user.saved_herbs.remove(herb)
         db.session.commit()

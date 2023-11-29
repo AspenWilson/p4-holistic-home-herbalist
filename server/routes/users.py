@@ -18,7 +18,7 @@ class SignUp(Resource):
 class Login(Resource):
     def post(self):
         data = request.get_json()
-        user=User.query.filter_by(username=data['username']).first()
+        user= User.query.filter_by(username=data['username']).first()
         
         if not user or not user.authenticate(data['password']):
             return {'error': 'Incorrect username or password'}, 401
@@ -31,6 +31,7 @@ class Login(Resource):
 class CheckSession(Resource):
     def get(self):
         user = get_current_user()
+        
         if not user:
             return unauth_error
         
@@ -45,7 +46,9 @@ class Logout(Resource):
 class Users(Resource):
     def get(self):
         current_user = get_current_user()
-        user = get_first(User, 'id', id)
+
+        if current_user.admin != "1":
+            return unauth_error 
         
         all_users = get_all(User)
         return all_users, 200
@@ -55,8 +58,12 @@ class UsersByID(Resource):
     def get(self, id):
         user = get_first(User, 'id', id)
         current_user = get_current_user()
+        
         if not user:
             return unfound_error('User')
+        
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
         
         return user.to_dict(), 200
             
@@ -67,6 +74,9 @@ class UsersByID(Resource):
 
         if not user:
             return unfound_error('User')
+        
+        if user.id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
         
         for key in data.keys():
             if key not in ['id', 'admin']:

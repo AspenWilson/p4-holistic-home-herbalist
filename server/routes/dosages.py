@@ -64,8 +64,11 @@ class HerbDosagesByID(Resource):
         if dosage.herb_id != id:
             return unrelated_err('Dosage', 'Herb')
         
-        dosage.dosage_form = data['dosage_form'], 
-        dosage.dosage_description = data['dosage_description']
+        if herb.entered_by_id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error
+        
+        for key, value in data.items():
+            setattr(dosage, key, value)
         
         db.session.commit()
         return dosage.to_dict(), 202
@@ -84,6 +87,9 @@ class HerbDosagesByID(Resource):
 
         if dosage.herb_id != id:
             return unrelated_err('Dosage', 'Herb')
+        
+        if herb.entered_by_id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error
         
         db.session.delete(dosage)
         db.session.commit()

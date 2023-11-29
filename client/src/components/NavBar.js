@@ -27,17 +27,31 @@ function NavBar() {
             <Icon name='leaf' />
                 Herbs
         </Menu.Item>
+        <Menu.Item as={Link} to="/dosageguide">
+            <Icon name='flask' />
+                Dosage Guide
+        </Menu.Item>
         <Menu.Item as={Link} to="/recipes">
             <Icon name='utensils' />
                 Recipes
+        </Menu.Item>
+        <Menu.Item as={Link} to="/herbs">
+            <Icon name='tasks' />
+                Recipe Guide
         </Menu.Item>
         <Menu.Item as={Link} to="/properties">
             <Icon name='unordered list'/>
                 Properties
         </Menu.Item>
-        <Menu.Item as={Link} to="/" onClick={ handleLogout }>
+        <Menu.Item as={Link} to="/herbs">
+            <Icon name='info' />
+                Resources
+        </Menu.Item>
+        <Menu.Item 
+        as={Link} to="/" onClick={ handleLogout }
+        >
             <Icon name='sign out'/>
-                Logout
+            Log Out
         </Menu.Item> 
     </>
 
@@ -45,14 +59,15 @@ function NavBar() {
     <>
         <Menu.Item as={Link} to="/login">
             <Icon name='sign in' />
-                Sign in/Sign up
+            Log In/ Sign Up
+
         </Menu.Item> 
     </>
 
     return (
         (loggedIn ? 
             <> 
-                <Menu icon='labeled' inverted fluid widths={ 6 }>
+                <Menu icon='labeled' inverted fluid widths={ 9 }>
                     { authOptions }
                 </Menu>
                 <br/>

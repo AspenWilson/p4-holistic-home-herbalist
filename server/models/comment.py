@@ -28,3 +28,5 @@ class Comment(db.Model, SerializerMixin):
         
     def __repr__(self):
         return f'Comment: {self.comment}'
+    
+    

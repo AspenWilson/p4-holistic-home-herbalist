@@ -64,3 +64,9 @@ export const tabPane = (arr, component, msg) => (
             ) : (<h3>{msg}</h3>)}
         </Tab.Pane> 
     )
+
+export const dosageTabs = (component) => (
+    <Tab.Pane attached={false}>
+        {component}
+    </Tab.Pane>
+)

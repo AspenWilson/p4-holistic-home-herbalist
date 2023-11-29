@@ -69,12 +69,12 @@ class RecipeIngredientsByID(Resource):
                     
         if ingredient not in recipe.ingredients:
             return unrelated_err('Ingredient', 'Recipe')
+        
+        if recipe.entered_by_id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error
                     
-        ingredient.amount=data['amount'],
-        ingredient.amount_type=data['amount_type'],
-        ingredient.herb_type=data['herb_type'],
-        ingredient.recipe_id=id,
-        ingredient.herb_id=herb_id 
+        for key, value in data.items():
+            setattr(ingredient, key, value)
 
         db.session.commit()
         return ingredient.to_dict(), 202
@@ -90,6 +90,9 @@ class RecipeIngredientsByID(Resource):
 
         if ingredient not in recipe.ingredients:
             return unrelated_err('Ingredient', 'Recipe')
+        
+        if recipe.entered_by_id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error
             
         db.session.delete(ingredient)
         db.session.commit()

@@ -9,6 +9,7 @@ import Herbs from "./components/Herbs";
 import Recipe from "./components/Recipe";
 import Recipes from "./components/Recipes";
 import Properties from "./components/Properties";
+import DosageGuide from "./components/DosageGuide";
 
 import Home from "./components/Home";
 import NavBar from "./components/NavBar";
@@ -42,6 +43,9 @@ function App() {
           </Route>
           <Route exact path='/herbs/:id'>
            <Herb />
+          </Route>
+          <Route exact path='/dosageguide'>
+           <DosageGuide />
           </Route>
           <Route exact path='/'>
             <Home/>

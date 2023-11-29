@@ -22,6 +22,7 @@ const AppProvider = ({ children }) => {
   
   // Login/Sign Up/Log Out Context
 
+
   useEffect(() => {
     fetch('/api/checksession')
     .then(resp => {
@@ -31,6 +32,7 @@ const AppProvider = ({ children }) => {
           setUser(data)
         })
       }})}, [])
+
 
   const handleLogin = (user) => {
     setUser(user);
@@ -123,6 +125,7 @@ const AppProvider = ({ children }) => {
     const handleModalSuccess = () => {
         setSecondOpen(!secondOpen)
     }
+
 
   return (
     <AppContext.Provider value={{

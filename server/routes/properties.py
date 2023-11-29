@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from config import api, db
-from flask import request, session, abort
+from flask import request, session
 from models.models import Property
 from .helpers import get_all, get_first, get_current_user, unauth_error, unfound_error, deleted_msg
 
@@ -38,10 +38,13 @@ class PropertiesByID(Resource):
         data = request.get_json()
 
         if not prop:
-            return unfound_error('Property')  
+            return unfound_error('Property') 
 
-        prop.name=data['name'], 
-        prop.description=data['description']
+        if prop.entered_by_id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
+
+        for key, value in data.items():
+            setattr(prop, key, value)
 
         db.session.commit()
         return prop.to_dict(), 202
@@ -50,8 +53,12 @@ class PropertiesByID(Resource):
     def delete(self, id):
         prop = get_first(Property, 'id', id)
         current_user = get_current_user()
+        
         if not prop:
             return unfound_error('Property')
+        
+        if prop.entered_by_id != session.get('user_id') and current_user.admin != "1":
+            return unauth_error 
         
         db.session.delete(prop)
         db.session.commit()

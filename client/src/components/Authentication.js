@@ -10,6 +10,7 @@ import { headers } from './helpers/GeneralHelpers';
 
 
 
+
 function Authentication() {
   const [signUp, setSignUp] = useState(false)
   const history = useHistory()
@@ -63,7 +64,7 @@ function Authentication() {
                     
             <Button style={{backgroundColor: '#056d52', color:'white', font:'Arial', margin: '10px', display:'inline-block'}} type='submit'>{signUp?'Sign Up!':'Log In!'}</Button>
             
-            <FormHeader as='h3'>{signUp?'Already a member?':'Not a member?'}</FormHeader>
+            <FormHeader as='h3'>{signUp?'Already a member? Sign in!':'Not a member? Sign up!'}</FormHeader>
             <Button 
               style={{ backgroundColor: '#056d52', color:'white', font:'Arial', margin: '10px', display:'inline-block' }} 
               onClick={handleClick}>

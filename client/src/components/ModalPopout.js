@@ -18,9 +18,9 @@ function ModalPopout({ msg, modalType, id }){
 
     const triggerOptions = 
         modalType === 'new herb'
-            ? <Button icon style={{ backgroundColor: '#056d52', color:'white' }}>Add Herb <Icon name='add' color='white'/></Button> :
+            ? <Button icon style={{ backgroundColor: '#056d52', color:'white' }}>Add Herb <Icon name='add' style={{ color:'white' }}/></Button> :
         modalType === 'new recipe'
-            ? <Button icon style={{ backgroundColor: '#056d52', color:'white' }}>Add Recipe <Icon name='add' color='white'/></Button> :
+            ? <Button icon style={{ backgroundColor: '#056d52', color:'white' }}>Add Recipe <Icon name='add' style={{ color:'white' }}/></Button> :
         <Button circular icon='edit' style={{ color:'#056d52' }}/>
 
 
