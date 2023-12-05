@@ -1,98 +1,9 @@
 import React, { useState } from "react"
-import { Button, Icon, Card, Header, Grid, Modal, Input, Popup, TextArea, Divider } from 'semantic-ui-react'
-import { StyledInput, StyledTextBox, StyledSelect } from "./StylingHelpers"
+import { Button, Card, Header, Grid, Input, Popup } from 'semantic-ui-react'
+import { StyledTextBox, StyledSelect } from "./StylingHelpers"
 import { displayErrors, dosageDrops } from "./FormHelpers"
+import { dividerBreaks } from "../helpers/GeneralHelpers"
 import '../../index.css'
-
-export function DosageEditCards ({dosage, handleDelete}) {
-    const [editState, setEditState] = useState("no edits")
-
-    // const handleEditBtn = () => {
-    //     setEditState("edits")
-    //     console.log(editState)
-    // }
-
-    // const handleSave = () => {
-    //     handleFieldSubmit(formik.values)
-    //     setEditState("no edits")
-    // }
-
-    // const handleCancel = () => {
-    //     setEditState("cancelled")
-    //     console.log(editState)
-    //     console.log (itemValue)
-    // }
-    // const id = dosage.id
-
-    // const displayOptions = 
-    //     editState === "no edits" ? formik.values[name] :
-    //     editState === "cancelled" ? itemValue :
-    //     null 
-    
-    return (
-        <Card className='flex-inner'>
-            <Card.Content>
-                <Grid columns={2}>
-                    <Grid.Column width={8}>
-                        <Header as='h4' textAlign='center' style={{ color: "black" }}> Form:</Header>
-                        <p style={{ color: "black" }}>{dosage.dosage_form}</p>
-                    </Grid.Column>
-
-                    <Grid.Column width={8}>
-                        <Header as='h4' textAlign='center' style={{ color: "black" }}> Description:</Header>
-                        <p style={{ color: "black" }}>{dosage.dosage_description}</p>
-
-                    </Grid.Column>
-                </Grid>
-            </Card.Content>
-            <Card.Content>
-                <Popup content='Delete dosage' trigger={<Button icon='trash' onClick={() => {
-                    handleDelete()
-                }}
-                /> } />               
-            </Card.Content>
-        </Card>
-    )
-}
-
-export function IngredientEditCards ({ ingredient, deletedIngredients, setDeletedIngredients }) {
-    const [deleted, setDeleted] = useState(false)
-    const id = ingredient.id
-
-    const handleDelete = () => {
-        const newList = deletedIngredients.concat({ id })
-        setDeletedIngredients(newList)
-    }
-
-    return (
-        <Card className='flex-inner' style={deleted ? { color: "white", background: "red" } : null}>
-            <div key={id}>
-            {deleted ? <Header style={{ color: "black" }} textAlign='center'>DELETED</Header> : null}
-            <Grid columns={2}>
-                <Grid.Column>
-                    <Header as='h4' style={{ color: "black" }} textAlign='center'>Amount</Header>
-                    <p style={{ color: "black" }}>{ingredient.amount}</p>
-
-                    <Header as='h4' style={{ color: "black" }} textAlign='center'>Amount Type</Header>
-                    <p style={{ color: "black" }}>{ingredient.amount_type}</p>
-                </Grid.Column>
-
-                <Grid.Column>
-                    <Header style={{ color: "black" }} as='h4' textAlign='center'>Herb</Header>
-                    <p style={{ color: "black" }}>{ingredient.herb.name}</p>
-                    <Header style={{ color: "black" }} as='h4' textAlign='center'>Herb Type</Header>
-                    <p style={{ color: "black" }}>{ingredient.herb_type}</p>
-                </Grid.Column>
-            </Grid>
-                {!deleted ? <Button icon='trash' type='button' onClick={() => {
-                    setDeleted(!deleted)
-                    handleDelete()
-                }}
-                /> : null }
-            </div>
-        </Card>
-    )
-}
     
 export function PropertyEditCards ({property, deletedProperties, setDeletedProperties}) {
     const [deleted, setDeleted] = useState(false)
@@ -179,36 +90,7 @@ export const AllFormEdits = ({ label, name, type, formik, itemValue, handleField
                 formik.setFieldValue(name, selectedOption.value)
             }}
             /> :
-        inputType === "nestedInput" ?
-            <Input
-                style={{ overflowWrap: 'break-word', width: '100%' }}
-                type={type}
-                id={name}
-                name={name}
-                value={itemValue}
-                onChange={formik.handleChange}
-            /> :
-        inputType === 'nestedTextBox' ?
-            <StyledTextBox
-                style = {{ wrapItem: 'true' }}
-                id={name}
-                as={type}
-                name={name}
-                placeholder={itemValue}
-                onChange={formik.handleChange}
-            /> :
-        inputType === "nestedSelect" ?
-            <StyledSelect 
-                classNamePrefix="Select"
-                name={name}
-                options={options}
-                onChange={(selectedOption) => {
-                formik.setFieldValue(name, selectedOption.value)
-            }}
-            /> :
             null
-
-
 
     return (
         <div style={{  alignItems: 'center' }}>
@@ -298,8 +180,6 @@ export const DosageAdditions = ({ formik, handleSubmit, showFalse }) => {
                 <div key={index}>
                     <Grid columns={3}>
                         <Grid.Column width={4}>
-
-                    
                     <h3  style={{ color: 'black' }}>Form:</h3> 
                     <br/>
                     <StyledSelect 
@@ -338,9 +218,7 @@ export const DosageAdditions = ({ formik, handleSubmit, showFalse }) => {
                 </div>
             )
         })}
-        <br />
-                            <Divider fitted />
-                            <br/>
+        {dividerBreaks}
         <Button centered fluid icon='plus' onClick={addFields}>Add more</Button>
         </>
     )
@@ -452,3 +330,26 @@ export const DosageChanges = ({ dosage, type, formik, handleFieldSubmit, handleD
         </div>
     )
 }
+
+//Initial Values
+
+// export const dosageEditValues = {
+//     dosage_form: dosage.dosage_form ,
+//     dosage_description: dosage.dosage_description
+// }
+
+// export const herbEditValues =  {
+//     name: herb.name || "",
+//     latin_name: herb.latin_name || "",
+//     description: herb.description || "",
+//     warnings: herb.warnings || "",
+//     image_url: herb.image_url || "",
+//     property_ids: herb.properties.map((property) => property.id) || []
+// }
+
+// export const dosageNewValues = {
+//     dosage_form: "", 
+//     dosage_description: ""
+// }
+
+export const herbNewValues = {}

@@ -146,3 +146,22 @@ export const FormMultiSelectField = ({ label, name, formik, options}) => {
     )
 }
 
+//Dynamic Inputs
+
+// const DynamicInputs = ({ formFields, type, name, formik, itemValue,handleFieldSubmit, inputType } ) => {
+//     const [ fields, setFields ] = useState(
+//         {formFields}
+//     )
+
+//     return (
+//         <Input 
+//             style={{ overflowWrap: 'break-word', width: '100%' }}
+//                 type={type}
+//                 id={name}
+//                 name={name}
+//                 value={formik.values[name]}
+//                 onChange={formik.handleChange}
+//         />
+//     )
+
+// }

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import { basicFetch, filterAlphabetically } from "../components/helpers/GeneralHelpers";
 
+
 const AppContext = createContext({});
 
 const AppProvider = ({ children }) => {
@@ -23,32 +24,35 @@ const AppProvider = ({ children }) => {
   // Login/Sign Up/Log Out Context
 
 
-  useEffect(() => {
+  const checkSession = () => {
     fetch('/api/checksession')
     .then(resp => {
       if(resp.ok){
         resp.json()
         .then(data => {
           setUser(data)
+          console.log(data)
         })
-      }})}, [])
+    }}
+    )}
 
 
   const handleLogin = (user) => {
-    setUser(user);
+      setUser(user);
     //herb data fetches
-    basicFetch("/api/herbs", setHerbs, filterAlphabetically);
-    basicFetch(`/api/users/${user.id}/saved-herbs`, setSavedHerbs, filterAlphabetically);
-    setEnteredHerbs(filterAlphabetically(user.entered_herbs));
-    //recipe data fetches
-    basicFetch("/api/recipes", setRecipes, filterAlphabetically);
-    basicFetch(`/api/users/${user.id}/saved-recipes`, setSavedRecipes, filterAlphabetically);
-    setEnteredRecipes(filterAlphabetically(user.entered_recipes));
-    //property fetches
-    basicFetch("/api/properties", setProperties, filterAlphabetically);
-    basicFetch(`/api/users/${user.id}/comments`, setEnteredComments)
-    setLoggedIn(true);
+      basicFetch("/api/herbs", setHerbs, filterAlphabetically);
+      basicFetch(`/api/users/${user.id}/saved-herbs`, setSavedHerbs, filterAlphabetically);
+      setEnteredHerbs(filterAlphabetically(user.entered_herbs));
+      //recipe data fetches
+      basicFetch("/api/recipes", setRecipes, filterAlphabetically);
+      basicFetch(`/api/users/${user.id}/saved-recipes`, setSavedRecipes, filterAlphabetically);
+      setEnteredRecipes(filterAlphabetically(user.entered_recipes));
+      //property fetches
+      basicFetch("/api/properties", setProperties, filterAlphabetically);
+      basicFetch(`/api/users/${user.id}/comments`, setEnteredComments)
+      setLoggedIn(true);
 };
+
 
   const logout = () => {
     setUser(null);
@@ -133,6 +137,7 @@ const AppProvider = ({ children }) => {
         handleLogin, //Authentication
         logout, // NavBar
         loggedIn, // NavBar
+        checkSession,
         //herbs 
         herbs, // Herbs, PropertyCard, RecipeEdits, RecipeForm
         savedHerbs, // HerbCard, Herbs, Profile

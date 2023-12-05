@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from "react"
 import { Formik, Form } from "formik"
 import * as yup from "yup"
-import { AppContext } from "../context/AppContext"
+import { AppContext } from '../../context/AppContext'
 import { Card, Button } from 'semantic-ui-react'
-import { headers } from "./helpers/GeneralHelpers"
-import { FormTextBoxField } from "./helpers/FormHelpers"
+import { headers } from "../helpers/GeneralHelpers"
+import { FormTextBoxField } from "../helpers/FormHelpers"
 
 
 function CommentEdits ({ id }) {

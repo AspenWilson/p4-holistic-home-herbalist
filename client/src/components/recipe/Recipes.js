@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react'
-import RecipeCard from './RecipeCard'
-import { handleSearches, handleFilterChange } from './helpers/GeneralHelpers';
-import Search from './Search';
-import Filter from './Filter';
+import RecipeCard from './RecipeCard';
+import { handleSearches, handleFilterChange } from '../helpers/GeneralHelpers';
+import Search from '../Search';
+import Filter from '../Filter';
 import { Card, Grid, Divider } from 'semantic-ui-react'
-import { AppContext } from '../context/AppContext';
-import ModalPopout from './ModalPopout';
+import { AppContext } from '../../context/AppContext'
+import ModalPopout from '../ModalPopout';
 
 
 function Recipes({ page }) {

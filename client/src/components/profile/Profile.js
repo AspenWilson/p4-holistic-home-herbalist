@@ -1,19 +1,16 @@
 import React, { useState, useContext } from 'react'
-import { Tab, Grid, Header } from 'semantic-ui-react'
-import Recipes from './Recipes';
-import Herbs from './Herbs';
-import { AppContext } from '../context/AppContext';
-import CommentCard from './CommentProfile';
-import { tabPane } from './helpers/GeneralHelpers';
-import "../index.css"
-
-
-
+import { Tab, Grid, Header, Image } from 'semantic-ui-react'
+import Recipes from '../recipe/Recipes';
+import Herbs from '../herb/Herbs';
+import { AppContext } from '../../context/AppContext';
+import CommentCard from '../comment/CommentProfile';
+import { tabPane } from '../helpers/GeneralHelpers';
+import AccountEdits from './AccountEdits';
+import "../../index.css"
 
 function Profile() {
     const { user, savedRecipes, savedHerbs, enteredHerbs, enteredRecipes, enteredComments } = useContext(AppContext)
     const [activeTab, setActiveTab] = useState('Saved Herbs')
-
 
     const panes = [
         { menuItem: 'Saved Herbs', render: () => tabPane(savedHerbs, <Herbs page='profile - saved' herbs={ savedHerbs }/>, 'No saved herbs.')},
@@ -24,16 +21,26 @@ function Profile() {
 
         { menuItem: 'Entered Recipes', render: () => tabPane(enteredRecipes, <Recipes recipes={ enteredRecipes } page='profile - entered'/>, 'No entered recipes.')},
 
-        { menuItem: 'Entered Comments', render: () => tabPane(enteredComments, <CommentCard comments={ enteredComments } />, 'You have not left any comments.')}
+        { menuItem: 'Entered Comments', render: () => tabPane(enteredComments, <CommentCard comments={ enteredComments } />, 'You have not left any comments.')},
+
+        { menuItem: 'Account Settings', render: () => 
+            <Tab.Pane attached={false}>
+                <AccountEdits />
+            </Tab.Pane> }
     ]
 
     return (
         <div className='profile'>
             <Grid>
                 <Grid.Column width={ 2 }>
-                    <div className='avatar-circle'>{ user.username[0].toUpperCase() }</div>
+                    <div className='avatar-circle'>
+                        <Image 
+                            className="ui centered circular image"
+                            size='small'
+                            src={ user.image_url }
+                        />
+                    </div>
                 </Grid.Column>
-
                 <Grid.Column width={ 14 }>
                     <Header style={{ color: 'white' }}as='h1'>{ user.username }'s Profile</Header>
                     <p>Joined: { user.account_created_on }</p>

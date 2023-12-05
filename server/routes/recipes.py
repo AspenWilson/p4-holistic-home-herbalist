@@ -83,7 +83,6 @@ class RecipesByID(Resource):
         db.session.commit()
         return recipe.to_dict(), 202
             
-    
     def delete(self, id):
         recipe = get_first(Recipe,'id', id)
         current_user = get_current_user()

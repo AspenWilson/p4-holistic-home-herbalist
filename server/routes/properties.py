@@ -49,7 +49,6 @@ class PropertiesByID(Resource):
         db.session.commit()
         return prop.to_dict(), 202
             
-    
     def delete(self, id):
         prop = get_first(Property, 'id', id)
         current_user = get_current_user()

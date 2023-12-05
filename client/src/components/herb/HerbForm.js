@@ -1,11 +1,11 @@
 import React, { useContext } from "react"
 import { Formik, Form, FieldArray } from "formik"
 import * as yup from "yup"
-import { AppContext } from "../context/AppContext"
-import { FormHeader } from "./helpers/StylingHelpers"
-import { headers } from "./helpers/GeneralHelpers"
+import { AppContext } from '../../context/AppContext'
+import { FormHeader } from "../helpers/StylingHelpers"
+import { headers } from "../helpers/GeneralHelpers"
 import { Card, Grid, Image, Button } from 'semantic-ui-react'
-import { HerbInitialValues, IDDropdowns, dosageDrops, FormInputField, FormTextBoxField, FormSelectField, FormMultiSelectField } from "./helpers/FormHelpers"
+import { HerbInitialValues, IDDropdowns, dosageDrops, FormInputField, FormTextBoxField, FormSelectField, FormMultiSelectField } from "../helpers/FormHelpers"
 
 function HerbForm () {
   const { properties, handleModalSuccess, user, refreshEnteredHerbs, refreshHerbs } = useContext(AppContext)

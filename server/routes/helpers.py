@@ -1,6 +1,7 @@
 from models.models import User
 from flask import session
 
+
 # Declared variables:
 
 unauth_error = {'error':'Unauthorized'}, 401
@@ -18,7 +19,7 @@ def get_first(model, search_key, value_key):
     return entry
 
 def get_current_user():
-    user_id = session.get('user_id')
+    user_id = session['user_id']
     current_user = User.query.filter_by(id=user_id).first()
     return current_user
 

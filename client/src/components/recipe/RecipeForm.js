@@ -1,11 +1,11 @@
 import React, { useContext } from "react"
 import { Formik, Form, FieldArray } from "formik"
 import * as yup from "yup"
-import { AppContext } from "../context/AppContext"
-import { headers } from "./helpers/GeneralHelpers"
+import { AppContext } from '../../context/AppContext'
+import { headers } from "../helpers/GeneralHelpers"
 import { Card, Grid, Button } from 'semantic-ui-react'
-import { RecipeInitialValues, IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField } from "./helpers/FormHelpers"
-import { FormHeader } from "./helpers/StylingHelpers"
+import { RecipeInitialValues, IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField } from "../helpers/FormHelpers"
+import { FormHeader } from "../helpers/StylingHelpers"
 
 
 function RecipeForm () {

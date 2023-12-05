@@ -1,5 +1,5 @@
 import React from "react";
-import { Comment, Grid, Card } from 'semantic-ui-react'
+import { Comment, Grid, Card, Image } from 'semantic-ui-react'
 
 function CommentCard({ comment }) {
     
@@ -8,7 +8,11 @@ function CommentCard({ comment }) {
         <Grid>
           <Grid.Column width={ 3 }>
             <div className='avatar-circle'>
-              { comment.user.username[0].toUpperCase() }
+              <Image 
+                className="ui centered circular image"
+                size='small'
+                src={ comment.user.image_url }
+              />
             </div>
           </Grid.Column>
 

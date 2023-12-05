@@ -66,3 +66,13 @@ margin-bottom:10px;
 padding: 10px;
 font-size:20px;
 `
+
+export const FormH3 = styled.h3`
+border: '1px solid #056d52', 
+background:'white', 
+color:'black', 
+padding: "5px", 
+whiteSpace:'nowrap',
+overflow:'hidden',
+textOverflow:'ellipsis'
+`

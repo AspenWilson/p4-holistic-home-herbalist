@@ -105,6 +105,5 @@ class HerbsByID(Resource):
         return deleted_msg('Herb')
 
 
-
 api.add_resource(Herbs, '/api/herbs')
 api.add_resource(HerbsByID, '/api/herbs/<int:id>')

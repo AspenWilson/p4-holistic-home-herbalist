@@ -33,7 +33,6 @@ class CommentsByID(Resource):
         db.session.commit()
         return comment.to_dict(), 202
 
-
     def delete(self, id):
         comment = get_first(Comment, 'id', id)
         current_user = get_current_user()
@@ -82,7 +81,6 @@ class UserCommentsByID(Resource):
         response = comment.to_dict(), 200
         return response
             
-    
     def patch(self, id, comment_id):
         user = get_first(User, 'id', id)
         data = request.get_json()
@@ -102,7 +100,6 @@ class UserCommentsByID(Resource):
         
         db.session.commit()
         return comment.to_dict(), 202
-
 
     def delete(self, id, comment_id):
         user = get_first(User, 'id', id)
@@ -158,7 +155,6 @@ class RecipeCommentsByID(Resource):
         
         return comment.to_dict(), 200
             
-        
     def patch(self, id, comment_id):
         recipe = get_first(Recipe, 'id', id)
         comment = get_first(Comment, 'id', comment_id)
@@ -178,7 +174,6 @@ class RecipeCommentsByID(Resource):
                         
         db.session.commit()
         return comment.to_dict(), 202
-            
             
     def delete(self, id, comment_id):
         recipe = get_first(Recipe, 'id', id)

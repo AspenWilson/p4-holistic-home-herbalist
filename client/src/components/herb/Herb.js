@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Image, Card, Icon, Grid, Header, Divider } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom';
-import { StyledCardLists, GoBack, UnLinkedLists, LinkedList } from "./helpers/CardHelpers";
+import { StyledCardLists, GoBack, UnLinkedLists, LinkedList, MultiVarLinkedList } from "../helpers/CardHelpers";
 
 function Herb(){
   const { id } = useParams();
@@ -18,7 +18,7 @@ function Herb(){
     }
   
   const dosagesList = herb.dosages.length> 0 ? 
-    <UnLinkedLists arr={herb.dosages} variable1='dosage_form' variable2='dosage_description' />
+    <MultiVarLinkedList arr={herb.dosages} url={'/dosageguide'} var1='dosage_form' var2='dosage_description' />
     : (<p style={{ color:'white' }}>No dosages listed for this herb.</p>);
     
   const herbProperties = <UnLinkedLists arr={ herb.properties } variable1={ 'name' } variable2={ 'description' } />

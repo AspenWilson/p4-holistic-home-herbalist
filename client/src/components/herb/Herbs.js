@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Card, Grid, Divider } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom'
-import { AppContext } from '../context/AppContext';
-import { handleSearches, handleFilterChange } from './helpers/GeneralHelpers'
+import { AppContext } from '../../context/AppContext'
+import { handleSearches, handleFilterChange } from '../helpers/GeneralHelpers'
 import HerbCard from './HerbCard'
-import Search from './Search'
-import Filter from './Filter'
-import ModalPopout from './ModalPopout'
-import "../index.css"
+import Search from '../Search'
+import Filter from '../Filter'
+import ModalPopout from '../ModalPopout'
+import "../../index.css"
 
 function Herbs({ page }) {
     const { id } = useParams()

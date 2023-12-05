@@ -57,7 +57,6 @@ class RecipeIngredientsByID(Resource):
         
         return ingredient.to_dict(), 200
 
-            
     def patch(self, id, ingredient_id):
         recipe = get_first(Recipe, 'id', id)
         data = request.get_json()
@@ -78,7 +77,6 @@ class RecipeIngredientsByID(Resource):
 
         db.session.commit()
         return ingredient.to_dict(), 202
-
 
     def delete(self, id, ingredient_id):
         recipe = get_first(Recipe, 'id', id)

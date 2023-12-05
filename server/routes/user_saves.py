@@ -18,7 +18,7 @@ class UserSavedRecipes(Resource):
         saved_recipes = [saved_recipe.to_dict() for saved_recipe in user.saved_recipes]
 
         return saved_recipes, 200
-            
+
     def post(self, id):
         user = get_first(User, 'id', id)
         current_user = get_current_user()
@@ -60,7 +60,7 @@ class UserSavedRecipesByID(Resource):
         
         if user.id != session.get('user_id') and current_user.admin != "1":
             return unauth_error 
-        
+
     def delete(self, id, recipe_id):
         user = get_first(User, 'id', id)
         current_user = get_current_user()
@@ -128,7 +128,7 @@ class UserSavedHerbsByID(Resource):
             return unauth_error 
         
         return herb.to_dict()
-           
+
     def delete(self, id, herb_id):
         user = get_first(User, 'id', id)
         current_user = get_current_user()

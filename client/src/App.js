@@ -4,16 +4,16 @@ import { createGlobalStyle } from "styled-components";
 
 import { AppProvider } from "./context/AppContext";
 
-import Herb from "./components/Herb";
-import Herbs from "./components/Herbs";
-import Recipe from "./components/Recipe";
-import Recipes from "./components/Recipes";
+import Herb from './components/herb/Herb';
+import Herbs from "./components/herb/Herbs";
+import Recipe from "./components/recipe/Recipe";
+import Recipes from "./components/recipe/Recipes";
 import Properties from "./components/Properties";
 import DosageGuide from "./components/DosageGuide";
-
 import Home from "./components/Home";
 import NavBar from "./components/NavBar";
-import Profile from "./components/Profile";
+import Profile from "./components/profile/Profile";
+import Resources from "./components/Resorces";
 import Authentication from "./components/Authentication";
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
      <NavBar />
       <Switch>
         <Route exact path='/login'>
-          <Authentication />
+          <Authentication /> 
         </Route>
         <Route exact path='/herbs'>
           <Herbs page='home'/>
@@ -46,6 +46,9 @@ function App() {
           </Route>
           <Route exact path='/dosageguide'>
            <DosageGuide />
+          </Route>
+          <Route exact path='/sources'>
+            <Resources />
           </Route>
           <Route exact path='/'>
             <Home/>

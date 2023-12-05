@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from 'react-router-dom';
 import { Card, Comment, Button, Grid, Header, Divider } from 'semantic-ui-react'
-import CommentCard from "./CommentRecipe";
+import CommentCard from "../comment/CommentRecipe";
 import { Formik, Form } from "formik"
 import * as yup from "yup"
-import { headers, filterAlphabetically, basicFetch } from "./helpers/GeneralHelpers";
-import { AppContext } from "../context/AppContext";
-import { CommentInitalValues } from "./helpers/FormHelpers";
-import { StyledCardDescription, StyledTextBox } from "./helpers/StylingHelpers"
-import { GoBack, RecipeUnLinkedList, UnLinkedLists } from "./helpers/CardHelpers";
+import { headers, filterAlphabetically, basicFetch } from "../helpers/GeneralHelpers";
+import { AppContext } from "../../context/AppContext";
+import { CommentInitalValues } from "../helpers/FormHelpers";
+import { StyledCardDescription, StyledTextBox } from "../helpers/StylingHelpers"
+import { GoBack, RecipeUnLinkedList, UnLinkedLists } from "../helpers/CardHelpers";
 
 
 function Recipe(){

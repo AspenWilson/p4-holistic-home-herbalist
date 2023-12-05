@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Modal, Header, Button, Icon } from'semantic-ui-react'
 import { AppContext } from '../context/AppContext';
-import HerbForm from "./HerbForm";
-import RecipeForm from "./RecipeForm";
-import HerbEdits from "./HerbEdits";
-import RecipeEdits from "./RecipeEdits";
-import CommentEdits from "./CommentEdits";
+import HerbForm from "./herb/HerbForm";
+import RecipeForm from "./recipe/RecipeForm";
+import HerbEdits from "./herb/HerbEdits";
+import RecipeEdits from "./recipe/RecipeEdits";
+import CommentEdits from "./comment/CommentEdits"
 
 function ModalPopout({ msg, modalType, id }){
     const [open, setOpen] = useState(false)
@@ -33,6 +33,12 @@ function ModalPopout({ msg, modalType, id }){
         modalType === 'comment edits' ? <CommentEdits id={ id } /> :
         null
 
+    const iconOptions = 
+        modalType === 'new herb' ? 'add' :
+        modalType === 'new recipe' ? 'add' :
+        'edit' 
+
+
     return (
         <>
         <Modal
@@ -41,8 +47,9 @@ function ModalPopout({ msg, modalType, id }){
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
             trigger={ triggerOptions }
+            size="large"
         >
-            <Header icon='add' content={ msg } />
+            <Header icon={iconOptions} content={ msg } as='h2'/>
             <Modal.Content style={{ backgroundColor: '#056d52' }}>
                 { displayedForm }
             </Modal.Content>

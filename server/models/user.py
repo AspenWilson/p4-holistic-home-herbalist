@@ -11,6 +11,8 @@ class User(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String)
+    email = db.Column(db.String)
+    image_url = db.Column(db.String, default='https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg')
     account_created_on = db.Column(db.DateTime, default=datetime.utcnow)
     _password_hash = db.Column(db.String)
     admin = db.Column(db.String, default=False)
@@ -23,7 +25,7 @@ class User(db.Model, SerializerMixin):
     entered_properties = db.relationship('Property', back_populates='entered_by')
     comments = db.relationship('Comment', back_populates = 'user')
 
-    serialize_only = ('id', 'username', 'account_created_on', 'admin', 'saved_herbs.name', 'saved_herbs.id', 'saved_herbs.properties', 'saved_recipes.name', 'saved_recipes.id', 'saved_recipes.properties', 'entered_herbs.id', 'entered_herbs.name', 'entered_herbs.image_url', 'entered_herbs.latin_name', 'entered_herbs.properties', 'entered_recipes.name', 'entered_recipes.id', 'entered_recipes.properties', 'saved_herbs.image_url')
+    serialize_only = ('id', 'username', 'account_created_on', 'admin', 'saved_herbs.name', 'saved_herbs.id', 'saved_herbs.properties', 'saved_recipes.name', 'saved_recipes.id', 'saved_recipes.properties', 'entered_herbs.id', 'entered_herbs.name', 'entered_herbs.image_url', 'entered_herbs.latin_name', 'entered_herbs.properties', 'entered_recipes.name', 'entered_recipes.id', 'entered_recipes.properties', 'saved_herbs.image_url', 'email', 'image_url')
 
     @hybrid_property
     def password_hash(self):
@@ -47,6 +49,17 @@ class User(db.Model, SerializerMixin):
         if existing_user:
             raise ValueError('Username is already taken.')
         return username
+    
+    @validates('email')
+    def validate_email(self, key, email):
+        if not email:
+            raise ValueError('Email is required.')
+        
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            raise ValueError('Email is already in use.')
+        
+        return email
 
     def __repr__(self):
-        return f"<Username={self.username}, ID: {self.id}>"
+        return f"<User username={self.username}, id={self.id}, email={self.email}, image_url={self.image_url}, admin={self.admin}>"

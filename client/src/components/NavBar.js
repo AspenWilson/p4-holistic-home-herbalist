@@ -4,8 +4,10 @@ import { Icon, Menu, Image } from 'semantic-ui-react'
 import { AppContext } from '../context/AppContext'
 
 
+
 function NavBar() {
     const { loggedIn, logout } = useContext(AppContext)
+
     
     const handleLogout = () => {
        fetch('/api/logout', {
@@ -43,7 +45,7 @@ function NavBar() {
             <Icon name='unordered list'/>
                 Properties
         </Menu.Item>
-        <Menu.Item as={Link} to="/herbs">
+        <Menu.Item as={Link} to="/sources">
             <Icon name='info' />
                 Resources
         </Menu.Item>
@@ -57,10 +59,11 @@ function NavBar() {
 
     const authRequiredOptions =
     <>
-        <Menu.Item as={Link} to="/login">
+        <Menu.Item 
+        as={Link} to="/login"
+        >
             <Icon name='sign in' />
             Log In/ Sign Up
-
         </Menu.Item> 
     </>
 

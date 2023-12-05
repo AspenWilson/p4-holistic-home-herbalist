@@ -47,6 +47,18 @@ export const UnLinkedLists = ({ arr, variable1, variable2 }) => {
     )
 }
 
+export const MultiVarLinkedList = ({ arr, url, var1, var2 }) => {
+    return arr.map((item) => (
+        <List key={item.id}>
+            <List.List>
+                <Link to={ url } style={{ fontWeight: 'bold',color:'white' }}><Icon name='right triangle' />{ item[var1] }
+                </Link>
+                <List.Description >{ item[var2] }</List.Description>
+            </List.List>
+        </List>
+    ))
+}
+
 export const LinkedList = ({ arr, url }) => {
     return arr.map((item) => (
         <List key={ item.id }>

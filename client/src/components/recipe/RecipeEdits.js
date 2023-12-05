@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react"
 import { Formik, Form, FieldArray } from "formik"
 import * as yup from "yup"
-import { AppContext } from "../context/AppContext"
+import { AppContext } from '../../context/AppContext'
 import { Card, Grid, Button, Icon } from 'semantic-ui-react'
-import { IngredientEditCards } from "./helpers/EditFormHelpers"
-import { FormHeader } from "./helpers/StylingHelpers"
-import { IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField } from "./helpers/FormHelpers"
-import { headers } from "./helpers/GeneralHelpers"
+import { IngredientEditCards } from "../helpers/EditFormHelpers"
+import { FormHeader } from "../helpers/StylingHelpers"
+import { IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField } from "../helpers/FormHelpers"
+import { headers } from "../helpers/GeneralHelpers"
 
 
 function RecipeEdits ({ id }) {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tab } from 'semantic-ui-react'
+import { Tab, Divider } from 'semantic-ui-react'
 
 // Fetch & Data Helpers
 
@@ -70,3 +70,14 @@ export const dosageTabs = (component) => (
         {component}
     </Tab.Pane>
 )
+
+
+export const dividerBreaks = () => {
+    return (
+        <>
+            <br />
+            <Divider fitted />
+            <br/>
+        </>
+    )
+}
