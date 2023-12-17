@@ -44,7 +44,7 @@ class Herb(db.Model, SerializerMixin):
     @validates('latin_name', 'description', 'warnings')
     def validate_presence(self, key, value):
         if not value:
-            raise ValueError('Herb {key} is required')
+            raise ValueError(f'Herb {key} is required')
         
         return value
 

@@ -42,7 +42,9 @@ function Herb(){
               <span style={{ color: 'white' }}><i>{ herb.latin_name }</i></span>
 
               <p style={{ color: 'white', fontSize: '12pt' }}>{ herb.description }</p>
-              <Card.Description style={{ color: 'white', fontSize: '12pt' }}><Icon name='warning sign' color='white' />{ herb.warnings }</Card.Description>
+              <Card.Description style={{ color: 'white', fontSize: '12pt' }}>
+                <Icon name='warning sign' color='white' />{ herb.warnings }
+              </Card.Description>
             </Grid.Column>
           </Grid>
         </Card.Content>

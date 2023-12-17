@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Modal, Header, Button, Icon } from'semantic-ui-react'
 import { AppContext } from '../context/AppContext';
 import HerbForm from "./herb/HerbForm";
@@ -7,7 +7,7 @@ import HerbEdits from "./herb/HerbEdits";
 import RecipeEdits from "./recipe/RecipeEdits";
 import CommentEdits from "./comment/CommentEdits"
 
-function ModalPopout({ msg, modalType, id }){
+export function ModalPopout({ msg, modalType, id }){
     const [open, setOpen] = useState(false)
     const { handleModalSuccess, secondOpen } = useContext(AppContext)
 
@@ -71,4 +71,26 @@ function ModalPopout({ msg, modalType, id }){
     )
 }
 
-export default ModalPopout
+export const SuccessModal = ({ statusIs, setStatus }) => {
+    const [open, setOpen] = useState(false)
+    
+    useEffect(() => {
+        if(statusIs === 'success') {
+            setOpen(true)
+        }
+    }, [statusIs])
+
+    const handleClose =() => {
+        setOpen(false)
+        setStatus(null)
+    }
+    return (
+        <Modal
+          onClose={handleClose}
+          open={open}
+        >
+          <Modal.Header>Success!</Modal.Header>
+        </Modal>
+        
+    )
+}

@@ -30,10 +30,10 @@ class UserSavedRecipes(Resource):
             return unfound_error('Item')
 
         if not recipe_id:
-            return {'error':'Missing recipe id.'}, 422
+            return {'message':'Missing recipe id.'}, 422
 
         if recipe in user.saved_recipes:
-            return {'error': 'Recipe is already in your saved recipes.'}, 409
+            return {'message': 'Recipe is already in your saved recipes.'}, 409
         
         if user.id != session.get('user_id') and current_user.admin != "1":
             return unauth_error 
@@ -56,7 +56,7 @@ class UserSavedRecipesByID(Resource):
             return recipe.to_dict(), 200
                 
         if recipe not in user.saved_recipes:
-            return {'error':'Recipe not found in saved recipes.'}, 404
+            return {'message':'Recipe not found in saved recipes.'}, 404
         
         if user.id != session.get('user_id') and current_user.admin != "1":
             return unauth_error 
@@ -101,10 +101,10 @@ class UserSavedHerbs(Resource):
             return unfound_error('Item')
         
         if not herb_id:
-            return {'error':'Missing herb id.'}, 422
+            return {'message':'Missing herb id.'}, 422
                 
         if herb in user.saved_herbs:
-            return {'error': 'Herb is already in your saved herbs.'}, 409
+            return {'message': 'Herb is already in your saved herbs.'}, 409
                 
         user.saved_herbs.append(herb)
         db.session.commit()
@@ -122,7 +122,7 @@ class UserSavedHerbsByID(Resource):
             return unfound_error('Item')
 
         if herb not in user.saved_herbs:
-            return {'error':'Herb not found in saved herbs.'}, 404
+            return {'message':'Herb not found in saved herbs.'}, 404
         
         if user.id != session.get('user_id') and current_user.admin != "1":
             return unauth_error 
@@ -138,7 +138,7 @@ class UserSavedHerbsByID(Resource):
             return unfound_error('Item')
                 
         if herb not in user.saved_herbs:
-            return {'error':'Herb not found in saved herbs.'}, 404
+            return {'message':'Herb not found in saved herbs.'}, 404
         
         if user.id != session.get('user_id') and current_user.admin != "1":
             return unauth_error 

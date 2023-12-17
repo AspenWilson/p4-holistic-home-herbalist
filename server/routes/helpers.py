@@ -4,7 +4,7 @@ from flask import session
 
 # Declared variables:
 
-unauth_error = {'error':'Unauthorized'}, 401
+unauth_error = {'message':'Unauthorized'}, 401
 
 
 
@@ -27,10 +27,10 @@ def get_current_user():
 # Errors and messages functions
 
 def unfound_error(model):
-    return {'error':f'{model} not found.'}, 404
+    return {'message':f'{model} not found.'}, 404
 
 def deleted_msg(model):
     return {'message':f'{model} deleted successfully.'}, 204
 
 def unrelated_err(model1, model2):
-    return {'error': f'This {model1} is not for this {model2}'}, 409
+    return {'message': f'This {model1} is not for this {model2}'}, 409

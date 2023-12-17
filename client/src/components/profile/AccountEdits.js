@@ -2,14 +2,17 @@ import React, {useContext, useState} from "react"
 import { Formik, Form } from "formik"
 import * as yup from "yup"
 import { AppContext } from "../../context/AppContext"
-import { Card, Grid, Image, Modal } from 'semantic-ui-react'
-import { headers } from "../helpers/GeneralHelpers"
+import { Card, Grid, Image } from 'semantic-ui-react'
 import { FormHeader } from "../helpers/StylingHelpers"
 import { AllFormEdits } from "../helpers/EditFormHelpers"
+import { SuccessModal } from "../ModalPopout"
+import { displayErrors } from "../helpers/FormHelpers"
+import '../../index.css'
 
 function AccountEdits() {
-    const { user, checkSession } = useContext(AppContext)
-    const [ open, setOpen ] = useState(false)
+    const { user } = useContext(AppContext)
+    const [statusIs, setStatus] = useState(null)
+    const [error, setError] = useState([])
 
     const formSchema = yup.object().shape({
         username: yup.string().required("Please enter a username."),
@@ -17,51 +20,23 @@ function AccountEdits() {
         email: yup.string().required("Please enter an email.")
     })
 
-    const SuccessModal = () => {
-        return (
-            <Modal
-              onClose={() => setOpen(false)}
-              open={open}
-            >
-              <Modal.Header>Success!</Modal.Header>
-            </Modal>
-        )
-    }
-
-    const handleSubmit = (values, name) => {
-        const updatedInfo = {
-            [name]: values[name]
-        }
-        fetch(`/api/users/${user.id}`, {
-            method: 'PATCH',
-            headers,
-            body: JSON.stringify(updatedInfo, null, 2)
-        }).then((resp) => {
-            if(resp.ok) {
-                resp.json().then((data) => {
-                    checkSession()
-                    console.log(data)
-                    setOpen(true)
-                })
-            }
-        })
-    }
-
     return (
-        <Formik
-            initialValues={{
-                username: user.username || "", 
-                image_url: user.image_url || "",
-                email: user.email || "",
-                password: "*******"
-            }}
-            validationSchema={ formSchema }
-        >
-        {(formik) => (
         <div className="container">
-            <h2>Edit Profile</h2>
-                <Card fluid >
-                    <Form>
+            <Card fluid className='flex-outer'>
+                <SuccessModal statusIs={statusIs} setStatus={setStatus} />
+                <h2>Edit Profile</h2>
+                <Formik
+                    initialValues={{
+                        username: user.username || "", 
+                        image_url: user.image_url || "",
+                        email: user.email || "",
+                        password: "*******"
+                    }}
+                    enableReinitialize={true}
+                    validationSchema={ formSchema }
+                >
+                {(formik) => (
+                    <Form> 
                         <Card.Content style={{ padding: '15px'}}>
                             <FormHeader as='h2'>Personal info</FormHeader>
                                 <Grid columns={ 2 } >
@@ -73,24 +48,27 @@ function AccountEdits() {
                                         />
                                     </Grid.Column>
                                     <Grid.Column width={10}>
+                                    {displayErrors({ error })}
                                         <AllFormEdits  
                                             itemValue={user.username}
-                                            name='username' 
-                                            type='text' 
-                                            formik={ formik } 
+                                            name='username'
+                                            type='text'
+                                            inputType='input' 
                                             label='Username:'
-                                            handleFieldSubmit={(values) => handleSubmit(values, 'username')}
-                                            inputType='input'
+                                            formik={ formik } 
+                                            setStatus={setStatus}
+                                            setError={setError}
                                         />
                                         <br />
                                         <AllFormEdits  
                                             itemValue={user.email}
                                             name='email' 
                                             type='text' 
+                                            inputType='input'
                                             formik={ formik } 
                                             label='Email:' 
-                                            handleFieldSubmit={(values) => handleSubmit(values, 'email')}
-                                            inputType='input'
+                                            setStatus={setStatus}
+                                            setError={setError}
                                         />
                                         <br/>
                                         <AllFormEdits  
@@ -99,7 +77,8 @@ function AccountEdits() {
                                             type='password' 
                                             formik={ formik } 
                                             label='Password:' 
-                                            handleFieldSubmit={(values) => handleSubmit(values, 'password')}
+                                            setStatus={setStatus}
+                                            setError={setError}
                                             inputType='input'
                                         />
                                         <AllFormEdits 
@@ -107,19 +86,19 @@ function AccountEdits() {
                                             name='image_url' 
                                             label='Profile picture link:' 
                                             type='textarea' 
-                                            formik={ formik } 
-                                            handleFieldSubmit={(values) => handleSubmit(values, 'image_url')}
                                             inputType='textarea'
+                                            formik={ formik } 
+                                            setStatus={setStatus}
+                                            setError={setError}
                                         />
                                     </Grid.Column>
                                 </Grid>
-                        </Card.Content>
-                            { SuccessModal() }
-                    </Form>
-                </Card>
-            </div>
-            )} 
-        </Formik>
+                            </Card.Content>
+                        </Form> 
+                    )} 
+                </Formik>
+            </Card>
+        </div>
     )
 }
 

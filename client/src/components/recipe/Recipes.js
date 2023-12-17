@@ -5,7 +5,7 @@ import Search from '../Search';
 import Filter from '../Filter';
 import { Card, Grid, Divider } from 'semantic-ui-react'
 import { AppContext } from '../../context/AppContext'
-import ModalPopout from '../ModalPopout';
+import { ModalPopout } from '../ModalPopout';
 
 
 function Recipes({ page }) {
@@ -22,11 +22,11 @@ function Recipes({ page }) {
         null
 
     const displayedRecipes = 
-        searchTerm && searchResults.length > 0 ? searchResults.map((recipe) => <RecipeCard id={recipe.id} recipe={recipe} page={page}/>) :
+        searchTerm && searchResults.length > 0 ? searchResults.map((recipe) => <RecipeCard key = {recipe.id} id={recipe.id} recipe={recipe} page={page}/>) :
         searchTerm && searchResults.length === 0 ? <h3>No recipes match your search.</h3> :
-        selectedProperties.length > 0 && filteredRecipes.length > 0 ? filteredRecipes.map((recipe) => <RecipeCard id={recipe.id} recipe={recipe} page={page} />) :
+        selectedProperties.length > 0 && filteredRecipes.length > 0 ? filteredRecipes.map((recipe) => <RecipeCard key = {recipe.id} id={recipe.id} recipe={recipe} page={page} />) :
         selectedProperties.length > 0 && filteredRecipes.length === 0 ? <h3>No recipes match your filter.</h3> :
-        recipesList.map((recipe) => <RecipeCard id={recipe.id} recipe={recipe} page={page}/>);
+        recipesList.map((recipe) => <RecipeCard key = {recipe.id} id={recipe.id} recipe={recipe} page={page}/>);
 
     return (
         <div>

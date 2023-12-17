@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 import { basicFetch, filterAlphabetically } from "../components/helpers/GeneralHelpers";
 
 
@@ -31,7 +31,6 @@ const AppProvider = ({ children }) => {
         resp.json()
         .then(data => {
           setUser(data)
-          console.log(data)
         })
     }}
     )}

@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react'
-import { Tab, Grid, Header } from 'semantic-ui-react'
-import { AppContext } from '../context/AppContext';
+import React, { useState } from 'react'
+import { Tab } from 'semantic-ui-react'
 import "../index.css"
 import { dosageTabs } from './helpers/GeneralHelpers';
+import MainGuide from './dosages/MainGuide';
 import Capsules from './dosages/Capsules';
 import Decoctions from './dosages/Decoctions';
 import Dried from './dosages/Dried';
@@ -11,17 +11,16 @@ import Extracts from './dosages/Extracts';
 import Fresh from './dosages/Fresh';
 import Glycerite from './dosages/Glycerite';
 import Infusions from './dosages/Infusions';
-import Oil from './dosages/Oil';
-import Powder from './dosages/Powder';
 import Salve from './dosages/Salve';
 import Syrup from './dosages/Syrup';
 import Tincture from './dosages/Tincture';
 import Topical from './dosages/Topical';
 
 function DosageGuide() {
-    const [activeTab, setActiveTab] = useState('Capsules')
+    const [activeTab, setActiveTab] = useState('Dosage Guidance')
 
     const panes = [
+        { menuItem: 'Dosage Guidance', render: () => dosageTabs(<MainGuide />)},
         { menuItem: 'Capsules', render: () => dosageTabs(<Capsules />)},
         { menuItem: 'Decoctions', render: () => dosageTabs(<Decoctions />)},
         { menuItem: 'Dried', render: () => dosageTabs(<Dried />)},
@@ -30,9 +29,6 @@ function DosageGuide() {
         { menuItem: 'Fresh', render: () => dosageTabs(<Fresh />)},
         { menuItem: 'Glycerite', render: () => dosageTabs(<Glycerite />)},
         { menuItem: 'Infusions', render: () => dosageTabs(<Infusions />)},
-        { menuItem: 'Juice', render: () => dosageTabs(<Capsules />)},
-        { menuItem: 'Oil', render: () => dosageTabs(<Oil />)},
-        { menuItem: 'Powder', render: () => dosageTabs(<Powder />)},
         { menuItem: 'Salve', render: () => dosageTabs(<Salve />)},
         { menuItem: 'Syrup', render: () => dosageTabs(<Syrup />)},
         { menuItem: 'Tincture', render: () => dosageTabs(<Tincture />)},

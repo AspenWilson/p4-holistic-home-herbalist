@@ -47,6 +47,8 @@ const amountTypeOptions = ['Part(s)', 'Cup']
 
 const herbTypeOptions = ['Key Herb', 'Supporting Herb', 'Catalyst', 'Optional Catalyst', 'Balancing Herb', 'Optional Balancing Herb']
 
+const topicalOptions = ['Butters', 'Compresses and Soaks','Liniments', 'Lotions', 'Massage Oils', 'Oil Extractions']
+
 // ---> DRY Function
 
 const dropdowns = (arr) => {
@@ -72,9 +74,11 @@ export const amountTypeDrops = dropdowns(amountTypeOptions)
 
 export const herbTypeDrops = dropdowns(herbTypeOptions)
 
+export const topicalDrops = dropdowns(topicalOptions)
+
 // Error Messages
 
-export const displayErrors = (error) => {
+export const displayErrors = ({ error }) => {
     return error ? <p style={{ color: "red" }}>{ error }</p> : null
 }
 
@@ -91,7 +95,9 @@ export const FormInputField = ({ label, name, type, formik }) => {
             value={formik.values[name]}
             onChange={formik.handleChange}
         />
-        {displayErrors(formik.errors[name])}
+        {formik.touched[name] && formik.errors[name] && (
+        <div style={{ color: "red" }}>{formik.errors[name]}</div>
+        )}
         </>
     )
 }
@@ -106,7 +112,8 @@ export const FormTextBoxField = ({ label, name, formik }) => {
             value={formik.values[name]}
             onChange={formik.handleChange}
         />
-        {displayErrors(formik.errors[name])}
+        {formik.touched[name] && formik.errors[name] && (
+        <div style={{ color: "red" }}>{formik.errors[name]}</div> )}
         </>
     )
 }
@@ -117,51 +124,37 @@ export const FormSelectField = ({ label, name, formik, options }) => {
     <FormHeader as='h3'>{label}</FormHeader>
     <StyledSelect 
         classNamePrefix="Select"
-        name={name}
-        options={options}
+        name={ name }
+        options={ options }
         onChange={(selectedOption) => {
             formik.setFieldValue(name, selectedOption.value)
         }}
         />
+        {formik.touched[name] && formik.errors[name] && (
+        <div style={{ color: "red" }}>{formik.errors[name]}</div> )}
     </>
     )
 }
 
-export const FormMultiSelectField = ({ label, name, formik, options}) => {
+export const FormMultiSelectField = ({ label, name, formik, options, setSelectedProperties }) => {
     return (
         <>
         <FormHeader as='h3'>{label}</FormHeader>
         <StyledSelect 
             classNamePrefix="Select"
             isClearable = { true }
-            isMulti
+            isMulti = { true }
             closeMenuOnSelect={ false }
-            name={name}
-            options={options}
+            name={ name }
+            options={ options }
             onChange={(selectedOptions) => {
                 formik.setFieldValue(name, selectedOptions.map((option) => option.value))
+                setSelectedProperties(selectedOptions.map((option) => option.value))
             }}
             />
+            {formik.touched[name] && formik.errors[name] && (
+        <div style={{ color: "red" }}>{formik.errors[name]}</div> )}
         </>
     )
 }
 
-//Dynamic Inputs
-
-// const DynamicInputs = ({ formFields, type, name, formik, itemValue,handleFieldSubmit, inputType } ) => {
-//     const [ fields, setFields ] = useState(
-//         {formFields}
-//     )
-
-//     return (
-//         <Input 
-//             style={{ overflowWrap: 'break-word', width: '100%' }}
-//                 type={type}
-//                 id={name}
-//                 name={name}
-//                 value={formik.values[name]}
-//                 onChange={formik.handleChange}
-//         />
-//     )
-
-// }

@@ -1,44 +1,15 @@
-import React, { useState, useContext } from "react"
+import React, { useState } from "react"
 import { Button, Grid, Input, Popup } from 'semantic-ui-react'
-import { StyledTextBox, StyledSelect, FormH3 } from "./StylingHelpers"
-import { AppContext } from "../../context/AppContext"
-import { headers } from "../helpers/GeneralHelpers"
-
-
+import { StyledTextBox, StyledSelect, FormH3 } from "../helpers/StylingHelpers"
 import '../../index.css'
 
-export const AllFormEdits = ({ label, name, type, formik, itemValue, inputType, options = null, setStatus, setError }) => {
-    const { user, checkSession } = useContext(AppContext)
-    const [ editState, setEditState] = useState("no edits")
+export const AllFormEdits = ({ label, name, type, formik, itemValue, handleFieldSubmit, inputType, options = null }) => {
+    const [editState, setEditState] = useState("no edits")
 
-    const handleSubmit = (values, name) => {
-        const updatedInfo = {
-            [name]: values[name]
-        }
-        fetch(`/api/users/${user.id}`, {
-            method: 'PATCH',
-            headers,
-            body: JSON.stringify(updatedInfo, null, 2)
-        }).then((resp) => {
-            if(resp.ok) {
-                resp.json().then((data) => {
-                    checkSession()
-                    setError()
-                    setStatus('success')
-                })
-            } else {
-                resp.json().then((err) => {
-                    setError(err.error)
-                    setEditState('cancelled')
-                })
-            }
-        })
-    }
     const handleSave = () => {
-        handleSubmit(formik.values, name)
+        handleFieldSubmit(formik.values)
         setEditState("no edits")
     }
-
 
     const displayOptions = 
         editState === "no edits" ? formik.values[name] :
@@ -71,7 +42,7 @@ export const AllFormEdits = ({ label, name, type, formik, itemValue, inputType, 
                 options={options}
                 onChange={(selectedOption) => {
                 formik.setFieldValue(name, selectedOption.value)
-                }}
+            }}
             /> :
             null
 
@@ -86,24 +57,22 @@ export const AllFormEdits = ({ label, name, type, formik, itemValue, inputType, 
                         <>
                             {inputTypeDisplays}
                             {formik.touched[name] && formik.errors[name] && (
-                                <div style={{ color: 'red' }}>{formik.errors[name]}</div>
-                            )}
+                            <div style={{ color: "red" }}>{formik.errors[name]}</div> )}
                         </>
                     ) : (
-                        <FormH3>
-                            {displayOptions}
-                        </FormH3>
+                        <FormH3 > { displayOptions } </FormH3>
                     )}
                 </Grid.Column>
                 <Grid.Column width={ 3 }>
                     {editState === "edits" ? (
                         <>
-                                <Popup content='Cancel edits' trigger={<Button icon='cancel' style={{ backgroundColor: 'red', color:'white' }} onClick={() => setEditState("cancelled")}  />} />
-                                <Popup content='Save changes' trigger={<Button icon='save' style={{ backgroundColor: '#056d52', color:'white' }} onClick={handleSave} />} />
+                            <Popup content='Cancel edits' trigger={<Button icon='cancel' style={{ backgroundColor: 'red', color:'white' }} onClick={() => setEditState("cancelled")} />} />
+                            <Popup content='Save changes' trigger={<Button icon='save' style={{ backgroundColor: '#056d52', color:'white' }} onClick={handleSave} />} />
+
                         </>
                     ) : (
                         <>
-                                <Popup content='Edit' trigger={<Button icon='edit' onClick={() => setEditState("edits")}  />} />
+                            <Popup content='Edit' trigger={<Button icon='edit' onClick={() => setEditState("edits")} />} />
                         </>
                     )}
                 </Grid.Column>
@@ -111,3 +80,4 @@ export const AllFormEdits = ({ label, name, type, formik, itemValue, inputType, 
         </div>
     )
 }
+

@@ -119,7 +119,7 @@ function Recipe(){
                 <Form >
                   <StyledTextBox name='comment' onChange={ formik.handleChange } value={ formik.values.comment } />
                 <Form/>
-                <Button content='Add Comment' type='submit' labelPosition='left' icon='edit' style={{ backgroundColor: '#056d52', color:'white' }} />
+                <Button icon='edit' content='Add Comment' type='submit' labelPosition='left'  style={{ backgroundColor: '#056d52', color:'white' }} />
               </Form>
               )}
               </Formik>

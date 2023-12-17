@@ -76,7 +76,7 @@ class UserCommentsByID(Resource):
             return unauth_error
                 
         if comment.user_id is not user.id:
-            return {'error':'This comment was not posted by this user. '}, 409
+            return {'message':'This comment was not posted by this user. '}, 409
                 
         response = comment.to_dict(), 200
         return response
@@ -94,7 +94,7 @@ class UserCommentsByID(Resource):
             return unauth_error
                 
         if comment.user_id is not user.id:
-            return {'error':'This comment was not posted by this user. '}, 409
+            return {'message':'This comment was not posted by this user. '}, 409
                 
         comment.comment = data['comment']
         

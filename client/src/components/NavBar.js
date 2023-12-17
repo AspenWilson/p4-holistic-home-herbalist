@@ -8,7 +8,6 @@ import { AppContext } from '../context/AppContext'
 function NavBar() {
     const { loggedIn, logout } = useContext(AppContext)
 
-    
     const handleLogout = () => {
        fetch('/api/logout', {
         method: 'DELETE'
@@ -49,9 +48,7 @@ function NavBar() {
             <Icon name='info' />
                 Resources
         </Menu.Item>
-        <Menu.Item 
-        as={Link} to="/" onClick={ handleLogout }
-        >
+        <Menu.Item as={Link} to="/" onClick={ handleLogout }>
             <Icon name='sign out'/>
             Log Out
         </Menu.Item> 
@@ -59,9 +56,7 @@ function NavBar() {
 
     const authRequiredOptions =
     <>
-        <Menu.Item 
-        as={Link} to="/login"
-        >
+        <Menu.Item as={Link} to="/login">
             <Icon name='sign in' />
             Log In/ Sign Up
         </Menu.Item> 

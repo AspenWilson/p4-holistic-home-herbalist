@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
@@ -17,6 +17,27 @@ import Resources from "./components/Resorces";
 import Authentication from "./components/Authentication";
 
 function App() {
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    fetch(`api/checksession`)
+    .then((resp) => {
+      if (resp.ok) {
+        resp.json()
+        .then (data => {
+          setUser(data)
+        })
+      }
+    })
+  },[])
+
+    if (!user) return (
+      <AppProvider>
+        <GlobalStyle />
+        <NavBar />
+        <Authentication />
+      </AppProvider>
+    )
 
   return (
     <AppProvider>

@@ -1,23 +1,25 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Card, Grid, Divider } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom'
+
+import { ModalPopout } from '../ModalPopout'
 import { AppContext } from '../../context/AppContext'
 import { handleSearches, handleFilterChange } from '../helpers/GeneralHelpers'
+
 import HerbCard from './HerbCard'
 import Search from '../Search'
 import Filter from '../Filter'
-import ModalPopout from '../ModalPopout'
 import "../../index.css"
 
 function Herbs({ page }) {
     const { id } = useParams()
     const { properties, herbs, savedHerbs, enteredHerbs } = useContext(AppContext)
 
+    const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [filteredHerbs, setFilteredHerbs] = useState([])
-    const [selectedProperties, setSelectedProperties] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
     const [propertyHerbs, setPropertyHerbs] = useState([])
+    const [selectedProperties, setSelectedProperties] = useState([]);
 
     useEffect(() => {
         const list = herbs.filter((herb) => herb.properties.some((property) => property.id === id))

@@ -43,21 +43,21 @@ class User(db.Model, SerializerMixin):
     @validates('username')
     def validate_username(self, key, username):
         if not username:
-            raise ValueError('Username is required.')
+            raise ValueError("Username is required.")
         
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            raise ValueError('Username is already taken.')
+            raise ValueError("Username is already taken.")
         return username
     
     @validates('email')
     def validate_email(self, key, email):
         if not email:
-            raise ValueError('Email is required.')
+            raise ValueError("Email is required.")
         
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            raise ValueError('Email is already in use.')
+            raise ValueError("Email is already in use.")
         
         return email
 

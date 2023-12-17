@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Card, Image, Label, Button } from 'semantic-ui-react'
 import { headers } from '../helpers/GeneralHelpers'
 import { AppContext } from '../../context/AppContext';
-import ModalPopout from '../ModalPopout'
+import { ModalPopout } from '../ModalPopout';
 import { DeleteModal, propertyTags } from '../helpers/CardHelpers';
 
 function HerbCard ({ herb, page }) {
@@ -40,7 +40,7 @@ function HerbCard ({ herb, page }) {
     return (
         <Card raised>
             <Card.Content>
-                <Image src={image_url} floated='left' size="small" />
+                <Image src={ image_url } floated='left' size="small" />
                 <Button 
                     icon={isSaved? 'star' : 'star outline'} 
                     circular 
@@ -61,8 +61,8 @@ function HerbCard ({ herb, page }) {
             </Card.Content>
 
             <Card.Content>
-                <Card.Header>{name}</Card.Header>
-                <Card.Meta>{latin_name}</Card.Meta>
+                <Card.Header>{ name }</Card.Header>
+                <Card.Meta>{ latin_name }</Card.Meta>
                 <Card.Description >
                     <h3>Properties</h3>
                     <Label.Group tag>

@@ -1,152 +1,193 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Formik, Form, FieldArray } from "formik"
+import { Formik, Form } from "formik"
 import * as yup from "yup"
 import { AppContext } from '../../context/AppContext'
-import { Card, Grid, Button, Icon } from 'semantic-ui-react'
-import { IngredientEditCards } from "../helpers/EditFormHelpers"
+import { Card, Button } from 'semantic-ui-react'
 import { FormHeader } from "../helpers/StylingHelpers"
-import { IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField } from "../helpers/FormHelpers"
-import { headers } from "../helpers/GeneralHelpers"
+import { IDDropdowns, displayErrors } from "../helpers/FormHelpers"
+import { headers, basicFetch, dividerBreaks } from "../helpers/GeneralHelpers"
+import { AllFormEdits } from "./RecipeEditHelpers"
+import { SuccessModal } from "../ModalPopout"
+import { IngredientChanges } from "./IngredientChanges"
+import { IngredientAdditions } from "./IngredientAdditions"
 
 
 function RecipeEdits ({ id }) {
-    const { handleModalSuccess, user, herbs, refreshRecipes, refreshEnteredRecipes } = useContext(AppContext)
+    const { user, herbs, refreshRecipes, refreshEnteredRecipes } = useContext(AppContext)
     const [recipe, setRecipe] = useState(null)
-    const [deletedIngredients, setDeletedIngredients] = useState([])
-    const [show, setShow] = useState(null)
+    const [show, setShow] = useState(false)
     const [ingredients, setIngredients] = useState([])
+    const [statusIs, setStatus] = useState(null)
+    const [error, setError] = useState()
 
     useEffect(() => {
-        fetch(`/api/recipes/${id}`)
-        .then ((resp) => resp.json())
-        .then ((data) => {
-            setRecipe(data)
-        })
+        basicFetch(`/api/recipes/${id}`, setRecipe)
+        basicFetch(`/api/recipes/${id}/ingredients`, setIngredients)
     }, [id])
-
-    useEffect(() => {
-        fetch(`/api/recipes/${id}/ingredients`)
-        .then((resp) => resp.json())
-        .then((data) => setIngredients(data))
-      }, [id])
 
     const formSchema = yup.object().shape({
         name: yup.string().required("Herb name is required."),
         directions: yup.string().min(50, "Directions must be at least 50 characters.").required("Directions are required."),
-        ingredients : yup.array().of(
-            yup.object().shape({
-                amount: yup.number(),
-                amount_type: yup.string(),
-                herb_type: yup.string(),
-                herb_id: yup.string()
-            })
-        ).min(1, 'At least one ingredient is required.')
     })
 
-    const handleSubmit = (values) => {
-        const updatedRecipe = {
-            name: values.name, 
-            directions: values.directions, 
-            ingredients: values.ingredients
-        }
-        fetch(`/api/recipes/${id}`, {
-            method:'PATCH',
-            headers,
-            body: JSON.stringify(updatedRecipe, null, 2)
-        }).then((resp) => {
-            if(resp.ok) {
-                resp.json().then((data) => {
-                    if (deletedIngredients.length > 0) {
-                        deletedIngredients.map((ingredient) => {
-                            fetch(`/api/recipes/${recipe.id}/ingredients/${ingredient.id}`, {
-                                method:'DELETE'
-                        })})
-                    }
-                    handleModalSuccess()
-                    refreshEnteredRecipes(user)
-                    refreshRecipes()
-                })
-            }})
+    const ingredientSchema = yup.object().shape({
+        amount: yup.number().required("Ingredient amount is required."),
+        amount_type: yup.string().required("Amount type is required."),
+        herb_type: yup.string().required("Herb type is required."),
+        herb_id: yup.string().required("Herb must be selected.")
+    })
+
+    const successFunctions = (user) => {
+        basicFetch(`/api/recipes/${id}`, setRecipe)
+        basicFetch(`/api/recipes/${id}/ingredients`, setIngredients)
+        refreshEnteredRecipes(user)
+        refreshRecipes()
+        setStatus('success')
+        setError('')
     }
+
+    const PatchRequest = (values, name) => {
+        const updatedInfo ={
+            [name] : values[name]
+        }
+        fetch(`api/recipes/${id}`, {
+            method: 'PATCH', 
+            headers, 
+            body: JSON.stringify(updatedInfo, null, 2)
+        }).then((resp) => {
+            if (resp.ok) {
+                resp.json().then((data) => {
+                    successFunctions(user)
+                })
+            } else { 
+                resp.json().then((err) => setError(err.message))
+            }
+        })
+    }
+
+    const DeleteRequest = ({ingredient}) => {
+        fetch(`/api/recipes/${id}/ingredients/${ingredient.id}`, {
+            method: 'DELETE'
+        }).then(() => {
+            successFunctions(user)
+        })
+    }
+
+    const showFalse = () => { setShow(false) }
+    const showTrue = () => { setShow(true) }
 
     if (!recipe) {
         return <div>Loading...</div>
     }
 
     return (
-        <Formik 
-            initialValues={{
-                name: recipe.name || "",
-                directions: recipe.directions || "",
-                ingredients: show ? [{ amount: "", amount_type: "", herb_id: "", herb_type: "" }] : []
-            }}
-            enableReinitialize={ true }
-            validationSchema={ formSchema }
-            onSubmit={ handleSubmit }
-        >
-        {(formik) => (
-            <div className='container'>
+        <div className='container'>
             <Card fluid className='flex-outer'>
-            <Form>
-                <Card.Content className="allCards" >
-                    <Grid columns={ 2 }>
-                        <Grid.Column>
-                            <FormInputField label='Recipe Name' name='name' type='text' formik={ formik } />
-                        </Grid.Column>
-
-                        <Grid.Column>
-                        <FormTextBoxField label='Directions' name='directions' formik={ formik } />
-                        </Grid.Column>
-                    </Grid>
-
-                    <FieldArray name='ingredients'>
-                    {({ push, remove }) => (
-                        <div>
-                            <FormHeader as='h3'>Existing Ingredients</FormHeader>
-                            <Card.Group>
-                                {ingredients.map((ingredient) => {
-                                    return (
-                                        <IngredientEditCards ingredient={ingredient} deletedIngredients={deletedIngredients} setDeletedIngredients={setDeletedIngredients} />
-                                    )
-                                })}
-                            </Card.Group>
-
-                            {show === true ?
-                            formik.values.ingredients.map((_, index) => {
-                                return (
-                                <div key={ index } >
-                                    <Grid columns={ 2 }>
-                                        <Grid.Column>
-                                        <FormInputField label='Amount' name={`ingredients[${index}].amount`} type='number' formik={ formik } />
-                                            <FormSelectField label='Amount Type' name={`ingredients[${index}].amount_type`} formik={formik} options={amountTypeDrops} />
-                                        </Grid.Column>
-
-                                        <Grid.Column>
-                                        <FormSelectField label='Herb' name={`ingredients[${index}].herb_id`} formik={formik} options={IDDropdowns(herbs)} />
-                                            <FormSelectField label='Herb Type' name={`ingredients[${index}].herb_type`} formik={formik} options={herbTypeDrops} />
-                                        </Grid.Column>
-                                    </Grid>
-                                    <Button  onClick={() => remove(index)}>Remove Ingredient</Button>
-                                    <Button onClick={() => push({ amount: "", amount_type: "", herb_id:"", herb_type:"" })}>
-                                    Add another ingredient
-                                    </Button>
-                                </div>
-                            )}) : null }
-                            {show === null ? 
-                                <Button onClick={() => {setShow(true)}}>
-                                   Add new ingredients to this recipe <Icon name='add' />
-                                </Button> : null}
-                        </div>
+                <Formik 
+                    initialValues={{
+                        name: recipe.name || "",
+                        directions: recipe.directions || ""
+                    }}
+                    enableReinitialize={ true }
+                    validationSchema={ formSchema }
+                >
+                {(formik) => (
+                    <Form>
+                        <Card.Content style={{ padding: '15px'}} >
+                        {displayErrors({ error })}
+                            <AllFormEdits  
+                                itemValue={recipe.name}
+                                name='name' 
+                                type='text'
+                                inputType='input' 
+                                formik={ formik } 
+                                label='Recipe Name:'
+                                handleFieldSubmit={(values) => PatchRequest(values, 'name')}
+                            />
+                            <br />
+                            <AllFormEdits  
+                                itemValue={recipe.directions}
+                                name='directions' 
+                                type='textarea' 
+                                inputType='textarea'
+                                formik={ formik } 
+                                label='Directions:'
+                                handleFieldSubmit={(values) => PatchRequest(values, 'directions')}
+                            />
+                        </Card.Content>
+                    </Form>
+                )}
+                </Formik>
+                <SuccessModal statusIs={statusIs} setStatus={setStatus} />
+                <Card.Content  >
+                    <FormHeader as='h3'>Existing Ingredients</FormHeader>
+                    {dividerBreaks()}
+                    {ingredients.length > 0 ? 
+                        <>
+                        <Card.Group itemsPerRow={2} style={{ padding: '20px'}}>
+                        {ingredients.map((ingredient) => (
+                            <Formik 
+                                key={ingredient.id}
+                                initialValues={{
+                                    amount: ingredient.amount,
+                                    amount_type: ingredient.amount_type,
+                                    herb_type: ingredient.herb_type,
+                                    herb_id: ingredient.herb_id
+                                }}
+                                enableReinitialize={ true }
+                                validationSchema={ ingredientSchema }
+                            >
+                            {(formik) => (
+                                <IngredientChanges
+                                    ingredient={ingredient} 
+                                    formik={formik} 
+                                    setError = {setError}
+                                    handleDelete={({ingredient}) => DeleteRequest({ingredient})} 
+                                    herbDrops={IDDropdowns(herbs)}
+                                    id= {id}
+                                    successFunctions = {successFunctions}
+                                />
+                            )}
+                            </Formik>
+                        ))}
+                        </Card.Group>
+                        </> :
+                            <h3 className='allCards'>No ingredients have been entered.</h3>
+                    }
+                    {dividerBreaks()}
+                    <Formik 
+                        initialValues={{
+                            amount: "", 
+                            amount_type: "",
+                            herb_type: "",
+                            herb_id: ""
+                        }}
+                        enableReinitialize={true}
+                        validationSchema={ingredientSchema}
+                    >
+                    {(formik) => (
+                        <Form>
+                            {show === false ?( 
+                                <Button icon='add' key='add' onClick={showTrue} fluid>
+                                   Add new ingredients to this recipe
+                                </Button>) : 
+                                <IngredientAdditions 
+                                    formik={ formik }
+                                    showFalse={showFalse} 
+                                    herbs={herbs}
+                                    successFunctions={successFunctions}
+                                    id={id}
+                                    setError= {setError}
+                                />
+                            }
+                        </Form>
                     )}
-                    </FieldArray>                       
+                    </Formik> 
                 </Card.Content>
-                <Button fluid type='submit'>Submit edits</Button>
-            </Form>
-        </Card>
+            </Card>
         </div>
-    )}
-    </Formik>
     )
 }
+
 
 export default RecipeEdits

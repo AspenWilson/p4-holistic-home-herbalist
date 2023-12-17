@@ -1,33 +1,31 @@
 from flask_restful import Resource
 from models.models import User
 from config import api, db, app
-from flask import request, session
+from flask import request, session, abort
 from .helpers import unfound_error, unauth_error, get_all, get_first, get_current_user
 
 
 class SignUp(Resource):
     def post(self):
-        data = request.get_json()
-        email = data['email']
+        try:
+            data = request.get_json()
+            
+            new_user = User(
+                username = data['username'],
+                email = data['email'],
+                image_url = data['image_url']
+                )
+            new_user.password_hash = data['password']
 
-        existing_user = User.query.filter_by(email=email).first()
+            db.session.add(new_user)
+            db.session.commit()
 
-        if existing_user:
-            return {'error': 'User already exists'}, 409
+            session['user_id'] = new_user.id
+
+            return new_user.to_dict(), 201
         
-        new_user = User(
-            username = data['username'],
-            email = email,
-            image_url = data['image_url']
-            )
-        new_user.password_hash = data['password']
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        session['user_id'] = new_user.id
-
-        return new_user.to_dict(), 201
+        except ValueError as e:
+            abort(409, e.args[0])
 
 class Login(Resource):
     def post(self):
@@ -35,7 +33,7 @@ class Login(Resource):
         user = User.query.filter_by(username=data['username']).first()
         
         if not user or not user.authenticate(data['password']):
-            return {'error': 'Incorrect username or password'}, 401
+            abort (401, 'Incorrect username or password' )
         
         session['user_id'] = user.id
         return user.to_dict(), 202
@@ -82,7 +80,6 @@ class UsersByID(Resource):
         current_user = get_current_user()
         all_users = get_all(User)
         data = request.get_json()
-        # import pdb; pdb.set_trace()
         if not user:
             return unfound_error('User')
         
@@ -90,14 +87,13 @@ class UsersByID(Resource):
             return unauth_error 
         
         for each_user in all_users:
-            # import pdb; pdb.set_trace()
             if user.id != each_user["id"]:
                 if 'email' in data:
                     if data['email'] == each_user["email"]:
-                        return {'error':'Email is already in use.'}, 409
+                        return {'message':'Email is already in use.'}, 409
                 if 'username' in data:
                     if data['username'] == each_user["username"]:
-                        return  {'error':'Username is already in use.'}, 409
+                        return  {'message':'Username is already in use.'}, 409
         
         for key in data.keys():
             if key == 'password':

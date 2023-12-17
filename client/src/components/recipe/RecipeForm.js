@@ -1,15 +1,16 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import { Formik, Form, FieldArray } from "formik"
 import * as yup from "yup"
 import { AppContext } from '../../context/AppContext'
 import { headers } from "../helpers/GeneralHelpers"
 import { Card, Grid, Button } from 'semantic-ui-react'
-import { RecipeInitialValues, IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField } from "../helpers/FormHelpers"
+import { RecipeInitialValues, IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField, displayErrors } from "../helpers/FormHelpers"
 import { FormHeader } from "../helpers/StylingHelpers"
 
 
 function RecipeForm () {
   const { herbs, handleModalSuccess, refreshEnteredRecipes, user, refreshRecipes } = useContext(AppContext)
+  const [error, setError] = useState()
 
   const formSchema = yup.object().shape({
     name: yup.string().required("Herb name is required."),
@@ -43,7 +44,10 @@ function RecipeForm () {
           refreshRecipes()
           resetForm({ values:RecipeInitialValues })
         })
-      }})
+      } else {
+        resp.json().then((err) => setError(err.message))
+      }
+    })
     }
 
   return (
@@ -56,9 +60,10 @@ function RecipeForm () {
       <div className="container">
         <Card fluid className="flex-outer">
         <Form>
+        {displayErrors({ error })}
           <Card.Content className="allCards">
-            <FormInputField label='Recipe Name' name='name' type='text' formik={ formik } />
-            <FormTextBoxField label='Directions' name='directions' formik={ formik } />
+            <FormInputField label='Recipe Name' name='name' type='text' formik={ formik } error={ error }/>
+            <FormTextBoxField label='Directions' name='directions' formik={ formik } error={ error }/>
 
             <FieldArray name="ingredients">
             {({ push, remove }) => (
@@ -68,23 +73,23 @@ function RecipeForm () {
                     <div key={ index }>
                     <Grid columns={ 2 }>
                       <Grid.Column>
-                      <FormInputField label='Amount' name={`ingredients[${index}].amount`} type='number' formik={ formik } />
+                      <FormInputField label='Amount' name={`ingredients[${index}].amount`} type='number' formik={ formik } error={ error }/>
                       </Grid.Column>
                         
                       <Grid.Column>
-                      <FormSelectField label='Amount Type' name={`ingredients[${index}].amount_type`} formik={ formik } options={amountTypeDrops} />
+                      <FormSelectField label='Amount Type' name={`ingredients[${index}].amount_type`} formik={ formik } options={amountTypeDrops} error={ error }/>
 
                       </Grid.Column>
                     </Grid>
 
                     <Grid columns={2}>
                       <Grid.Column>
-                        <FormSelectField label='Herb' name={`ingredients[${index}].herb_id`} formik={ formik } options={IDDropdowns(herbs)} />
+                        <FormSelectField label='Herb' name={`ingredients[${index}].herb_id`} formik={ formik } options={IDDropdowns(herbs)} error={ error }/>
 
                       </Grid.Column>
 
                       <Grid.Column>
-                      <FormSelectField label='Herb Type' name={`ingredients[${index}].herb_type`} formik={ formik } options={herbTypeDrops} />
+                      <FormSelectField label='Herb Type' name={`ingredients[${index}].herb_type`} formik={ formik } options={herbTypeDrops} error={ error }/>
 
                       </Grid.Column>
                     </Grid>
