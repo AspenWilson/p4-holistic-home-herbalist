@@ -10,8 +10,7 @@ function Salve () {
         </Tab.Pane>},
         { menuItem: 'Instructions', render: () => <Tab.Pane>
             <PFont >For salves, a 6:1-8:1 ratio of oil to beeswax is employed, allowing for adjustments based on the desired consistency. Wax pellets or grated wax ease the melting process, with beeswax melted separately and poured into warm oil. Despite the effectiveness of salves, cleaning the equipment used in their preparation requires diligence, emphasizing the importance of prompt cleanup while the salve is still in a liquid state. </PFont>
-        </Tab.Pane> },
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane> }
     ]
     return (
         <div>

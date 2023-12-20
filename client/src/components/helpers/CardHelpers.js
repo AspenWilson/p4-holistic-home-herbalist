@@ -9,7 +9,7 @@ import { filterAlphabetically } from './GeneralHelpers';
 
 export const StyledCardLists = ({ label, list }) => {
     return (
-        <Card.Content extra>
+        <Card.Content extra style={{ padding:'10px'}}>
             <StyledCardDescription style={{ color:'white' }}>{ label }:</StyledCardDescription>
             { list }
         </Card.Content>

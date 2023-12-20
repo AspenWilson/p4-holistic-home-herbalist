@@ -29,8 +29,7 @@ function Infusions () {
                             <LiM16 ><strong>Strong Infusion:</strong> Make a standard infusion and steep for 8 hours.</LiM16 >
                      </ul>
                      
-              </Tab.Pane> },
-              { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+              </Tab.Pane> }
           ]
     return (
         <div>

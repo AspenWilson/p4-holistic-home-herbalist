@@ -27,7 +27,7 @@ class Recipe(db.Model, SerializerMixin):
     
     comments = db.relationship('Comment', back_populates='recipe', cascade='all, delete-orphan')
 
-    serialize_rules=('-herbs.recipes','-properties.recipes', '-comments.recipes', '-saved_by', '-entered_by.entered_recipes', '-entered_by.entered_herbs', '-entered_by.saved_recipes', '-entered_by.saved_herbs', '-ingredients.recipe', '-ingredients.herb', '-herbs.entered_on', '-herbs.dosages', '-herbs.ingredients', '-herbs.image_url', '-herbs.properties', '-herbs.description', '-properties.entered_on', '-comments.recipe', '-comments.user.entered_recipes', '-comments.user.saved_recipes', '-comments.user.saved_herbs', '-comments.user.entered_herbs' )
+    serialize_rules=('-herbs.recipes','-properties.recipes', '-comments.recipes', '-saved_by', '-entered_by.entered_recipes', '-entered_by.entered_herbs', '-entered_by.saved_recipes', '-entered_by.saved_herbs', '-ingredients.recipe', '-herbs.entered_on', '-herbs.dosages', '-herbs.ingredients', '-herbs.image_url', '-herbs.properties', '-herbs.description', '-properties.entered_on', '-comments.recipe', '-comments.user.entered_recipes', '-comments.user.saved_recipes', '-comments.user.saved_herbs', '-comments.user.entered_herbs', '-ingredients.herb.recipes', '-ingredients.herb.dosages', '-ingredients.herb.entered_by', '-ingredients.herb.properties', '-ingredients.herb.latin_name', '-ingredients.herb.description', '-ingredients.herb.entered_on', '-ingredients.herb.ingredients' )
     
     @property
     def unique_properties(self):

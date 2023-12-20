@@ -31,8 +31,7 @@ function Decoctions () {
                         <LiM16>Bring to a low simmer for 4 or more hours until about 500 milliliters (about 1 pint) of fluid remains.</LiM16>
                         <LiM16>This extended process allows volatile oils to escape while extracting more mineral salts, resulting in a decoction with a different medicinal action than standard teas. </LiM16>
                 </ol>
-            </Tab.Pane> },
-            { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+            </Tab.Pane> }
         ]
     return (
         <div>

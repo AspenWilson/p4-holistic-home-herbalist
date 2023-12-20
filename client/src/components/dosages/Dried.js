@@ -42,8 +42,7 @@ function Dried () {
                         <LiM14 >Purchase herbal products, including bulk herbs, exclusively from reputable manufacturers to ensure product quality and safety.</LiM14>
                     </ul>
             </ul>
-        </Tab.Pane>},
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane>}
     ]
     return (
         <div>

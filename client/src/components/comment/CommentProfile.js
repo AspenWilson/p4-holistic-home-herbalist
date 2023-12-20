@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { Button, Card, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import { ModalPopout } from '../ModalPopout';
 import { headers } from "../helpers/GeneralHelpers";
 import { AppContext } from '../../context/AppContext'
 import { DeleteModal } from "../helpers/CardHelpers";
+import { Button, Card, Grid } from 'semantic-ui-react'
 
 function CommentCard ({ comments }) {
     const { refreshEnteredComments, user, handleModalSuccess } = useContext(AppContext)

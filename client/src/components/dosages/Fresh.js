@@ -56,8 +56,7 @@ function Fresh () {
                 <LiM16 ><strong>Vinegar Extracts:</strong> Soak herbs in vinegar to create flavorful extracts suitable for culinary use and medicinal applications.</LiM16>
             </ul>
             <PFont >Experiment with different preparations to harness the healing power of fresh herbs in your daily life. Remember, each herb has unique characteristics, and learning about them enhances your herbal knowledge and application. </PFont>
-        </Tab.Pane> },
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane> }
     ]
     return (
         <div>

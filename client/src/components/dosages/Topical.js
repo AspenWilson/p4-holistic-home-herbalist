@@ -68,8 +68,7 @@ function Topical () {
             <br />
             {displayedInstructions}
             </>
-        </Tab.Pane> },
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane> }
     ]
 
     return (

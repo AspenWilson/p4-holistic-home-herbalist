@@ -15,6 +15,7 @@ import Salve from './dosages/Salve';
 import Syrup from './dosages/Syrup';
 import Tincture from './dosages/Tincture';
 import Topical from './dosages/Topical';
+import TablesTab from './dosages/TablesTab';
 
 function DosageGuide() {
     const [activeTab, setActiveTab] = useState('Dosage Guidance')
@@ -32,7 +33,8 @@ function DosageGuide() {
         { menuItem: 'Salve', render: () => dosageTabs(<Salve />)},
         { menuItem: 'Syrup', render: () => dosageTabs(<Syrup />)},
         { menuItem: 'Tincture', render: () => dosageTabs(<Tincture />)},
-        { menuItem: 'Topical', render: () => dosageTabs(<Topical />)}
+        { menuItem: 'Topical', render: () => dosageTabs(<Topical />)}, 
+        { menuItem: 'Tables', render: () => dosageTabs(<TablesTab />)},
     ]
 
     return (

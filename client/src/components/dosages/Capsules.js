@@ -30,8 +30,7 @@ function Capsules () {
             <PFont>Capsule sizes can vary, affecting the amount of herb powder they hold. Hand-filled size 00 capsules, for example, yield 200-250 mg of powdered herb, while machine-filled capsules usually hold about 45 mg of herb powder per standard size 00 capsule.</PFont>
 
             <PFont>Consumers are advised to read labels carefully, checking for capsule composition and additional ingredients. Exploring alternative brands and considering efficiency, especially if precision is a priority, ensures a personalized and satisfying herbal supplement experience. Storing finished capsules appropriately helps maintain the potency of the herbs over time. As the market for herbal supplements continues to evolve, an increasing array of capsule options becomes available to cater to diverse dietary needs and preferences.</PFont>
-        </Tab.Pane> }, 
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }, 
+        </Tab.Pane> }
     ]
     return (
         <Container fluid >

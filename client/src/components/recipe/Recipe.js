@@ -9,6 +9,7 @@ import { AppContext } from "../../context/AppContext";
 import { CommentInitalValues } from "../helpers/FormHelpers";
 import { StyledCardDescription, StyledTextBox } from "../helpers/StylingHelpers"
 import { GoBack, RecipeUnLinkedList, UnLinkedLists } from "../helpers/CardHelpers";
+import { RecipeEmailModal } from "../ModalPopout";
 
 
 function Recipe(){
@@ -21,13 +22,13 @@ function Recipe(){
     fetch(`/api/recipes/${id}`)
       .then((resp) => resp.json())
       .then((data) => setRecipe(data))
-  }, [id]);
+  }, []);
     
   useEffect(() => {
     fetch(`/api/recipes/${id}/ingredients`)
     .then((resp) => resp.json())
     .then((data) => setIngredients(data))
-  }, [id])
+  }, [])
 
   const formSchema = yup.object().shape({
     comment: yup.string()
@@ -72,6 +73,7 @@ function Recipe(){
   return (
     <div>
       <GoBack />
+      <RecipeEmailModal recipe={recipe}/>
       <Card raised fluid style= {{ backgroundColor: 'rgba(52, 52, 52, 0.8)', padding: '10px' }} className='flex-outer'>
         <Card.Content>
           <Header as='h1' style={{ color: 'white' }}>{recipe.name}</Header>
@@ -118,7 +120,6 @@ function Recipe(){
               {(formik) => (
                 <Form >
                   <StyledTextBox name='comment' onChange={ formik.handleChange } value={ formik.values.comment } />
-                <Form/>
                 <Button icon='edit' content='Add Comment' type='submit' labelPosition='left'  style={{ backgroundColor: '#056d52', color:'white' }} />
               </Form>
               )}

@@ -39,8 +39,7 @@ function Syrup () {
                 <LiM16>To extend shelf life, add 20% of an 80-proof alcohol like brandy or rum. Syrups with alcohol last longer when refrigerated or canned.</LiM16>
             </ul>
 
-        </Tab.Pane> },
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane> }
     ]
     return (
         <div>

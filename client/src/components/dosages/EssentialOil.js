@@ -94,8 +94,7 @@ function EssentialOil () {
             <h2>Embracing Emotional Harmony</h2>
 
             <PFont >As an energy medicine, flower essences contribute to balanced emotional states, promoting inner peace and happiness. With an expansive array of flower essences available, individuals can address a spectrum of emotional issues, making them valuable tools for emotional well-being.</PFont>
-        </Tab.Pane> },
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane> }
     ]
     return (
         <div>

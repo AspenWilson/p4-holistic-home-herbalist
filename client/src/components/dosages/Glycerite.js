@@ -41,8 +41,7 @@ function Glycerite () {
                 <LiM16>Stuff jar with fresh material, 70% glycerin, 30% water.</LiM16>
                 <LiM16>Process in boiling water for about 15 minutes.</LiM16>
             </ol>
-        </Tab.Pane> },
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane> }
     ]
     return (
         <div>

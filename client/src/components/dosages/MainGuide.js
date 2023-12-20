@@ -1,7 +1,9 @@
 import React from "react";
-import { Container, Tab } from 'semantic-ui-react'
+import { Container, Tab, Card } from 'semantic-ui-react'
 import { WeightDosageChart, AgeDosageChart, IllnessChart } from "./Tables";
 import { LiM16, PFont } from "../helpers/StylingHelpers";
+import TermsTab from "./Terms";
+import EquipmentTab from "./Equipment";
 
 function MainGuide () {
 
@@ -63,12 +65,18 @@ function MainGuide () {
             </ul>
             <PFont >It's important to note that herbal medicine often takes a holistic approach, addressing the root cause of the ailment rather than merely alleviating symptoms. Patience and commitment to the recommended dosages and lifestyle adjustments contribute significantly to the success of herbal treatments.</PFont>
         </Tab.Pane>},
+        {menuItem: 'Terms', render: () => <Tab.Pane>
+            <Card.Group>
+                <TermsTab />
+            </Card.Group>
+        </Tab.Pane>},
+        {menuItem: 'Equipment', render: () => <Tab.Pane><EquipmentTab /></Tab.Pane>}
     ]
 
     return (
         <div>
             <Container  fluid >
-                <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
+                <Tab menu= {{ fluid: true, vertical: true, tabular: true }} panes={panes} />
             </Container>
         </div>
     )

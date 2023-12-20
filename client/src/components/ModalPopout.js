@@ -6,6 +6,8 @@ import RecipeForm from "./recipe/RecipeForm";
 import HerbEdits from "./herb/HerbEdits";
 import RecipeEdits from "./recipe/RecipeEdits";
 import CommentEdits from "./comment/CommentEdits"
+import HerbEmail from "./emailjs/HerbEmail";
+import RecipeEmail from "./emailjs/RecipeEmail";
 
 export function ModalPopout({ msg, modalType, id }){
     const [open, setOpen] = useState(false)
@@ -92,5 +94,85 @@ export const SuccessModal = ({ statusIs, setStatus }) => {
           <Modal.Header>Success!</Modal.Header>
         </Modal>
         
+    )
+}
+
+export const HerbEmailModal = ({herb}) => {
+    const [open, setOpen] = useState(false)
+    const { handleModalSuccess, secondOpen } = useContext(AppContext)
+
+    const closeBoth = () => {
+        handleModalSuccess()
+        setOpen(false)
+    }
+    return (
+        <>
+        <Modal
+            closeIcon
+            open={ open }
+            onClose={() => setOpen(false)}
+            onOpen={() => setOpen(true)}
+            trigger={<Button icon style={{ backgroundColor: '#056d52', color:'white' }}>Click here to receive an email with these details! <Icon name='mail' style={{ color:'white' }}/></Button>}
+            size="large"
+        >
+            <Header icon='mail' content='Preview email' as='h2'/>
+            <Modal.Content style={{ backgroundColor: '#056d52' }}>
+                <HerbEmail herb={herb} />
+            </Modal.Content>
+            <Modal 
+                onClose = {() => handleModalSuccess()}
+                open = { secondOpen }
+            >
+                <Modal.Header>Success!</Modal.Header>
+                <Modal.Actions>
+                    <Button 
+                        icon='check'
+                        content='Done'
+                        onClick={() => closeBoth()}
+                    />
+                </Modal.Actions>
+            </Modal>
+        </Modal>
+      </>
+    )
+}
+
+export const RecipeEmailModal = ({recipe}) => {
+    const [open, setOpen] = useState(false)
+    const { handleModalSuccess, secondOpen } = useContext(AppContext)
+
+    const closeBoth = () => {
+        handleModalSuccess()
+        setOpen(false)
+    }
+    return (
+        <>
+        <Modal
+            closeIcon
+            open={ open }
+            onClose={() => setOpen(false)}
+            onOpen={() => setOpen(true)}
+            trigger={<Button icon style={{ backgroundColor: '#056d52', color:'white' }}>Click here to receive an email with these details! <Icon name='mail' style={{ color:'white' }}/></Button>}
+            size="large"
+        >
+            <Header icon='mail' content='Preview email' as='h2'/>
+            <Modal.Content style={{ backgroundColor: '#056d52' }}>
+                <RecipeEmail recipe={recipe} />
+            </Modal.Content>
+            <Modal 
+                onClose = {() => handleModalSuccess()}
+                open = { secondOpen }
+            >
+                <Modal.Header>Success!</Modal.Header>
+                <Modal.Actions>
+                    <Button 
+                        icon='check'
+                        content='Done'
+                        onClick={() => closeBoth()}
+                    />
+                </Modal.Actions>
+            </Modal>
+        </Modal>
+      </>
     )
 }

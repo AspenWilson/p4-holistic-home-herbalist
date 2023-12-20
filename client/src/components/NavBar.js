@@ -36,13 +36,17 @@ function NavBar() {
             <Icon name='utensils' />
                 Recipes
         </Menu.Item>
-        <Menu.Item as={Link} to="/herbs">
+        <Menu.Item as={Link} to="/recipeguide">
             <Icon name='tasks' />
                 Recipe Guide
         </Menu.Item>
         <Menu.Item as={Link} to="/properties">
             <Icon name='unordered list'/>
                 Properties
+        </Menu.Item>
+        <Menu.Item as={Link} to="/contact">
+            <Icon name='talk'/>
+                Contact Us
         </Menu.Item>
         <Menu.Item as={Link} to="/sources">
             <Icon name='info' />
@@ -65,7 +69,7 @@ function NavBar() {
     return (
         (loggedIn ? 
             <> 
-                <Menu icon='labeled' inverted fluid widths={ 9 }>
+                <Menu icon='labeled' inverted fluid widths={ 10 }>
                     { authOptions }
                 </Menu>
                 <br/>

@@ -56,6 +56,11 @@
     border:#056d52;
     border-radius:1px;
   }
+
+  .ui.fluid.menu .item {
+    color: #fbfcfc;
+    font-weight: bold;
+  }
   
   .ui.tabular.menu .item {
     font-size: 16px;

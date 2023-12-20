@@ -10,11 +10,13 @@ import Recipe from "./components/recipe/Recipe";
 import Recipes from "./components/recipe/Recipes";
 import Properties from "./components/Properties";
 import DosageGuide from "./components/DosageGuide";
+import RecipeGuide from "./components/RecipeGuide";
 import Home from "./components/Home";
 import NavBar from "./components/NavBar";
 import Profile from "./components/profile/Profile";
 import Resources from "./components/Resorces";
 import Authentication from "./components/Authentication";
+import ContactForm from "./components/emailjs/ContactForm";
 
 function App() {
   const [user, setUser] = useState(null)
@@ -67,6 +69,12 @@ function App() {
           </Route>
           <Route exact path='/dosageguide'>
            <DosageGuide />
+          </Route>
+          <Route exact path='/recipeguide'>
+           <RecipeGuide />
+          </Route>
+          <Route exact path='/contact'>
+            <ContactForm />
           </Route>
           <Route exact path='/sources'>
             <Resources />

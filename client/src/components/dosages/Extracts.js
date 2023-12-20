@@ -27,8 +27,7 @@ function Extracts () {
             </ul>
             <PFont >Understanding the properties of each menstruum and extraction type allows herbalists to tailor their approach based on the desired medicinal compounds and the characteristics of the plant material. </PFont>
             <PFont >See each individual dosage tab for more information on each of these. </PFont>
-        </Tab.Pane>},
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane>}
     ]
     return (
         <div>

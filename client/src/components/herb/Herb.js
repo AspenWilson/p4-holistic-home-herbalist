@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Image, Card, Icon, Grid, Header, Divider } from 'semantic-ui-react'
+import { Image, Card, Icon, Grid, Header, Divider, Button } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom';
 import { StyledCardLists, GoBack, UnLinkedLists, LinkedList, MultiVarLinkedList } from "../helpers/CardHelpers";
+import { HerbEmailModal } from "../ModalPopout";
 
 function Herb(){
   const { id } = useParams();
@@ -30,6 +31,7 @@ function Herb(){
   return (
     <div>
       <GoBack />
+      <HerbEmailModal herb={herb}/>
       <Card raised fluid style= {{ backgroundColor: 'rgba(52, 52, 52, 0.8)', padding: '10px' }} className='flex-outer'>
         <Card.Content>
           <Grid columns={ 2 }>
@@ -39,16 +41,16 @@ function Herb(){
 
             <Grid.Column>
               <Header as='h1' style={{ color: 'white' }}>{ herb.name }</Header>
-              <span style={{ color: 'white' }}><i>{ herb.latin_name }</i></span>
+              <span style={{ color: 'white' }}><i>{ herb.latin_name }</i></span><br/><br/>
 
-              <p style={{ color: 'white', fontSize: '12pt' }}>{ herb.description }</p>
+              <p style={{ color: 'white', fontSize: '12pt' }}>{ herb.description }</p><br/>
               <Card.Description style={{ color: 'white', fontSize: '12pt' }}>
                 <Icon name='warning sign' color='white' />{ herb.warnings }
               </Card.Description>
             </Grid.Column>
           </Grid>
         </Card.Content>
-
+        <Divider />
         <Grid columns = { 2 }>
           <Grid.Column>
             <StyledCardLists label='Herb Dosages' list={ dosagesList } />

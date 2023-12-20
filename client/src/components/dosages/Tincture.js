@@ -31,8 +31,7 @@ function Tincture () {
 
             <h2>Using alcohol with other solvents:</h2>
             <PFont>Enhancing the extraction process, herbalists can blend alcohol with other solvents. Adding 10% glycerin to an alcohol tincture aids in extracting volatile oils and stabilizing tannins, offering a more pleasant taste. Combining alcohol with vinegar or raw sugar/honey introduces versatility, allowing for a diverse range of herbal elixirs with distinct properties. Understanding these nuanced approaches empowers herbalists to tailor their preparations for optimal efficacy and safety. </PFont>
-        </Tab.Pane> },
-        { menuItem: 'Recommended Products', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> }
+        </Tab.Pane> }
     ]
     return (
         <div>
