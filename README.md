@@ -66,7 +66,11 @@ This is where the full list of all properties can be found. Each property card w
 - Logout
 Clicking this will log you out of the application and take you to the home page. 
 
+## Updates
 
+- Users can now email recipe and property detials to themselves. 
+- The Dosage and Recipe Guides provide additional information to users. 
+- The Contact Form allows user to reach out to the admin. Users receive a confirmation email after submitting the form. 
 
 ## Support
 
