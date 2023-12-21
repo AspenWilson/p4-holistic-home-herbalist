@@ -1,6 +1,5 @@
 import React from "react";
-import { Card } from 'semantic-ui-react'
-import { LiM16, PFont } from "../helpers/StylingHelpers";
+import { Card } from 'semantic-ui-react';
 
 function TermsTab () {
     const terms= [

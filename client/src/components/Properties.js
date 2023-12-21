@@ -1,8 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react'
-import PropertyCard from './PropertyCard'
+import React, { useContext, useState, useEffect } from 'react';
+import { Card, Button, Divider } from 'semantic-ui-react';
 import { AppContext } from '../context/AppContext';
-import { Card, Button, Divider } from 'semantic-ui-react'
 import Search from './Search';
+import PropertyCard from './PropertyCard';
 import { handleSearches } from './helpers/GeneralHelpers';
 
 

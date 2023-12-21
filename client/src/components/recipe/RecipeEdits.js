@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react"
-import { Formik, Form } from "formik"
-import * as yup from "yup"
-import { AppContext } from '../../context/AppContext'
-import { Card, Button } from 'semantic-ui-react'
-import { FormHeader } from "../helpers/StylingHelpers"
-import { IDDropdowns, displayErrors } from "../helpers/FormHelpers"
-import { headers, basicFetch, dividerBreaks } from "../helpers/GeneralHelpers"
-import { AllFormEdits } from "./RecipeEditHelpers"
-import { SuccessModal } from "../ModalPopout"
-import { IngredientChanges } from "./IngredientChanges"
-import { IngredientAdditions } from "./IngredientAdditions"
+import React, { useContext, useEffect, useState } from "react";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
+import { Card, Button } from 'semantic-ui-react';
+import { AppContext } from '../../context/AppContext';
+import SuccessModal from "../modals/SuccessModal";
+import { AllFormEdits } from "./RecipeEditHelpers";
+import IngredientChanges from "./IngredientChanges";
+import { FormHeader } from "../helpers/StylingHelpers";
+import IngredientAdditions from "./IngredientAdditions";
+import { IDDropdowns, displayErrors } from "../helpers/FormHelpers";
+import { headers, basicFetch, dividerBreaks } from "../helpers/GeneralHelpers";
 
 
 function RecipeEdits ({ id }) {
@@ -60,7 +60,10 @@ function RecipeEdits ({ id }) {
                     successFunctions(user)
                 })
             } else { 
-                resp.json().then((err) => setError(err.message))
+                resp.json().then((err) =>{ 
+                    setError(err.message)
+                    setStatus('cancelled')
+                })
             }
         })
     }
@@ -103,6 +106,7 @@ function RecipeEdits ({ id }) {
                                 formik={ formik } 
                                 label='Recipe Name:'
                                 handleFieldSubmit={(values) => PatchRequest(values, 'name')}
+                                statusIs={statusIs}
                             />
                             <br />
                             <AllFormEdits  

@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Tab } from 'semantic-ui-react'
+import { Container, Tab } from 'semantic-ui-react';
 import { PFont } from "../helpers/StylingHelpers";
 
 function Capsules () {

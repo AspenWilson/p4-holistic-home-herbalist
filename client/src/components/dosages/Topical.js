@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Container, Tab } from 'semantic-ui-react'
-import { StyledSelect, LiM16, PFont } from "../helpers/StylingHelpers";
+import { Container, Tab } from 'semantic-ui-react';
 import { topicalDrops } from "../helpers/FormHelpers";
+import { StyledSelect, LiM16, PFont } from "../helpers/StylingHelpers";
 
 
 function Topical () {
@@ -74,15 +74,9 @@ function Topical () {
     return (
         <div>
             <Container  fluid >
-        <h1>Topicals</h1>
-        <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
-        
-        <PFont > </PFont>
-        <PFont > </PFont>
-        <PFont > </PFont>
-        
-
-        </Container>
+                <h1>Topicals</h1>
+                <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
+            </Container>
         </div>
     )
 }

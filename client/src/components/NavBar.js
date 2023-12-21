@@ -1,9 +1,7 @@
-import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
-import { Icon, Menu, Image } from 'semantic-ui-react'
-import { AppContext } from '../context/AppContext'
-
-
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { Icon, Menu, Image } from 'semantic-ui-react';
+import { AppContext } from '../context/AppContext';
 
 function NavBar() {
     const { loggedIn, logout } = useContext(AppContext)

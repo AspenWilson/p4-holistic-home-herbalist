@@ -1,10 +1,10 @@
-import React, {useContext, useEffect, useState} from "react"
-import { Formik, Form } from "formik"
-import * as yup from "yup"
-import { FormTextBoxField, displayErrors } from "../helpers/FormHelpers"
-import { AppContext } from '../../context/AppContext'
-import { headers } from "../helpers/GeneralHelpers"
-import { Card, Button } from 'semantic-ui-react'
+import React, {useContext, useEffect, useState} from "react";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
+import { Card } from 'semantic-ui-react';
+import { AppContext } from '../../context/AppContext';
+import { headers } from "../helpers/GeneralHelpers";
+import { FormTextBoxField, displayErrors, SubmitBtn } from "../helpers/FormHelpers";
 
 
 function CommentEdits ({ id }) {
@@ -59,12 +59,9 @@ function CommentEdits ({ id }) {
                     <Form>
                         <Card.Content className='allCards'>
                             <FormTextBoxField label='Edit Comment' name='comment' formik={ formik } />
-                        {displayErrors({error})}
-                        {formik.touched['comment'] && formik.errors['comment'] && (
-                                <div style={{ color: 'red' }}>{formik.errors['comment']}</div>
-                            )}
+                            { displayErrors({ error }) }
                         </Card.Content>
-                        <Button fluid type='submit'>Submit edits</Button>
+                        <SubmitBtn  msg= 'Submit edits'/>
                     </Form>
                 </Card>
             </div>

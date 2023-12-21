@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
 import { useParams } from 'react-router-dom';
-import { Card, Comment, Button, Grid, Header, Divider } from 'semantic-ui-react'
-import CommentCard from "../comment/CommentRecipe";
-import { Formik, Form } from "formik"
-import * as yup from "yup"
-import { headers, filterAlphabetically, basicFetch } from "../helpers/GeneralHelpers";
+import { Card, Comment, Button, Grid, Header, Divider } from 'semantic-ui-react';
 import { AppContext } from "../../context/AppContext";
+import CommentCard from "../comment/CommentRecipe";
+import RecipeEmailModal from "../modals/RecipeEmailModal";
 import { CommentInitalValues } from "../helpers/FormHelpers";
-import { StyledCardDescription, StyledTextBox } from "../helpers/StylingHelpers"
+import { StyledCardDescription, StyledTextBox } from "../helpers/StylingHelpers";
 import { GoBack, RecipeUnLinkedList, UnLinkedLists } from "../helpers/CardHelpers";
-import { RecipeEmailModal } from "../ModalPopout";
+import { headers, filterAlphabetically, basicFetch } from "../helpers/GeneralHelpers";
 
 
 function Recipe(){
@@ -83,7 +83,7 @@ function Recipe(){
             <Grid.Column>
               <StyledCardDescription>Directions</StyledCardDescription>
               <br />
-              { recipe.directions }
+              <p style={{ color: 'white', fontSize: '14pt' }}>{ recipe.directions }</p>
               <Card.Content extra>
                 <br />
                 <StyledCardDescription as='h1'>Ingredients</StyledCardDescription>

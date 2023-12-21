@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Card, Label, Button } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { Card, Label, Button } from 'semantic-ui-react';
+import { AppContext } from '../../context/AppContext';
+import ModalPopout from "../modals/ModalPopout";
+import DeleteModal from "../modals/DeleteModal";
 import { headers } from "../helpers/GeneralHelpers";
-import { propertyTags, DeleteModal } from "../helpers/CardHelpers";
-import { AppContext } from '../../context/AppContext'
-import { ModalPopout } from '../ModalPopout';
+import { propertyTags } from "../helpers/CardHelpers";
 
 
 function RecipeCard({ recipe, page }){

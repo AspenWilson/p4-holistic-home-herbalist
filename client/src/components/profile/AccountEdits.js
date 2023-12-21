@@ -1,13 +1,13 @@
-import React, {useContext, useState} from "react"
-import { Formik, Form } from "formik"
-import * as yup from "yup"
-import { AppContext } from "../../context/AppContext"
-import { Card, Grid, Image } from 'semantic-ui-react'
-import { FormHeader } from "../helpers/StylingHelpers"
-import { AllFormEdits } from "../helpers/EditFormHelpers"
-import { SuccessModal } from "../ModalPopout"
-import { displayErrors } from "../helpers/FormHelpers"
-import '../../index.css'
+import React, {useContext, useState} from "react";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
+import { Card, Grid, Image } from 'semantic-ui-react';
+import { AppContext } from "../../context/AppContext";
+import '../../index.css';
+import SuccessModal from "../modals/SuccessModal";
+import { displayErrors } from "../helpers/FormHelpers";
+import { FormHeader } from "../helpers/StylingHelpers";
+import { AllFormEdits } from "../helpers/EditFormHelpers";
 
 function AccountEdits() {
     const { user } = useContext(AppContext)

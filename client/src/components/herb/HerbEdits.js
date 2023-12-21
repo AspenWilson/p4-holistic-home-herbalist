@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from "react"
-import {  Formik, Form } from "formik"
-import * as yup from "yup"
-import { AppContext } from "../../context/AppContext"
-import { Card, Grid, Image, Button } from 'semantic-ui-react'
-import { PropertyEditCards, AllFormEdits } from "./HerbEditHelpers"
-import { FormHeader } from "../helpers/StylingHelpers"
-import { IDDropdowns, FormMultiSelectField, displayErrors} from "../helpers/FormHelpers"
+import React, { useContext, useEffect, useState } from "react";
+import {  Formik, Form } from "formik";
+import * as yup from "yup";
+import { Card, Grid, Image, Button } from 'semantic-ui-react';
+import { AppContext } from "../../context/AppContext";
+import '../../index.css';
+import DosageChanges  from "./DosageChanges";
+import DosageAdditions from "./DosageAdditions";
+import SuccessModal from "../modals/SuccessModal";
+import { FormHeader } from "../helpers/StylingHelpers";
+import { PropertyEditCards, AllFormEdits } from "./HerbEditHelpers";
 import { headers, basicFetch, dividerBreaks } from "../helpers/GeneralHelpers"
-import '../../index.css'
-import { SuccessModal } from "../ModalPopout"
-import { DosageAdditions } from "./DosageAdditions"
-import { DosageChanges } from "./DosageChanges"
+import { IDDropdowns, FormMultiSelectField, displayErrors} from "../helpers/FormHelpers";
 
 
 function HerbEdits ({ id }) {
@@ -65,7 +65,10 @@ function HerbEdits ({ id }) {
                     successFunctions(user)
                 })
             } else {
-                resp.json().then((err) => setError(err.message))
+                resp.json().then((err) =>{ 
+                    setError(err.message)
+                    setStatus('cancelled')
+                })
             }
         })
     }
@@ -138,6 +141,7 @@ function HerbEdits ({ id }) {
                                         formik={ formik } 
                                         label='Herb Name:'
                                         handleFieldSubmit={(values) => PatchRequest(values, 'name')}
+                                        statusIs={statusIs}
                                     />
                                     <br />
                                     <AllFormEdits  
@@ -148,6 +152,7 @@ function HerbEdits ({ id }) {
                                         formik={ formik } 
                                         label='Latin Name:'
                                         handleFieldSubmit={(values) => PatchRequest(values, 'latin_name')}
+                                        statusIs={statusIs}
                                     />
                                     <AllFormEdits  
                                             itemValue={herb.image_url}
@@ -157,6 +162,7 @@ function HerbEdits ({ id }) {
                                             formik={ formik } 
                                             label='Image Link:'
                                             handleFieldSubmit={(values) => PatchRequest(values, 'image_url')}
+                                            statusIs={statusIs}
                                         />
                                 </Grid.Column>
                                 <Grid.Column width={6}>
@@ -239,7 +245,6 @@ function HerbEdits ({ id }) {
                                 {(formik) => (
                                     <DosageChanges 
                                         dosage={dosage} 
-                                        type='textarea' 
                                         formik={formik} 
                                         id={id}
                                         setError= {setError}

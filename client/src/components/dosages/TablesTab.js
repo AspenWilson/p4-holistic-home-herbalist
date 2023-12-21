@@ -1,7 +1,7 @@
 import React from "react";
-import { Container, Tab } from 'semantic-ui-react'
-import { LiM16, PFont } from "../helpers/StylingHelpers";
-import { OilDilutions, StandardWeightToVolume, SolventWeights, Weight2Volume18, HerbsSolvents, StrongSolution, StandardSolution, WeakSolution } from "./Tables";
+import { Container, Tab } from 'semantic-ui-react';
+import { PFont } from "../helpers/StylingHelpers";
+import { OilDilutions, HerbsSolvents, StrongSolution, StandardSolution, WeakSolution } from "./Tables";
 
 function TablesTab () {
 

@@ -1,9 +1,10 @@
-import React, { useState } from "react"
-import { Button, Grid, Input, Popup } from 'semantic-ui-react'
-import { StyledTextBox, StyledSelect, FormH3 } from "../helpers/StylingHelpers"
-import '../../index.css'
+import React, { useState } from "react";
+import { Button, Grid, Input, Popup } from 'semantic-ui-react';
+import '../../index.css';
+import { FormikErrorMsg } from "../helpers/FormHelpers";
+import { StyledTextBox, StyledSelect, FormH3 } from "../helpers/StylingHelpers";
 
-export const AllFormEdits = ({ label, name, type, formik, itemValue, handleFieldSubmit, inputType, options = null }) => {
+export const AllFormEdits = ({ label, name, type, formik, itemValue, handleFieldSubmit, inputType, options = null, statusIs }) => {
     const [editState, setEditState] = useState("no edits")
 
     const handleSave = () => {
@@ -12,9 +13,7 @@ export const AllFormEdits = ({ label, name, type, formik, itemValue, handleField
     }
 
     const displayOptions = 
-        editState === "no edits" ? formik.values[name] :
-        editState === "cancelled" ? itemValue :
-        null 
+        statusIs === "cancelled" ? itemValue : formik.values[name]
     
     const inputTypeDisplays = 
         inputType === "input" ? 
@@ -56,8 +55,7 @@ export const AllFormEdits = ({ label, name, type, formik, itemValue, handleField
                     {editState === "edits" ? (
                         <>
                             {inputTypeDisplays}
-                            {formik.touched[name] && formik.errors[name] && (
-                            <div style={{ color: "red" }}>{formik.errors[name]}</div> )}
+                            <FormikErrorMsg name={name} formik={formik}/>
                         </>
                     ) : (
                         <FormH3 > { displayOptions } </FormH3>

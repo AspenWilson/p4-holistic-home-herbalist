@@ -1,5 +1,5 @@
-import React from 'react'
-import { Tab, Divider } from 'semantic-ui-react'
+import React from 'react';
+import { Tab, Divider } from 'semantic-ui-react';
 
 // Fetch & Data Helpers
 

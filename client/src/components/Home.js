@@ -1,6 +1,6 @@
-import React from "react"
-import { Container } from 'semantic-ui-react'
-import { PFont } from "./helpers/StylingHelpers"
+import React from "react";
+import { Container } from 'semantic-ui-react';
+import { PFont } from "./helpers/StylingHelpers";
 
 
 function Home() {

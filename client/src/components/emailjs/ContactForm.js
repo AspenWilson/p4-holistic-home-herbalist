@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState } from "react";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
 import emailjs from '@emailjs/browser';
-import { Formik, Form } from "formik"
-import * as yup from "yup"
-import { Container, Grid, Input, Button } from 'semantic-ui-react'
-import { StyledTextBox } from "../helpers/StylingHelpers"
-import { AppContext } from '../../context/AppContext'
-import { SuccessModal } from "../ModalPopout"
+import { Container, Grid } from 'semantic-ui-react';
+import { AppContext } from '../../context/AppContext';
+import SuccessModal from "../modals/SuccessModal";
+import { FormInputField,FormTextBoxField, SubmitBtn } from "../helpers/FormHelpers";
 
 function ContactForm () {
     const { user } = useContext(AppContext)
@@ -42,37 +42,34 @@ function ContactForm () {
             onSubmit={sendEmail}
         >
             {(formik) => (
-                <Container  fluid style= {{ backgroundColor: 'rgba(52, 52, 52, 0.8)', padding: '10px' }}>
+                <Container  fluid style= {{ backgroundColor: '#ccc', padding: '10px' }}>
                     <SuccessModal statusIs={statusIs} setStatus={setStatus} />
                     <Form >
-                        <h1 >Contact Us!</h1>
+                        <h1 style={{ color: 'black'}}>Contact Us!</h1>
                         <Grid>
                             <Grid.Column width={6}> 
-                                <h2>Name</h2>
-                                <Input fluid 
+                                <FormInputField
                                     name='name'
                                     type='text'
-                                    value={formik.values['name']}
-                                    onChange= {formik.handleChange}
+                                    formik={formik}
+                                    label='Name'
                                 />
-                                <h2>Email</h2>
-                                <Input fluid 
+                                <FormInputField
                                         name='email'
                                         type='text'
-                                        value={formik.values['email']}
-                                        onChange= {formik.handleChange}
+                                        formik={formik}
+                                        label='Email'
                                 />
                             </Grid.Column>
                             <Grid.Column width={10}> 
-                                <h2>Message</h2>
-                                <StyledTextBox 
+                                <FormTextBoxField 
                                     name="message" 
-                                    value={formik.values['message']}
-                                    onChange= {formik.handleChange}
-                                /> 
+                                    formik={formik}
+                                    label='Message'
+                                />
                                 <br/>
                                 <br/>
-                                <Button fluid style={{backgroundColor: '#056d52', color:'white', font:'Arial' }} type='submit'>Send Message</Button>
+                                <SubmitBtn  msg= 'Send Message'/>
                             </Grid.Column>
                         </Grid>
                     </Form>

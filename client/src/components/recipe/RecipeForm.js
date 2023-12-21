@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react"
-import { Formik, Form, FieldArray } from "formik"
-import * as yup from "yup"
-import { AppContext } from '../../context/AppContext'
-import { headers } from "../helpers/GeneralHelpers"
-import { Card, Grid, Button } from 'semantic-ui-react'
-import { RecipeInitialValues, IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField, displayErrors } from "../helpers/FormHelpers"
-import { FormHeader } from "../helpers/StylingHelpers"
+import React, { useContext, useState } from "react";
+import * as yup from "yup";
+import { Formik, Form, FieldArray } from "formik";
+import { headers } from "../helpers/GeneralHelpers";
+import { Card, Grid, Button } from 'semantic-ui-react';
+import { AppContext } from '../../context/AppContext';
+import { FormHeader } from "../helpers/StylingHelpers";
+import { RecipeInitialValues, IDDropdowns, amountTypeDrops, herbTypeDrops, FormInputField, FormTextBoxField, FormSelectField, displayErrors, SubmitBtn } from "../helpers/FormHelpers";
 
 
 function RecipeForm () {
@@ -107,7 +107,7 @@ function RecipeForm () {
             )}
           </FieldArray>
           <br/>
-          <Button fluid type='submit'>Submit</Button>
+          <SubmitBtn msg='Submit'/>
         </Card.Content>
       </Form>            
       </Card>

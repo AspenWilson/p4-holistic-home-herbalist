@@ -1,5 +1,6 @@
-import React from 'react'
-import { StyledInput, FormHeader, StyledTextBox, StyledSelect } from './StylingHelpers'
+import React from 'react';
+import { Button } from 'semantic-ui-react';
+import { StyledInput, FormHeader, StyledTextBox, StyledSelect } from './StylingHelpers';
 
 // Initial Values
 
@@ -79,25 +80,35 @@ export const topicalDrops = dropdowns(topicalOptions)
 // Error Messages
 
 export const displayErrors = ({ error }) => {
-    return error ? <p style={{ color: "red" }}>{ error }</p> : null
+    return error ? <p style={{ color: "red", fontSize: '12pt' }}>{ error }</p> : null
 }
+
+export const FormikErrorMsg = ({ name, formik }) => {
+
+    if (!formik.touched[name] || !formik.errors[name]) {
+        return null;
+    }
+    return (
+
+        <div style={{ color: 'red', fontSize: '12pt' }}>{formik.errors[name]}</div>
+    );
+};
 
 // Form Fields
 
 export const FormInputField = ({ label, name, type, formik }) => {
     return (
         <>
-        <FormHeader as='h3'>{label}</FormHeader>
+        <FormHeader as='h2'>{label}</FormHeader>
         <StyledInput
+            fluid
             type={type}
             id={name}
             name={name}
             value={formik.values[name]}
             onChange={formik.handleChange}
         />
-        {formik.touched[name] && formik.errors[name] && (
-        <div style={{ color: "red" }}>{formik.errors[name]}</div>
-        )}
+        <FormikErrorMsg name={name} formik={formik}/>
         </>
     )
 }
@@ -105,15 +116,14 @@ export const FormInputField = ({ label, name, type, formik }) => {
 export const FormTextBoxField = ({ label, name, formik }) => {
     return (
         <>
-        <FormHeader as='h3'>{label}</FormHeader>
+        <FormHeader as='h2'>{label}</FormHeader>
         <StyledTextBox
             name={name}
             id={name}
             value={formik.values[name]}
             onChange={formik.handleChange}
         />
-        {formik.touched[name] && formik.errors[name] && (
-        <div style={{ color: "red" }}>{formik.errors[name]}</div> )}
+        <FormikErrorMsg name={name} formik={formik}/>
         </>
     )
 }
@@ -121,7 +131,7 @@ export const FormTextBoxField = ({ label, name, formik }) => {
 export const FormSelectField = ({ label, name, formik, options }) => {
     return (
     <>
-    <FormHeader as='h3'>{label}</FormHeader>
+    <FormHeader as='h2'>{label}</FormHeader>
     <StyledSelect 
         classNamePrefix="Select"
         name={ name }
@@ -130,8 +140,7 @@ export const FormSelectField = ({ label, name, formik, options }) => {
             formik.setFieldValue(name, selectedOption.value)
         }}
         />
-        {formik.touched[name] && formik.errors[name] && (
-        <div style={{ color: "red" }}>{formik.errors[name]}</div> )}
+        <FormikErrorMsg name={name} formik={formik}/>
     </>
     )
 }
@@ -152,9 +161,13 @@ export const FormMultiSelectField = ({ label, name, formik, options, setSelected
                 setSelectedProperties(selectedOptions.map((option) => option.value))
             }}
             />
-            {formik.touched[name] && formik.errors[name] && (
-        <div style={{ color: "red" }}>{formik.errors[name]}</div> )}
+            <FormikErrorMsg name={name} formik={formik}/>
         </>
     )
 }
 
+export const SubmitBtn = ({ msg }) => {
+    return (
+      <Button fluid style={{backgroundColor: '#056d52', color:'white', font:'Arial', border: '5px solid #FFFFFF' }} type='submit'>{msg}</Button>
+    )
+  }

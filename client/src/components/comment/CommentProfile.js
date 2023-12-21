@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Link } from 'react-router-dom';
-import { ModalPopout } from '../ModalPopout';
+import { Button, Card, Grid } from 'semantic-ui-react';
+import { AppContext } from '../../context/AppContext';
+import ModalPopout from "../modals/ModalPopout";
+import DeleteModal from "../modals/DeleteModal";
 import { headers } from "../helpers/GeneralHelpers";
-import { AppContext } from '../../context/AppContext'
-import { DeleteModal } from "../helpers/CardHelpers";
-import { Button, Card, Grid } from 'semantic-ui-react'
 
 function CommentCard ({ comments }) {
     const { refreshEnteredComments, user, handleModalSuccess } = useContext(AppContext)
@@ -34,12 +34,10 @@ function CommentCard ({ comments }) {
                     </Grid.Column>
 
                     <Grid.Column width={ 4 }>
-                        {/* <Card.Content> */}
                             <Button.Group  floated='right'>
                                 <ModalPopout modalType='comment edits' id={ comment.id } msg='Edit Comment'/>
                                 <DeleteModal handleDelete={() => handleDelete(comment.id)} />
                             </Button.Group>
-                        {/* </Card.Content> */}
                     </Grid.Column>
                 </Grid>
                 <br />

@@ -1,6 +1,6 @@
-import styled from "styled-components"
-import Select from 'react-select'
-import { Card, Header, TextArea, Input, Button } from 'semantic-ui-react'
+import styled from "styled-components";
+import Select from 'react-select';
+import { Card, Header, TextArea, Input, Button } from 'semantic-ui-react';
 
 
 export const StyledSelect = styled(Select)`
@@ -96,3 +96,4 @@ export const BrandedBtn = ({msg, type, onClick}) => {
   return (
 <Button style={{backgroundColor: '#056d52', color:'white', font:'Arial', margin: '10px', display:'inline-block'}} onClick={onClick} type={type}>{msg}</Button>)
 }
+

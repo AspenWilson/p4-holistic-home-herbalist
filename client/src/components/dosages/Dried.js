@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Tab } from 'semantic-ui-react'
+import { Container, Tab } from 'semantic-ui-react';
 import { LiM16, PFont, LiM14 } from "../helpers/StylingHelpers";
 
 function Dried () {

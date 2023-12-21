@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { Card, Tab, List } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { Card, Tab, List } from 'semantic-ui-react';
 import { AppContext } from "../context/AppContext";
 import { CardHeader } from "./helpers/StylingHelpers";
 

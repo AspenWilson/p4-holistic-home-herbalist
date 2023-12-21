@@ -1,16 +1,12 @@
-import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
-import { useFormik } from "formik"
-import * as yup from "yup"
+import React, { useState, useContext } from 'react';
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { useHistory } from 'react-router-dom';
+import { Card, Image } from 'semantic-ui-react';
 import { AppContext } from '../context/AppContext';
-import { Card, Image } from 'semantic-ui-react'
-import { FormInputField } from './helpers/FormHelpers';
-import { FormHeader, Form, BrandedBtn } from "./helpers/StylingHelpers"
-import { headers } from './helpers/GeneralHelpers';
-import { dividerBreaks } from './helpers/GeneralHelpers';
-
-
-
+import { FormInputField, SubmitBtn } from './helpers/FormHelpers';
+import { dividerBreaks, headers } from './helpers/GeneralHelpers';
+import { FormHeader, Form, BrandedBtn } from "./helpers/StylingHelpers";
 
 function Authentication() {
   const { handleLogin } = useContext(AppContext)
@@ -63,27 +59,27 @@ function Authentication() {
       <Card raised centered >
         <br />
         <Image centered style={{ background: 'none' }}src={'/Logo-black.png'} size='small'/>
-        <FormHeader as='h2'>Log In!</FormHeader>
+        <FormHeader as='h2' style={{ color:'black'}}>Log In!</FormHeader>
         {errors ? <h3 style={{ color:'red' }}> { errors }</h3> : null}
         <Card.Content>
           <Form onSubmit={ formik.handleSubmit }>
-            <FormInputField label='Username' name='username' type='text' formik={ formik } />
+            <FormInputField label='Username' name='username' type='text' formik={ formik } color='black'/>
             
-            <FormInputField label='Password' name='password' type='password' formik={ formik } />
-            
-            { !signUp ? null : 
-              <FormInputField label='Email' name='email' type='text' formik={ formik } /> }
+            <FormInputField label='Password' name='password' type='password' formik={ formik } color='black'/>
             
             { !signUp ? null : 
-              <FormInputField label='Profile picture link' name='image_url' type='text' formik={ formik } />}
+              <FormInputField label='Email' name='email' type='text' formik={ formik } color='black'/> }
+            
+            { !signUp ? null : 
+              <FormInputField label='Profile picture link' name='image_url' type='text' formik={ formik } color='black'/>}
             
             {dividerBreaks()}
             
-            <BrandedBtn  type='submit' msg={signUp?'Sign Up!':'Log In!'} />
+            <SubmitBtn msg={signUp?'Sign Up!':'Log In!'} />
             
             {dividerBreaks()}
             
-            <FormHeader as='h3'>{signUp?'Already a member? Sign in!':'Not a member? Sign up!'}</FormHeader>
+            <FormHeader as='h3' style={{ color:'black'}}>{signUp?'Already a member? Sign in!':'Not a member? Sign up!'}</FormHeader>
             
             <BrandedBtn onClick={ handleClick } type='button' msg={signUp ? 'Log In!': 'Register now!'} />
           </Form>

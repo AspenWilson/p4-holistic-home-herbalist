@@ -64,7 +64,7 @@ class RecipesByID(Resource):
             return unauth_error 
         
         for each_recipe in all_recipes:
-            if data['name'] == each_recipe['name'] and each_recipe.id != recipe.id:
+            if data['name'] == each_recipe['name'] and each_recipe['id'] != recipe.id:
                 return {'message': 'There is already a recipe with this name. Please either rename your recipe or edit the existing recipe.'}, 409
 
         try:     

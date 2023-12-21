@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Tab } from 'semantic-ui-react'
+import { Container, Tab } from 'semantic-ui-react';
 import { PFont } from "../helpers/StylingHelpers";
 
 
@@ -14,17 +14,11 @@ function Salve () {
     ]
     return (
         <div>
-        <Container  fluid >
-    <h1>Salves</h1>
-    <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
-    
-    
-    <PFont > </PFont>
-    <PFont > </PFont>
-
-
-    </Container>
-    </div>
+            <Container  fluid >
+                <h1>Salves</h1>
+                <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
+            </Container>
+        </div>
     )
 }
 

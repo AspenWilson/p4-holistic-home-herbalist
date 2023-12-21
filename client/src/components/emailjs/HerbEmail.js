@@ -1,18 +1,16 @@
 import React, { useState, useContext } from "react";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
 import emailjs from "@emailjs/browser";
 import { AppContext } from "../../context/AppContext";
-import { Button, Input } from "semantic-ui-react";
-import { Formik, Form } from "formik";
-import * as yup from "yup";
+import { FormInputField, SubmitBtn } from "../helpers/FormHelpers";
+import { filterAlphabetically } from "../helpers/GeneralHelpers";
 
 
 function HerbEmail({ herb }) {
-    const { user } = useContext(AppContext)
-    const [ showForm, setShowForm ] = useState(false)
-    const [statusIs, setStatus] = useState(null)
-    const logo_url = '/Logo-white.png'
-    // '../../public/Logo-white.png'
-    // 'https://vscode.dev/github/AspenWilson/p4-holistic-home-herbalist/blob/main/client/public/Logo-white.png'
+    const { user, handleModalSuccuss } = useContext(AppContext)
+    const filteredProperties = filterAlphabetically(herb.properties)
+
   const [message, setMessage] = useState(`
   <html>
   <head>
@@ -84,7 +82,6 @@ function HerbEmail({ herb }) {
         float: left;
         padding: 20px;
         width: 60%;
-        padding: 10px;
       }
       @media {
         section {
@@ -95,9 +92,6 @@ function HerbEmail({ herb }) {
     </style> 
   </head>
   <body>
-    <header style="background-color: #056d52">
-      <img src=${`https://drive.google.com/file/d/1Hf204D91BPwlygdMolYIomd5MhlGeTqY/view`} alt='HHH Logo'>
-    </header>
     <h2 >Your requested information from Holistic Home Herbalist</h2>
     <section>
       <p style="padding: 20px";>Hello ${user.username}, <br><br>
@@ -115,7 +109,7 @@ function HerbEmail({ herb }) {
         <br>
         <nav>
           <ul><strong>Properties</strong>
-          ${herb.properties.map((property) => `<li style="margin: 10px"><strong>${property.name}</strong>: ${property.description}</li>`).join("")}
+          ${filteredProperties.map((property) => `<li style="margin: 10px"><strong>${property.name}</strong>: ${property.description}</li>`).join("")}
           </ul>
           <ul><strong>Dosages</strong>
           ${herb.dosages.map((dosage) => `<li style="margin: 10px"><strong>${dosage.dosage_form}</strong>: ${dosage.dosage_description}</li>`).join("")}
@@ -151,7 +145,6 @@ function HerbEmail({ herb }) {
         email: values['email'],
         message: message
       }
-    console.log(templateParams);
     emailjs.send(
       "service_offg4aq",
       "template_zp1ifcj",
@@ -160,6 +153,7 @@ function HerbEmail({ herb }) {
     ).then(
       (result) => {
         console.log(result.text);
+        handleModalSuccuss()
       },
       (error) => {
         console.log(error.text);
@@ -176,17 +170,13 @@ function HerbEmail({ herb }) {
     >
         {(formik) =>(
             <Form>
-                <h2>Confirm your email:</h2>
-                <Input fluid 
+                <FormInputField
                     name='email' 
                     type='text' 
-                    value={formik.values['email']} 
-                    onChange={formik.handleChange} 
+                    formik={formik}
+                    label='Confirm your email:'
                 />
-                {formik.touched['email'] && formik.errors['email'] && (
-                    <div style={{ color: "red" }}>{formik.errors['email']}</div>
-                )}
-                <Button fluid style={{backgroundColor: 'black', color:'white', font:'Arial' }} type='submit'>Send email!</Button>
+                <SubmitBtn msg='Send email!' />
                 <div>
                     <div dangerouslySetInnerHTML={{ __html: message }} />
                 </div>

@@ -1,12 +1,13 @@
-import React, { useState, useContext } from "react"
-import { Button, Grid, Input, Popup } from 'semantic-ui-react'
-import { StyledSelect } from "../helpers/StylingHelpers"
-import { amountTypeDrops, IDDropdowns, herbTypeDrops } from "../helpers/FormHelpers"
-import { dividerBreaks, headers } from "../helpers/GeneralHelpers"
-import '../../index.css'
-import { AppContext } from "../../context/AppContext"
+import React, { useState, useContext } from "react";
+import { Button, Grid, Input, Popup } from 'semantic-ui-react';
+import { AppContext } from "../../context/AppContext";
+import '../../index.css';
+import { StyledSelect } from "../helpers/StylingHelpers";
+import { dividerBreaks, headers } from "../helpers/GeneralHelpers";
+import { amountTypeDrops, IDDropdowns, herbTypeDrops } from "../helpers/FormHelpers";
 
-export const IngredientAdditions = ({ formik, showFalse, herbs, successFunctions, id, setError }) => {
+
+function IngredientAdditions ({ formik, showFalse, herbs, successFunctions, id, setError }) {
     const { user } = useContext(AppContext)
     const [inputFields, setInputFields] = useState([
        {amount_type: '', amount: '', herb_type:'', herb_id:''}
@@ -128,3 +129,5 @@ export const IngredientAdditions = ({ formik, showFalse, herbs, successFunctions
         </>
     )
 }
+
+export default IngredientAdditions

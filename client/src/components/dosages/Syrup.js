@@ -1,5 +1,5 @@
 import React from "react";
-import { Container,Tab } from 'semantic-ui-react'
+import { Container,Tab } from 'semantic-ui-react';
 import { LiM16, PFont } from "../helpers/StylingHelpers";
 
 
@@ -38,21 +38,16 @@ function Syrup () {
                 <LiM16>Store in the refrigerator for up to a month; discard if an off taste or mold appears.</LiM16>
                 <LiM16>To extend shelf life, add 20% of an 80-proof alcohol like brandy or rum. Syrups with alcohol last longer when refrigerated or canned.</LiM16>
             </ul>
-
         </Tab.Pane> }
     ]
+
     return (
         <div>
-        <Container  fluid >
-    <h1>Syrups</h1>
-    <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
-
-    <PFont > </PFont>
-    <PFont > </PFont>
-    <PFont > </PFont>
-
-    </Container>
-    </div>
+            <Container  fluid >
+                <h1>Syrups</h1>
+                <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
+            </Container>
+        </div>
     )
 }
 

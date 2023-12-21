@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-
 import { AppProvider } from "./context/AppContext";
-
-import Herb from './components/herb/Herb';
-import Herbs from "./components/herb/Herbs";
-import Recipe from "./components/recipe/Recipe";
-import Recipes from "./components/recipe/Recipes";
-import Properties from "./components/Properties";
-import DosageGuide from "./components/DosageGuide";
-import RecipeGuide from "./components/RecipeGuide";
 import Home from "./components/Home";
 import NavBar from "./components/NavBar";
-import Profile from "./components/profile/Profile";
+import Herb from './components/herb/Herb';
+import Herbs from "./components/herb/Herbs";
 import Resources from "./components/Resorces";
+import Recipe from "./components/recipe/Recipe";
+import Properties from "./components/Properties";
+import Recipes from "./components/recipe/Recipes";
+import DosageGuide from "./components/DosageGuide";
+import RecipeGuide from "./components/RecipeGuide";
+import Profile from "./components/profile/Profile";
 import Authentication from "./components/Authentication";
 import ContactForm from "./components/emailjs/ContactForm";
 

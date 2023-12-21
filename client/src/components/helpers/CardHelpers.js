@@ -1,9 +1,8 @@
-import React, { useState, useContext } from 'react'
-import { StyledCardDescription } from './StylingHelpers'
-import { Card, Button, Icon, List, Modal, Header, Popup, Label } from 'semantic-ui-react'
+import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { AppContext } from '../../context/AppContext';
+import { Card, Button, Icon, List, Popup, Label } from 'semantic-ui-react';
 import { filterAlphabetically } from './GeneralHelpers';
+import { StyledCardDescription } from './StylingHelpers';
 
 // Herb Lists
 
@@ -24,7 +23,7 @@ export const GoBack = () => {
     return (
         <Button 
             icon 
-            style={{ backgroundColor: 'black', color:'white' }} 
+            style={{ backgroundColor: 'black', color:'white', fontSize: '14pt'}} 
             labelPosition='left' 
             onClick={ goBack }
         >
@@ -36,11 +35,13 @@ export const GoBack = () => {
 
 export const UnLinkedLists = ({ arr, variable1, variable2 }) => {
     return arr.map((item) => (
-            <List key={ item.id } style={{ color:'white'}}>
+            <List key={ item.id } style={{ color:'white', fontSize: '14pt'}}>
                 <List.List>
                     <List.Header style={{ fontWeight: 'bold' }}><Icon name='right triangle' />{ item[variable1] }
                     </List.Header>
-                    <List.Description >{ item[variable2] }</List.Description>
+                    <ul>
+                        <li >{ item[variable2] }</li>
+                    </ul>
                 </List.List>
             </List>
         )
@@ -49,11 +50,13 @@ export const UnLinkedLists = ({ arr, variable1, variable2 }) => {
 
 export const MultiVarLinkedList = ({ arr, url, var1, var2 }) => {
     return arr.map((item) => (
-        <List key={item.id}>
+        <List key={item.id} style={{ color:'white', fontSize: '14pt'}}>
             <List.List>
                 <Link to={ url } style={{ fontWeight: 'bold',color:'white' }}><Icon name='right triangle' />{ item[var1] }
                 </Link>
-                <List.Description >{ item[var2] }</List.Description>
+                <ul>
+                    <li >{ item[var2] }</li>
+                </ul>
             </List.List>
         </List>
     ))
@@ -61,7 +64,7 @@ export const MultiVarLinkedList = ({ arr, url, var1, var2 }) => {
 
 export const LinkedList = ({ arr, url }) => {
     return arr.map((item) => (
-        <List key={ item.id }>
+        <List key={ item.id } style={{ color:'white', fontSize: '14pt'}}>
             <List.List>
                 <Link to={ url+`/${item.id}` } style={{ fontWeight: 'bold',color:'white' }}><Icon name='right triangle' />{ item.name }
                 </Link>
@@ -85,60 +88,6 @@ export const RecipeUnLinkedList = ({ arr, name }) => {
         )
     )}
 
-
-// Delete ModalPopup
-
-export const DeleteModal = ({ handleDelete }) => {
-    const [open, setOpen] = useState(false)
-    const { handleModalSuccess, secondOpen } = useContext(AppContext)
-
-    const closeBoth = () => {
-        handleModalSuccess()
-        setOpen(false)
-    }
-    return (
-        <>
-        <Modal
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            open={ open }
-            trigger={<Button circular  icon="trash" color='red'/>}
-        >
-        <Header icon='trash' content='Confirm delete' />
-        <Modal.Content style={{ backgroundColor: '#056d52' }}>
-          <Modal.Description>
-            <p>
-              Are you sue you want to delete? This action cannot be undone.
-            </p>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color='black' onClick={() => setOpen(false)}> Cancel </Button>
-          <Button
-            content="Delete"
-            labelPosition='right'
-            icon='checkmark'
-            onClick={ handleDelete }
-          />
-        </Modal.Actions>
-        <Modal 
-            onClose= {() => handleModalSuccess()}
-            open= { secondOpen }
-        >
-            <Modal.Header>Success!</Modal.Header>
-            <Modal.Actions>
-                <Button
-                    icon = 'thumbs up outline'
-                    content = 'Done'
-                    onClick= {() => closeBoth()}
-                    />
-            </Modal.Actions>    
-
-        </Modal>
-      </Modal>
-      </>
-    )
-}
 
 // Property Tags
 

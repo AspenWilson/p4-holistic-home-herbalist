@@ -1,5 +1,5 @@
-import React from "react"
-import { Table } from 'semantic-ui-react'
+import React from "react";
+import { Table } from 'semantic-ui-react';
 
 
 
@@ -32,114 +32,6 @@ const TableRows = () => {
           <Table.HeaderCell>Fluid Ounces</Table.HeaderCell>
           <Table.HeaderCell>Amount of Essential Oils for 2.5% Dilution</Table.HeaderCell>
           <Table.HeaderCell>Amount of Essential Oils for 5% Dilution</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        <TableRows />
-      </Table.Body>
-      </Table>
-      </>
-  )
-}
-    
-export const StandardWeightToVolume = () => {
-const standard_weight_to_volume= [
-  {   "potency": "1:2",   "onces_herb_perM_qrt": 16,   "strength": "very strong" },
-  {   "potency": "1:4",   "onces_herb_perM_qrt": 8,   "strength": "strong" },
-  {   "potency": "1:5",   "onces_herb_perM_qrt": 6.4,   "strength": "standard" },
-  {   "potency": "1:6",   "onces_herb_perM_qrt": 5.2,   "strength": "weak" },
-  {   "potency": "1:10",   "onces_herb_perM_qrt": 1.6,   "strength": "very weak, often used for toxic botanicals" }
-]
-const TableRows = () => {
-  return  standard_weight_to_volume.map((item) =>(
-    <Table.Row>
-      <Table.Cell>{item.potency}</Table.Cell>
-      <Table.Cell>{item.onces_herb_perM_qrt}</Table.Cell>
-      <Table.Cell>{item.strength}</Table.Cell>
-    </Table.Row>
-  ))
-}
-
-  return (
-      <>
-      <Table celled>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Potency</Table.HeaderCell>
-          <Table.HeaderCell>Ounces of Herb to Add per Quart of Menstruum</Table.HeaderCell>
-          <Table.HeaderCell>Strength</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        <TableRows />
-      </Table.Body>
-      </Table>
-      </>
-  )
-  
-}
-    
-export const SolventWeights = () => {
-const solvent_weights= [
-  {   "substance": "Water",   "weight_per_gallon": "8 lb (128 fl oz or 16 cups)",   "weight_per_quart": "2 lb (32 fl oz or 4 cups)",   "weight_per_pint": "1 lb (16 fl oz or 2 cups)" },
-  {   "substance": "Alcohol",   "weight_per_gallon": "8 lb (128 fl oz)",   "weight_per_quart": "2 lb (32 fl oz)",   "weight_per_pint": "1 lb (16 fl oz)" },
-  {   "substance": "Vinegar",   "weight_per_gallon": "8.4 lb",   "weight_per_quart": "2.1 lb",   "weight_per_pint": "1.05 lb" },
-  {   "substance": "Glycerin",   "weight_per_gallon": "10.5 lb",   "weight_per_quart": "2.51 lb",   "weight_per_pint": "1.25 lb" },
-  {   "substance": "Olive Oil",   "weight_per_gallon": "7.6 lb",   "weight_per_quart": "1.9 lb",   "weight_per_pint": ".95 lb" }
-]
-const TableRows = () => {
-  return  solvent_weights.map((item) =>(
-    <Table.Row>
-      <Table.Cell>{item.substance}</Table.Cell>
-      <Table.Cell>{item.weight_per_gallon}</Table.Cell>
-      <Table.Cell>{item.weight_per_quart}</Table.Cell>
-      <Table.Cell>{item.weight_per_pint}</Table.Cell>
-    </Table.Row>
-  ))
-}
-
-  return (
-      <>
-      <Table celled>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Substance</Table.HeaderCell>
-          <Table.HeaderCell>Weight per Gallon</Table.HeaderCell>
-          <Table.HeaderCell>Weight per Quart</Table.HeaderCell>
-          <Table.HeaderCell>Weight per Pint</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        <TableRows />
-      </Table.Body>
-      </Table>
-      </>
-  )
-}
-
-export const Weight2Volume18 = () => {
-const w_to_v_18= [
-  {   "amount_of_herb": "1 oz",   "amount_of_menstruum": "8 oz (1 cup)" },
-  {   "amount_of_herb": "1 lb",   "amount_of_menstruum": "8 lbs (1 gallon)" },
-  {   "amount_of_herb": "100 kg",   "amount_of_menstruum": "800 liters" },
-  {   "amount_of_herb": "1 kg",   "amount_of_menstruum": "8 liters" }
- ]
- const TableRows = () => {
-  return  w_to_v_18.map((item) =>(
-    <Table.Row>
-      <Table.Cell>{item.amount_of_herb}</Table.Cell>
-      <Table.Cell>{item.amount_of_menstruum}</Table.Cell>
-    </Table.Row>
-  ))
-}
-
-  return (
-      <>
-      <Table celled>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Amount of Herb</Table.HeaderCell>
-          <Table.HeaderCell>Amount of Menstruum</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>

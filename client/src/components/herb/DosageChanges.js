@@ -1,13 +1,13 @@
-import React, { useState, useContext } from "react"
-import { Button, Card, Grid, Popup } from 'semantic-ui-react'
-import { StyledTextBox, StyledSelect, FormH3 } from "../helpers/StylingHelpers"
-import { dosageDrops } from "../helpers/FormHelpers"
-import { headers } from "../helpers/GeneralHelpers"
-import { AppContext } from "../../context/AppContext"
+import React, { useState, useContext } from "react";
+import { Button, Card, Grid, Popup } from 'semantic-ui-react';
+import { AppContext } from "../../context/AppContext";
+import '../../index.css';
+import { headers } from "../helpers/GeneralHelpers";
+import { dosageDrops,FormikErrorMsg } from "../helpers/FormHelpers";
+import { StyledTextBox, StyledSelect, FormH3 } from "../helpers/StylingHelpers";
 
-import '../../index.css'
 
-export const DosageChanges = ({ dosage, type, formik, handleDelete, id, successFunctions, setError }) => {
+function DosageChanges ({ dosage, formik, handleDelete, id, successFunctions, setError }) {
     const {user} = useContext(AppContext)
     const [editState, setEditState] = useState("no edits")
 
@@ -54,9 +54,7 @@ export const DosageChanges = ({ dosage, type, formik, handleDelete, id, successF
                                     formik.setFieldValue('dosage_form', selectedOption.value)
                                     }}
                                 />
-                                {formik.touched['dosage_form'] && formik.errors['dosage_form'] && (
-                                <div style={{ color: "red" }}>{formik.errors['dosage_form']}</div>
-                                )}
+                                <FormikErrorMsg name='dosage_form' />
                             </>
                         ) : (
                             <FormH3>{formik.values['dosage_form']}</FormH3>
@@ -68,14 +66,12 @@ export const DosageChanges = ({ dosage, type, formik, handleDelete, id, successF
                             <>
                                 <StyledTextBox
                                     style = {{ wrapItem: 'true' }}
-                                    as={type}
+                                    as='textarea'
                                     name='dosage_description'
                                     value={editState === 'cancelled' ? dosage.dosage_description : formik.values['dosage_description']}
                                     onChange={formik.handleChange}
                                 />
-                                {formik.touched['dosage_description'] && formik.errors['dosage_description'] && (
-                                <div style={{ color: "red" }}>{formik.errors['dosage_description']}</div>
-                                )} 
+                                <FormikErrorMsg name='dosage_description' />
                             </>
                         ) : (
                             <FormH3>{formik.values['dosage_description']}</FormH3>
@@ -106,3 +102,5 @@ export const DosageChanges = ({ dosage, type, formik, handleDelete, id, successF
         </Card>
     )
 }
+
+export default DosageChanges

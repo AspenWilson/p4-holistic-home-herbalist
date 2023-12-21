@@ -1,9 +1,9 @@
-import React, { useState } from "react"
-import { Button, Card, Header, Grid, Input, Popup } from 'semantic-ui-react'
-import { StyledTextBox, StyledSelect, FormH3 } from "../helpers/StylingHelpers"
+import React, { useState } from "react";
+import { Button, Card, Header, Grid, Input, Popup } from 'semantic-ui-react';
+import '../../index.css';
+import { FormikErrorMsg } from "../helpers/FormHelpers";
+import { StyledTextBox, StyledSelect, FormH3 } from "../helpers/StylingHelpers";
 
-import '../../index.css'
-    
 export function PropertyEditCards ({property, deletedProperties, setDeletedProperties}) {
     const [deleted, setDeleted] = useState(false)
     const id = property.id
@@ -36,7 +36,7 @@ export function PropertyEditCards ({property, deletedProperties, setDeletedPrope
     )
 }
 
-export const AllFormEdits = ({ label, name, type, formik, itemValue, inputType, options = null, handleFieldSubmit }) => {
+export const AllFormEdits = ({ label, name, type, formik, itemValue, inputType, options = null, handleFieldSubmit, statusIs }) => {
     const [editState, setEditState] = useState("no edits")
 
     const handleSave = () => {
@@ -45,9 +45,8 @@ export const AllFormEdits = ({ label, name, type, formik, itemValue, inputType, 
     }
 
     const displayOptions = 
-        editState === "no edits" ? formik.values[name] :
-        editState === "cancelled" ? itemValue :
-        null 
+        statusIs === "cancelled" ? itemValue : formik.values[name]
+
     
     const inputTypeDisplays = 
         inputType === "input" ? 
@@ -89,9 +88,7 @@ export const AllFormEdits = ({ label, name, type, formik, itemValue, inputType, 
                     {editState === "edits" ? (
                         <>
                             {inputTypeDisplays}
-                            {formik.touched[name] && formik.errors[name] && (
-                                <div style={{ color: "red" }}>{formik.errors[name]}</div>
-                            )}
+                            <FormikErrorMsg name={name} formik={formik}/>
                         </>
                     ) : (
                         <FormH3> { displayOptions } </FormH3>

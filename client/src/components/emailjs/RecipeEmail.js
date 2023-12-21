@@ -1,29 +1,16 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
 import emailjs from "@emailjs/browser";
 import { AppContext } from "../../context/AppContext";
-import { Button, Input } from "semantic-ui-react";
-import { Formik, Form } from "formik";
-import * as yup from "yup";
+import { FormInputField, SubmitBtn } from "../helpers/FormHelpers";
+import { filterAlphabetically } from "../helpers/GeneralHelpers";
 
 
 function RecipeEmail({ recipe }) {
     const { user, handleModalSuccess } = useContext(AppContext)
-    const [ ingredients, setIngredients ] = useState([])
-    const id = recipe.id
 
-    useEffect(() => {    
-        fetch(`/api/recipes/${id}/ingredients`)
-            .then((resp) => resp.json())
-            .then((data) => {
-                    setIngredients(data);
-                    console.log(data)
-                    console.log(recipe);
-                })
-    }, []);
-
-      const ingredientList = ingredients.map((ingredient) => (
-        <li key={ingredient.id}>{ingredient.id}</li>
-    ));
+    const filteredProperties = filterAlphabetically(recipe.properties)
     const [message, setMessage] = useState(`
     <html>
     <head>
@@ -47,7 +34,7 @@ function RecipeEmail({ recipe }) {
         h1 {
             background-color: #666;
             padding: 30px;
-            font-size: 32px;
+            font-size: 28px;
             color: white;
             height: fit-content
         }
@@ -68,17 +55,13 @@ function RecipeEmail({ recipe }) {
         }
         nav {
             float: left;
-            width: 40%;
+            width: 60%;
             background: #ccc;
             padding: 10px;
             color: black
         }
         nav ul {
             padding: 10px;
-        }
-        h1 img {
-            float: left;
-            width: 40%
         }
         h1 strong {
             float: left;
@@ -88,25 +71,22 @@ function RecipeEmail({ recipe }) {
         h1 em {
             float: left;
             width: 60%;
-            font-size: 24pt;
+            font-size: 20pt;
             padding: 20px
         }
         article {
             float: left;
             padding: 20px;
-            width: 60%;
-            padding: 10px;
+            width: 40%;
         }
 
         article ul {
             color: black;
-            float: left;
             padding: 20px;
         }
 
         article li {
             color: black;
-            float: left;
             padding: 20px;
         }
         @media {
@@ -118,9 +98,6 @@ function RecipeEmail({ recipe }) {
         </style> 
     </head>
     <body>
-        <header style="background-color: #056d52">
-        <img src=${`https://drive.google.com/file/d/1Hf204D91BPwlygdMolYIomd5MhlGeTqY/view`} alt='HHH Logo'>
-        </header>
         <h2 >Your requested information from Holistic Home Herbalist</h2>
         <section>
         <p style="padding: 20px";>Hello ${user.username}, <br><br>
@@ -137,16 +114,12 @@ function RecipeEmail({ recipe }) {
             <br>
             <nav>
             <ul><strong>Properties</strong>
-            ${recipe.properties.map((property) => `<li style="margin: 10px"><strong>${property.name}</strong>: ${property.description}</li>`).join("")}
-            </ul>
-            <ul><strong>Ingredients:</strong>
-            ${ingredients.map((ingredient) => `<li style="margin: 10px"><strong>${ingredient.herb_id}</strong>, ${ingredient.herb_type}: ${ingredient.amount} ${ingredient.amount_type}</li>`).join("")}
+            ${filteredProperties.map((property) => `<li style="margin: 10px"><strong>${property.name}</strong>: ${property.description}</li>`).join("")}
             </ul>
             </nav>
             <article>
             <p><strong>Directions:</strong></p>
             <p>${recipe.directions}</p>
-
             <ul><strong>Ingredients:</strong>
             ${recipe.ingredients.map((ingredient) => `<li style="margin: 10px"><strong>${ingredient.herb.name}</strong>, ${ingredient.herb_type}: ${ingredient.amount} ${ingredient.amount_type}</li>`).join("")}
             </ul>
@@ -175,24 +148,20 @@ function RecipeEmail({ recipe }) {
         email: values['email'],
         message: message
       }
-    console.log(templateParams);
-    handleModalSuccess()
-    // emailjs.send(
-    //   "service_offg4aq",
-    //   "template_zp1ifcj",
-    //   templateParams,
-    //   "PN_0oPztGyVHw2dV_"
-    // ).then(
-    //   (result) => {
-    //     handleModalSuccess()
-    //     setStatus('success')
-        
-    //     console.log(result.text);
-    //   },
-    //   (error) => {
-    //     console.log(error.text);
-    //   }
-    // );
+    emailjs.send(
+      "service_offg4aq",
+      "template_zp1ifcj",
+      templateParams,
+      "PN_0oPztGyVHw2dV_"
+    ).then(
+      (result) => {
+        console.log(result.text);
+        handleModalSuccess()        
+      },
+      (error) => {
+        console.log(error.text);
+      }
+    );
   }
 
   return (
@@ -204,17 +173,13 @@ function RecipeEmail({ recipe }) {
     >
         {(formik) =>(
             <Form>
-                <h2>Confirm your email:</h2>
-                <Input fluid 
+                <FormInputField
                     name='email' 
                     type='text' 
-                    value={formik.values['email']} 
-                    onChange={formik.handleChange} 
+                    formik={formik}
+                    label='Confirm your email:'
                 />
-                {formik.touched['email'] && formik.errors['email'] && (
-                    <div style={{ color: "red" }}>{formik.errors['email']}</div>
-                )}
-                <Button fluid style={{backgroundColor: 'black', color:'white', font:'Arial' }} type='submit'>Send email!</Button>
+                <SubmitBtn msg='Send email!' />
                 <div>
                     <div dangerouslySetInnerHTML={{ __html: message }} />
                 </div>
@@ -226,4 +191,3 @@ function RecipeEmail({ recipe }) {
 
 export default RecipeEmail;
 
-// ${ingredients.map((ingredient) => `<li style="margin: 10px"><strong>${ingredient.herb_id}</strong>, ${ingredient.herb_type}: ${ingredient.amount} ${ingredient.amount_type}</li>`).join("")}

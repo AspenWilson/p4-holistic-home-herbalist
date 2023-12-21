@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import { Tab } from 'semantic-ui-react'
-import "../index.css"
-import { dosageTabs } from './helpers/GeneralHelpers';
-import MainGuide from './dosages/MainGuide';
-import Capsules from './dosages/Capsules';
-import Decoctions from './dosages/Decoctions';
+import React, { useState } from 'react';
+import { Tab } from 'semantic-ui-react';
+import "../index.css";
 import Dried from './dosages/Dried';
-import EssentialOil from './dosages/EssentialOil';
-import Extracts from './dosages/Extracts';
 import Fresh from './dosages/Fresh';
-import Glycerite from './dosages/Glycerite';
-import Infusions from './dosages/Infusions';
 import Salve from './dosages/Salve';
 import Syrup from './dosages/Syrup';
-import Tincture from './dosages/Tincture';
 import Topical from './dosages/Topical';
+import Capsules from './dosages/Capsules';
+import Extracts from './dosages/Extracts';
+import Tincture from './dosages/Tincture';
+import MainGuide from './dosages/MainGuide';
+import Glycerite from './dosages/Glycerite';
+import Infusions from './dosages/Infusions';
 import TablesTab from './dosages/TablesTab';
+import Decoctions from './dosages/Decoctions';
+import EssentialOil from './dosages/EssentialOil';
+import { dosageTabs } from './helpers/GeneralHelpers';
 
 function DosageGuide() {
     const [activeTab, setActiveTab] = useState('Dosage Guidance')

@@ -1,12 +1,12 @@
-import React, { useState, useContext } from 'react'
-import { Tab, Grid, Header, Image } from 'semantic-ui-react'
-import Recipes from '../recipe/Recipes';
-import Herbs from '../herb/Herbs';
+import React, { useState, useContext } from 'react';
+import { Tab, Grid, Header, Image } from 'semantic-ui-react';
 import { AppContext } from '../../context/AppContext';
+import "../../index.css";
+import Herbs from '../herb/Herbs';
+import Recipes from '../recipe/Recipes';
+import AccountEdits from './AccountEdits';
 import CommentCard from '../comment/CommentProfile';
 import { tabPane } from '../helpers/GeneralHelpers';
-import AccountEdits from './AccountEdits';
-import "../../index.css"
 
 function Profile() {
     const { user, savedRecipes, savedHerbs, enteredHerbs, enteredRecipes, enteredComments } = useContext(AppContext)

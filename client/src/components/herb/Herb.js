@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Image, Card, Icon, Grid, Header, Divider, Button } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom';
+import { Image, Card, Icon, Grid, Header, Divider } from 'semantic-ui-react';
+import HerbEmailModal from "../modals/HerbEmailModal";
 import { StyledCardLists, GoBack, UnLinkedLists, LinkedList, MultiVarLinkedList } from "../helpers/CardHelpers";
-import { HerbEmailModal } from "../ModalPopout";
 
 function Herb(){
   const { id } = useParams();
@@ -32,24 +32,22 @@ function Herb(){
     <div>
       <GoBack />
       <HerbEmailModal herb={herb}/>
-      <Card raised fluid style= {{ backgroundColor: 'rgba(52, 52, 52, 0.8)', padding: '10px' }} className='flex-outer'>
-        <Card.Content>
+      <Card raised fluid style= {{ backgroundColor: 'rgba(52, 52, 52, 0.8)', padding: '20px' }} className='flex-outer'>
           <Grid columns={ 2 }>
-            <Grid.Column>
+            <Grid.Column width={6}>
               <Image src={ herb.image_url } size="big"/>
             </Grid.Column>
 
-            <Grid.Column>
+            <Grid.Column width={10}>
               <Header as='h1' style={{ color: 'white' }}>{ herb.name }</Header>
               <span style={{ color: 'white' }}><i>{ herb.latin_name }</i></span><br/><br/>
 
-              <p style={{ color: 'white', fontSize: '12pt' }}>{ herb.description }</p><br/>
-              <Card.Description style={{ color: 'white', fontSize: '12pt' }}>
-                <Icon name='warning sign' color='white' />{ herb.warnings }
+              <p style={{ color: 'white', fontSize: '14pt' }}>{ herb.description }</p><br/>
+              <Card.Description style={{ color: 'white', fontSize: '14pt' }}>
+                <Icon name='warning sign' color='white' /> { herb.warnings }
               </Card.Description>
             </Grid.Column>
           </Grid>
-        </Card.Content>
         <Divider />
         <Grid columns = { 2 }>
           <Grid.Column>

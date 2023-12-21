@@ -1,13 +1,12 @@
-import React, { useState, useContext } from "react"
-import { Button, Grid, Popup } from 'semantic-ui-react'
-import { StyledTextBox, StyledSelect } from "../helpers/StylingHelpers"
-import { dosageDrops } from "../helpers/FormHelpers"
-import { dividerBreaks, headers } from "../helpers/GeneralHelpers"
-import { AppContext } from "../../context/AppContext"
+import React, { useState, useContext } from "react";
+import { Button, Grid, Popup } from 'semantic-ui-react';
+import { AppContext } from "../../context/AppContext";
+import '../../index.css';
+import { dividerBreaks, headers } from "../helpers/GeneralHelpers";
+import { dosageDrops, FormTextBoxField, FormSelectField } from "../helpers/FormHelpers";
 
-import '../../index.css'
 
-export const DosageAdditions = ({ formik, showFalse, setError, id, successFunctions }) => {
+function DosageAdditions ({ formik, showFalse, setError, id, successFunctions }) {
     const { user } = useContext(AppContext)
     const [inputFields, setInputFields] = useState([
         {dosage_form: '', dosage_description: ''}
@@ -60,35 +59,19 @@ export const DosageAdditions = ({ formik, showFalse, setError, id, successFuncti
                 <div key={index}>
                     <Grid columns={3}>
                         <Grid.Column width={4}>
-                            <h3  style={{ color: 'black' }}>Form:</h3> 
-                            <br/>
-                            <StyledSelect 
-                                classNamePrefix="Select"
+                            <FormSelectField
                                 name='dosage_form'
                                 options={dosageDrops}
-                                placeholder='Select dosage form...'
-                                onChange={(selectedOption) => {
-                                    formik.setFieldValue('dosage_form', selectedOption.value)
-                                }}
+                                formik={formik}
+                                label='Form:'
                             />
-                            {formik.touched['dosage_form'] && formik.errors['dosage_form'] && (
-                                <div style={{ color: "red" }}>{formik.errors['dosage_form']}</div>
-                            )}
                         </Grid.Column>
                         <Grid.Column width={9}>
-                            <h3  style={{ color: 'black' }}>Description:</h3>
-                            <br/>
-                            <StyledTextBox
-                                style = {{ wrapItem: 'true' }}
-                                as='textarea'
-                                name='dosage_description'
-                                placeholder='Enter a dosage description...'
-                                value={formik.values['dosage_description']}
-                                onChange={formik.handleChange}
+                            <FormTextBoxField
+                                name='dosage_description' 
+                                formik={formik}
+                                label='Descripion:'
                             />
-                            {formik.touched['dosage_description'] && formik.errors['dosage_description'] && (
-                                <div style={{ color: "red" }}>{formik.errors['dosage_description']}</div>
-                            )}
                         </Grid.Column>
                         <Grid.Column width={3}>
                             <br />
@@ -105,3 +88,5 @@ export const DosageAdditions = ({ formik, showFalse, setError, id, successFuncti
     </>
     )
 }
+
+export default DosageAdditions

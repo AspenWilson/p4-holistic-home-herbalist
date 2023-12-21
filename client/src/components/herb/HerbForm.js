@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react"
-import { Formik, Form, FieldArray } from "formik"
-import * as yup from "yup"
-import { AppContext } from '../../context/AppContext'
-import { FormHeader } from "../helpers/StylingHelpers"
-import { headers } from "../helpers/GeneralHelpers"
-import { Card, Grid, Image, Button } from 'semantic-ui-react'
-import { HerbInitialValues, IDDropdowns, dosageDrops, FormInputField, FormTextBoxField, FormSelectField, FormMultiSelectField, displayErrors } from "../helpers/FormHelpers"
+import React, { useContext, useState } from "react";
+import * as yup from "yup";
+import { Formik, Form, FieldArray } from "formik";
+import { headers } from "../helpers/GeneralHelpers";
+import { AppContext } from '../../context/AppContext';
+import { FormHeader } from "../helpers/StylingHelpers";
+import { Card, Grid, Image, Button } from 'semantic-ui-react';
+import { HerbInitialValues, IDDropdowns, dosageDrops, FormInputField, FormTextBoxField, FormSelectField, FormMultiSelectField, displayErrors, SubmitBtn } from "../helpers/FormHelpers";
 
 function HerbForm () {
   const { properties, handleModalSuccess, user, refreshEnteredHerbs, refreshHerbs } = useContext(AppContext)
@@ -71,12 +71,27 @@ function HerbForm () {
           <Card.Content className='allCards' >
             <Grid columns={ 2 }>
               <Grid.Column>
-                <FormInputField label='Herb Name' name='name' type='text' formik={ formik } error={ error } />
-                <FormInputField label='Latin Name' name='latin_name' type='text' formik={ formik } error={ error } />
+                <FormInputField 
+                  label='Herb Name' 
+                  name='name' 
+                  type='text' 
+                  formik={ formik } 
+                />
+                <FormInputField 
+                  label='Latin Name' 
+                  name='latin_name' 
+                  type='text' 
+                  formik={ formik } 
+                />
               </Grid.Column>
 
               <Grid.Column>
-                <FormInputField label='Image Link' name='image_url' type='text' formik={ formik } error={ error } />
+                <FormInputField 
+                  label='Image Link' 
+                  name='image_url' 
+                  type='text' 
+                  formik={ formik } 
+                />
                 <FormHeader as='h3'>Image Preview</FormHeader>
                 <Image 
                   size='small'
@@ -88,11 +103,19 @@ function HerbForm () {
             <br />
             <Grid columns={ 2 }>
               <Grid.Column>
-                <FormTextBoxField label='Description' name='description' formik={ formik } error={ error } />
+                <FormTextBoxField 
+                  label='Description' 
+                  name='description' 
+                  formik={ formik } 
+                />
               </Grid.Column>
 
               <Grid.Column>
-                <FormTextBoxField label='Warnings' name='warnings' formik={ formik } error={ error } /> 
+                <FormTextBoxField 
+                  label='Warnings' 
+                  name='warnings' 
+                  formik={ formik } 
+                /> 
               </Grid.Column>
             </Grid>
             
@@ -105,11 +128,20 @@ function HerbForm () {
                 <div key={ index }>
                   <Grid columns={ 2 }>
                     <Grid.Column>
-                      <FormInputField label='Dosage Description' name={`dosages[${index}].dosage_description`} type='text' formik={ formik } error={ error } />
+                      <FormInputField 
+                        label='Dosage Description' 
+                        name={`dosages[${index}].dosage_description`} type='text' 
+                        formik={ formik } 
+                      />
                     </Grid.Column>
 
                     <Grid.Column>
-                      <FormSelectField label='Doage Form' name={`dosages[${index}].dosage_form`} formik={ formik } options={ dosageDrops } error={ error } />
+                      <FormSelectField 
+                        label='Doage Form' 
+                        name={`dosages[${index}].dosage_form`} 
+                        formik={ formik } 
+                        options={ dosageDrops } 
+                      />
                     </Grid.Column>
                   </Grid>
 
@@ -127,9 +159,15 @@ function HerbForm () {
               </div>
             )}
             </FieldArray>
-            <FormMultiSelectField label='Add Properties' name='property_ids' formik={ formik } options={ IDDropdowns(properties) } setSelectedProperties={setSelectedProperties} selectedProperties={selectedProperties}/>
+            <FormMultiSelectField 
+              label='Add Properties' 
+              name='property_ids' 
+              formik={ formik } 
+              options={ IDDropdowns(properties) }
+              setSelectedProperties={setSelectedProperties} selectedProperties={selectedProperties}
+            />
             <br />
-            <Button fluid type='submit' >Submit</Button>
+            <SubmitBtn msg= 'Submit'/>
           </Card.Content>
         </Form>
         </Card>

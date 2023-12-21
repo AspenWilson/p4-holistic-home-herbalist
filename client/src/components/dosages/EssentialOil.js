@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Tab } from 'semantic-ui-react'
+import { Container, Tab } from 'semantic-ui-react';
 import { LiM16, PFont, LiM14 } from "../helpers/StylingHelpers";
 
 function EssentialOil () {
@@ -79,7 +79,6 @@ function EssentialOil () {
             </ul>
 
             <h2>Flower Essences: Healing on an Emotional Plane</h2>
-
 
             <PFont >Flower essences, akin to homeopathic remedies, focus on emotional healing using the vibrational energy of flowers. Dr. Edward Bach, a medical doctor and homeopath, crafted the first thirty-eight flower essence remedies. Bach's philosophy centered on emotional conflicts disrupting harmony between the soul and mind, eventually leading to physical illness.</PFont>
 

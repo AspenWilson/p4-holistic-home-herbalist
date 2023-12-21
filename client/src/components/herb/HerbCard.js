@@ -1,10 +1,11 @@
-import React, { useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
-import { Card, Image, Label, Button } from 'semantic-ui-react'
-import { headers } from '../helpers/GeneralHelpers'
+import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { Card, Image, Label, Button } from 'semantic-ui-react';
 import { AppContext } from '../../context/AppContext';
-import { ModalPopout } from '../ModalPopout';
-import { DeleteModal, propertyTags } from '../helpers/CardHelpers';
+import ModalPopout from '../modals/ModalPopout';
+import DeleteModal from '../modals/DeleteModal';
+import { headers } from '../helpers/GeneralHelpers';
+import { propertyTags } from '../helpers/CardHelpers';
 
 function HerbCard ({ herb, page }) {
     const { savedHerbs, user, refreshSavedHerbs, refreshEnteredHerbs, refreshHerbs, handleModalSuccess } = useContext(AppContext)

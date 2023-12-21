@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react"
-import { Button, Card, Grid, Input, Popup } from 'semantic-ui-react'
-import { StyledSelect, FormH3 } from "../helpers/StylingHelpers"
-import { amountTypeDrops, herbTypeDrops } from "../helpers/FormHelpers"
-import { headers } from "../helpers/GeneralHelpers"
-import '../../index.css'
-import { AppContext } from "../../context/AppContext"
+import React, { useState, useContext } from "react";
+import { Button, Card, Grid, Input, Popup } from 'semantic-ui-react';
+import { AppContext } from "../../context/AppContext";
+import '../../index.css';
+import { headers } from "../helpers/GeneralHelpers";
+import { StyledSelect, FormH3 } from "../helpers/StylingHelpers";
+import { amountTypeDrops, herbTypeDrops } from "../helpers/FormHelpers";
 
-export const IngredientChanges = ({ ingredient, formik, successFunctions, handleDelete, herbDrops, setError, id}) => {
+function IngredientChanges ({ ingredient, formik, successFunctions, handleDelete, herbDrops, setError, id}) {
     const {user} = useContext(AppContext)
     const [editState, setEditState] = useState("no edits")
 
@@ -143,3 +143,5 @@ export const IngredientChanges = ({ ingredient, formik, successFunctions, handle
         </Card>
     )
 }
+
+export default IngredientChanges

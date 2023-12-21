@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Tab } from 'semantic-ui-react'
+import { Container, Tab } from 'semantic-ui-react';
 import { LiM16, PFont } from "../helpers/StylingHelpers";
 
 
@@ -43,19 +43,14 @@ function Glycerite () {
             </ol>
         </Tab.Pane> }
     ]
+
     return (
         <div>
-        <Container  fluid>
-    <h1>Glycerins</h1>
-    <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
-
-    <PFont > </PFont>
-    <PFont > </PFont>
-    <PFont > </PFont>
-
-
-    </Container>
-    </div>
+            <Container  fluid>
+                <h1>Glycerins</h1>
+                <Tab menu= {{ fluid: true, vertical: true, tabular: true}} panes={panes} />
+            </Container>
+        </div>
     )
 }
 

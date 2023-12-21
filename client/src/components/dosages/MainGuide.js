@@ -1,9 +1,9 @@
 import React from "react";
-import { Container, Tab, Card } from 'semantic-ui-react'
-import { WeightDosageChart, AgeDosageChart, IllnessChart } from "./Tables";
-import { LiM16, PFont } from "../helpers/StylingHelpers";
+import { Container, Tab, Card } from 'semantic-ui-react';
 import TermsTab from "./Terms";
 import EquipmentTab from "./Equipment";
+import { LiM16, PFont } from "../helpers/StylingHelpers";
+import { WeightDosageChart, AgeDosageChart, IllnessChart } from "./Tables";
 
 function MainGuide () {
 
